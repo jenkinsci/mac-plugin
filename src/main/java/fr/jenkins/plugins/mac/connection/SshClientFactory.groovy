@@ -23,7 +23,12 @@ import jenkins.model.Jenkins
  */
 class SshClientFactory {
 
-    @Restricted(NoExternalUse.class)
+    /**
+     * Get the SSH client to the Mac
+     * @param conf
+     * @return Shell
+     */
+    @Restricted(NoExternalUse)
     static Shell getSshClient(SshClientFactoryConfiguration conf = new SshClientFactoryConfiguration()) {
         String host = conf.host ?: MacPluginConfiguration.host
         Integer port = conf.port ?: MacPluginConfiguration.port
@@ -33,7 +38,14 @@ class SshClientFactory {
         return getClient(credentials, host, port)
     }
 
-    @Restricted(NoExternalUse.class)
+    /**
+     * Return the ssh client to the Mac
+     * @param credentials
+     * @param host
+     * @param port
+     * @return Shell
+     */
+    @Restricted(NoExternalUse)
     private static Shell getClient(StandardCredentials credentials, String host, Integer port) {
         Shell shell = null
         def adr = InetAddress.getByName(host).toString().split(" / ")[1]

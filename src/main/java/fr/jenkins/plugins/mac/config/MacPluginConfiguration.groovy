@@ -17,6 +17,11 @@ import hudson.util.FormValidation.Kind
 import hudson.util.ListBoxModel
 import jenkins.model.Jenkins
 
+/**
+ * Iteration of the Global configuration of mac-plugin
+ * @author Mathieu DELROCQ
+ *
+ */
 class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
 
     String host
@@ -31,7 +36,10 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
         this.port = port
         this.maxUsers = maxUsers
     }
-
+    /**
+     * Return the current instance of MacPluginConfiguration
+     * @return
+     */
     static @Nullable MacPluginConfiguration getMacPluginConfigs() {
         return GlobalMacPluginConfiguration.globalMacPluginConfiguration.macPluginConfigs?.find { true }
     }

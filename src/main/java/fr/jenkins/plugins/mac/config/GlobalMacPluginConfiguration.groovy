@@ -9,9 +9,9 @@ import jenkins.model.GlobalConfiguration
 import net.sf.json.JSONObject
 
 /**
- * 
+ * Global Configuration of mac-plugin
  * @author Mathieu DELROCQ
- *
+ * 
  */
 @Extension
 class GlobalMacPluginConfiguration extends GlobalConfiguration {

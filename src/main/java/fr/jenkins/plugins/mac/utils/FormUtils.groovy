@@ -6,6 +6,9 @@ import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fr
 
 import javax.validation.constraints.NotNull
 
+import org.kohsuke.accmod.Restricted
+import org.kohsuke.accmod.restrictions.NoExternalUse
+
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel
@@ -19,7 +22,7 @@ import hudson.util.ListBoxModel
 import jenkins.model.Jenkins
 
 /**
- * 
+ * Utilities for Jenkins UI
  * @author Mathieu DELROCQ
  *
  */
@@ -102,6 +105,7 @@ class FormUtils {
      * @param item
      * @return ListBoxModel
      */
+    @Restricted(NoExternalUse)
     static ListBoxModel newCredentialsItemsListBoxModel(final String host,
             final String credentialsId,
             final Item ancestor) {

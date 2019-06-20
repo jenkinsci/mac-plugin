@@ -18,7 +18,6 @@ import hudson.security.ACL
 /**
  * Utilities for credentials
  * @author Mathieu DELROCQ
- *
  */
 class CredentialsUtils {
 
