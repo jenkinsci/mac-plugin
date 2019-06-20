@@ -65,6 +65,11 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
     @Extension
     static class DescriptorImpl extends Descriptor<MacPluginConfiguration> {
 
+        /**
+         * Check if the value of host field is correct
+         * @param value
+         * @return FormValidation
+         */
         FormValidation doCheckHost(@QueryParameter String value) {
             def validation = FormUtils.validateHost(value)
             if (validation.kind == Kind.OK) {
@@ -73,14 +78,28 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
             return validation
         }
 
+        /**
+         * Return ListBoxModel of existing credentials
+         * @param host
+         * @param credentialsId
+         * @param context
+         * @return ListBoxModel
+         */
         ListBoxModel doFillCredentialsIdItems(@QueryParameter String host,
-                @QueryParameter String credentialsId, @AncestorInPath Item context) {
-            return new ListBoxModel()
+                @QueryParameter String credentialsId, @AncestorInPath Item ancestor) {
+            return FormUtils.newCredentialsItemsListBoxModel(host, credentialsId, ancestor)
         }
 
+        /**
+         * Verify the connection to the Mac machine 
+         * @param host
+         * @param credentialsId
+         * @param context
+         * @return ok if connection, ko if error
+         */
         FormValidation verifyConnection(@QueryParameter String host,
                 @QueryParameter String credentialsId, @AncestorInPath Item context) {
-            return FormValidation.error("not implemented")
+            return FormUtils.verifyCredential(host, credentialsId, context)
         }
     }
 }
