@@ -1,8 +1,8 @@
 package fr.jenkins.plugins.mac.config
 
-import javax.annotation.Nullable
-
+import org.antlr.v4.runtime.misc.Nullable
 import org.kohsuke.stapler.StaplerRequest
+
 import hudson.Extension
 import hudson.model.Descriptor.FormException
 import jenkins.model.GlobalConfiguration

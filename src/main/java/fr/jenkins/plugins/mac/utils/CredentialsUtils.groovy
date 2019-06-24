@@ -3,14 +3,10 @@ package fr.jenkins.plugins.mac.utils
 import static com.google.common.base.Preconditions.checkArgument
 import static com.google.common.base.Preconditions.checkNotNull
 
-import com.cloudbees.jenkins.plugins.sshcredentials.impl.JSchConnector
 import com.cloudbees.plugins.credentials.CredentialsMatchers
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
-import com.cloudbees.plugins.credentials.common.UsernameCredentials
-import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder
-import com.jcraft.jsch.JSch
 
 import hudson.model.ModelObject
 import hudson.security.ACL
