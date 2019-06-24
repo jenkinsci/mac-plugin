@@ -84,9 +84,9 @@
             <version>1.7.26</version>
         </dependency>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-ssh</artifactId>
-            <version>1.6.1</version>
+            <groupId>org.jenkins-ci</groupId>
+            <artifactId>trilead-ssh2</artifactId>
+            <version>build-217-jenkins-16</version>
         </dependency>
         <!-- Test dependencies -->
         <dependency>

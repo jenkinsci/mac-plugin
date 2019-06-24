@@ -12,4 +12,7 @@ class SshClientFactoryConfiguration {
     String credentialsId
     Integer port
     ModelObject context
+    Integer connectionTimeout
+    Integer readTimeout
+    Integer kexTimeout
 }

@@ -4,14 +4,16 @@ import static com.cloudbees.plugins.credentials.CredentialsMatchers.anyOf
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf
 import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fromUri
 
-import javax.validation.constraints.NotNull
-
+import org.antlr.v4.runtime.misc.NotNull
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel
+import com.trilead.ssh2.Connection
+import com.trilead.ssh2.Session
+
 import fr.jenkins.plugins.mac.connection.SshClientFactory
 import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
 import hudson.model.Item
@@ -45,7 +47,6 @@ class FormUtils {
         } catch(Exception e) {
             return null
         }
-        
     }
 
     /**
@@ -79,7 +80,7 @@ class FormUtils {
         }
         return FormValidation.ok()
     }
-    
+
     /**
      * Return FormValidation to verify the connection to GitLab with the given url and credentialsId
      * @param serverUrl
@@ -87,13 +88,22 @@ class FormUtils {
      * @param context
      * @return FormValidation
      */
-    static FormValidation verifyCredential(final String host, final String credentialsId, final ModelObject context) {
+    static FormValidation verifyCredential(final String host, final Integer port,
+            final String credentialsId, final Integer connectionTimeout,
+            final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
+        Session session = null
         try {
-            SshClientFactory.getSshClient(
-                    new SshClientFactoryConfiguration(credentialsId: credentialsId, context: context,
-                    host: host))
+            Connection connection = SshClientFactory.getSshClient(
+                    new SshClientFactoryConfiguration(credentialsId: credentialsId, port: port,
+                    context: context, host: host, connectionTimeout: connectionTimeout,
+                    readTimeout: readTimeout, kexTimeout: kexTimeout))
+            session = connection.openSession()
+            session.startShell()
+            session.execCommand("echo 'Hello, world!'")
+            session.close()
             return FormValidation.ok("Connection succeed")
         } catch(Exception e) {
+            if(null != session) session.close()
             return FormValidation.error(e.getMessage())
         }
     }

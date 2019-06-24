@@ -28,13 +28,20 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
     String credentialsId
     Integer port
     Integer maxUsers
+    Integer connectionTimeout
+    Integer readTimeout
+    Integer kexTimeout
 
     @DataBoundConstructor
-    MacPluginConfiguration(String host, String credentialsId, int port, int maxUsers) {
+    MacPluginConfiguration(String host, String credentialsId, Integer port, Integer maxUsers,
+    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
         this.maxUsers = maxUsers
+        this.connectionTimeout = connectionTimeout
+        this.readTimeout = readTimeout
+        this.kexTimeout = kexTimeout
     }
     /**
      * Return the current instance of MacPluginConfiguration
@@ -57,6 +64,18 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
 
     static @Nullable Integer getMaxUsers() {
         getMacPluginConfigs()?.@maxUsers
+    }
+
+    static @Nullable Integer getConnectionTimeout() {
+        getMacPluginConfigs()?.@connectionTimeout
+    }
+
+    static @Nullable Integer getReadTimeout() {
+        getMacPluginConfigs()?.@readTimeout
+    }
+
+    static @Nullable Integer getKexTimeout() {
+        getMacPluginConfigs()?.@kexTimeout
     }
 
     @Override
@@ -105,9 +124,10 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
          * @param context
          * @return ok if connection, ko if error
          */
-        FormValidation verifyConnection(@QueryParameter String host,
-                @QueryParameter String credentialsId, @AncestorInPath Item context) {
-            return FormUtils.verifyCredential(host, credentialsId, context)
+        FormValidation doVerifyConnection(@QueryParameter String host, @QueryParameter Integer port,
+                @QueryParameter String credentialsId, @QueryParameter Integer connectionTimeout,
+                @QueryParameter Integer readTimeout, @QueryParameter Integer kexTimeout, @AncestorInPath Item context) {
+            return FormUtils.verifyCredential(host, port, credentialsId, connectionTimeout, readTimeout, kexTimeout, context)
         }
     }
 }
