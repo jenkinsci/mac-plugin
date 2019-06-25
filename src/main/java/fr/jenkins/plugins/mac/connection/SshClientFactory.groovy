@@ -9,8 +9,8 @@ import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
 import fr.jenkins.plugins.mac.config.MacPluginConfiguration
-import fr.jenkins.plugins.mac.utils.CredentialsUtils
-import fr.jenkins.plugins.mac.utils.FormUtils
+import fr.jenkins.plugins.mac.util.CredentialsUtils
+import fr.jenkins.plugins.mac.util.FormUtils
 import jenkins.model.Jenkins
 
 /**

@@ -1,9 +1,9 @@
-package fr.jenkins.plugins.mac.utils
+package fr.jenkins.plugins.mac.util
 
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.anyOf
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf
 import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fromUri
-import static fr.jenkins.plugins.mac.utils.Constants.WHOAMI
+import static fr.jenkins.plugins.mac.util.Constants.WHOAMI
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.apache.commons.io.IOUtils
@@ -27,14 +27,12 @@ import hudson.util.ListBoxModel
 import jenkins.model.Jenkins
 
 /**
- * Utilities for Jenkins UI
+ * Utilities for Jenkins UI Forms
  * @author Mathieu DELROCQ
  *
  */
-@Slf4j
 class FormUtils {
-
-    /**
+     /**
      * Transform the host value to an URI
      * @param String host
      * @return URI
@@ -139,5 +137,33 @@ class FormUtils {
                 StandardCredentials,
                 fromUri(getUri(host).toString()).build(),
                 anyOf(instanceOf(StandardCredentials)))
+    }
+    
+    /**
+     * Return ListBoxModel with filled item and empty option
+     * @param nameSelector
+     * @param valueSelector
+     * @param items
+     * @return ListBoxModel
+     */
+    static ListBoxModel newListBoxModel(Closure<String> nameSelector, Closure<String> valueSelector, List items) {
+        def listBoxModel = newListBoxModelWithEmptyOption()
+        items.each { item ->
+            listBoxModel.add(nameSelector(item), valueSelector(item))
+        }
+        return listBoxModel
+    }
+
+    /**
+     * Return an empty ListBoxModel with empty option
+     * @param nameSelector
+     * @param valueSelector
+     * @param items
+     * @return ListBoxModel
+     */
+    static ListBoxModel newListBoxModelWithEmptyOption() {
+        def listBoxModel = new ListBoxModel()
+        listBoxModel.add(Constants.EMPTY_LIST_BOX_NAME, Constants.EMPTY_LIST_BOX_VALUE)
+        return listBoxModel
     }
 }

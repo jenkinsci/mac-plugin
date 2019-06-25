@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.utils
+package fr.jenkins.plugins.mac.util
 
 import static com.google.common.base.Preconditions.checkArgument
 import static com.google.common.base.Preconditions.checkNotNull

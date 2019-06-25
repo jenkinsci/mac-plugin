@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.utils
+package fr.jenkins.plugins.mac.util
 
 import com.trilead.ssh2.Session
 
@@ -8,6 +8,11 @@ import org.antlr.v4.runtime.misc.NotNull
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
 
+/**
+ * Utilities to run SSH command.
+ * @author Mathieu DELROCQ
+ *
+ */
 @Slf4j
 class SshUtils {
     

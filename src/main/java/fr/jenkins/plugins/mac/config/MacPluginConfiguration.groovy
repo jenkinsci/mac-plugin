@@ -6,7 +6,7 @@ import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.QueryParameter
 
-import fr.jenkins.plugins.mac.utils.FormUtils
+import fr.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
 import hudson.model.Descriptor
