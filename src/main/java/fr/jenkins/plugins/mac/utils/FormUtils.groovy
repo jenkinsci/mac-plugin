@@ -3,8 +3,10 @@ package fr.jenkins.plugins.mac.utils
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.anyOf
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf
 import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fromUri
+import static fr.jenkins.plugins.mac.utils.Constants.WHOAMI
 
 import org.antlr.v4.runtime.misc.NotNull
+import org.apache.commons.io.IOUtils
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
@@ -16,6 +18,7 @@ import com.trilead.ssh2.Session
 
 import fr.jenkins.plugins.mac.connection.SshClientFactory
 import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
+import groovy.util.logging.Slf4j
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -28,6 +31,7 @@ import jenkins.model.Jenkins
  * @author Mathieu DELROCQ
  *
  */
+@Slf4j
 class FormUtils {
 
     /**
@@ -88,6 +92,7 @@ class FormUtils {
      * @param context
      * @return FormValidation
      */
+    @Restricted(NoExternalUse)
     static FormValidation verifyCredential(final String host, final Integer port,
             final String credentialsId, final Integer connectionTimeout,
             final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
@@ -98,10 +103,9 @@ class FormUtils {
                     context: context, host: host, connectionTimeout: connectionTimeout,
                     readTimeout: readTimeout, kexTimeout: kexTimeout))
             session = connection.openSession()
-            session.startShell()
-            session.execCommand("echo 'Hello, world!'")
+            String result = SshUtils.executeCommand(session, WHOAMI)
             session.close()
-            return FormValidation.ok("Connection succeed")
+            return FormValidation.ok("Connected as " + result)
         } catch(Exception e) {
             if(null != session) session.close()
             return FormValidation.error(e.getMessage())
