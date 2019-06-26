@@ -4,6 +4,7 @@ import javax.annotation.Nullable
 
 import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
+import org.kohsuke.stapler.DataBoundSetter
 import org.kohsuke.stapler.QueryParameter
 
 import fr.jenkins.plugins.mac.util.FormUtils
@@ -18,7 +19,7 @@ import hudson.util.ListBoxModel
 import jenkins.model.Jenkins
 
 /**
- * Iteration of the Global configuration of mac-plugin
+ * Configuration of a Mac SSH Connection
  * @author Mathieu DELROCQ
  *
  */
@@ -43,39 +44,68 @@ class MacHost implements Describable<MacHost> {
         this.readTimeout = readTimeout
         this.kexTimeout = kexTimeout
     }
-    /**
-     * Return the current instance of MacPluginConfiguration
-     * @return
-     */
-    static @Nullable MacHost getMacHost() {
-        return MacCloud.macCloud?.find { true }
-    }
-    static @Nullable String getHost() {
-        getMacHost()?.@host
+
+    String getHost() {
+        return host;
     }
 
-    static @Nullable String getCredentialsId() {
-        getMacHost()?.@credentialsId
+    @DataBoundSetter
+    void setHost(String host) {
+        this.host = host;
     }
 
-    static @Nullable Integer getPort() {
-        getMacHost()?.@port
+    String getCredentialsId() {
+        return credentialsId;
     }
 
-    static @Nullable Integer getMaxUsers() {
-        getMacHost()?.@maxUsers
+    @DataBoundSetter
+    void setCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId;
     }
 
-    static @Nullable Integer getConnectionTimeout() {
-        getMacHost()?.@connectionTimeout
+    Integer getPort() {
+        return port;
     }
 
-    static @Nullable Integer getReadTimeout() {
-        getMacHost()?.@readTimeout
+    @DataBoundSetter
+    void setPort(Integer port) {
+        this.port = port;
     }
 
-    static @Nullable Integer getKexTimeout() {
-        getMacHost()?.@kexTimeout
+    Integer getMaxUsers() {
+        return maxUsers;
+    }
+
+    @DataBoundSetter
+    void setMaxUsers(Integer maxUsers) {
+        this.maxUsers = maxUsers;
+    }
+
+    Integer getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    @DataBoundSetter
+    void setConnectionTimeout(Integer connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    Integer getReadTimeout() {
+        return readTimeout;
+    }
+
+    @DataBoundSetter
+    void setReadTimeout(Integer readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+
+    Integer getKexTimeout() {
+        return kexTimeout;
+    }
+
+    @DataBoundSetter
+    void setKexTimeout(Integer kexTimeout) {
+        this.kexTimeout = kexTimeout;
     }
 
     @Override
@@ -84,8 +114,8 @@ class MacHost implements Describable<MacHost> {
     }
 
     /**
-     * Descriptor of an iteration of the global configuration
-     * @see src\main\resources\fr\jenkins\plugins\mac\config\MacPluginConfiguration\config.groovy
+     * Descriptor of a Mac Host for Jenkins UI
+     * @see src\main\resources\fr\jenkins\plugins\mac\MacHost\config.groovy
      * @author mathieu.delrocq
      *
      */

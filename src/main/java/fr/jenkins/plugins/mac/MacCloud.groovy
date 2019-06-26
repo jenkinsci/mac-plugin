@@ -2,16 +2,12 @@ package fr.jenkins.plugins.mac
 
 import org.antlr.v4.runtime.misc.Nullable
 import org.kohsuke.stapler.DataBoundConstructor
-import org.kohsuke.stapler.StaplerRequest
 
-import fr.jenkins.plugins.mac.config.MacPluginConfiguration
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
-import hudson.model.Descriptor.FormException
 import hudson.slaves.Cloud
 import hudson.slaves.NodeProvisioner.PlannedNode
-import net.sf.json.JSONObject
 
 class MacCloud extends Cloud {
 
@@ -23,12 +19,8 @@ class MacCloud extends Cloud {
         this.macHost = macHost
     }
 
-    MacHost getMacHost() {
-        return MacHost
-    }
-
-    void setMacHost(MacHost macHost) {
-        this.macHost = macHost
+    public MacHost getMacHost() {
+        return macHost;
     }
 
     static @Nullable getMacCloud() {
@@ -49,7 +41,7 @@ class MacCloud extends Cloud {
 
     @Extension
     static class DescriptorImpl extends Descriptor<Cloud> {
-        
+
         @Override
         public String getDisplayName() {
             return Messages.Cloud_DisplayName()
