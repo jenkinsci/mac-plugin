@@ -23,7 +23,6 @@ class MacAgentBuilder extends Builder implements SimpleBuildStep {
     public void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener)
     throws InterruptedException, IOException {
         // TODO Auto-generated method stub
-
     }
 
     @Extension

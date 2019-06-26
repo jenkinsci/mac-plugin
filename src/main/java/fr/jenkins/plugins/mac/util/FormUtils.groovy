@@ -16,6 +16,7 @@ import com.cloudbees.plugins.credentials.common.StandardListBoxModel
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
+import fr.jenkins.plugins.mac.Messages
 import fr.jenkins.plugins.mac.connection.SshClientFactory
 import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
 import groovy.util.logging.Slf4j
@@ -64,9 +65,9 @@ class FormUtils {
             }
             return FormValidation.ok()
         } catch(UnknownHostException uhe) {
-            return FormValidation.error("The given host is not valid")
+            return FormValidation.error(Messages._Host_HostInvalid().toString())
         } catch(SecurityException se) {
-            return FormValidation.error("Cannot validate the host due to security restriction")
+            return FormValidation.error(Messages._Host_SecurityRestriction().toString())
         }
     }
 
@@ -103,10 +104,10 @@ class FormUtils {
             session = connection.openSession()
             String result = SshUtils.executeCommand(session, WHOAMI)
             session.close()
-            return FormValidation.ok("Connected as " + result)
+            return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {
             if(null != session) session.close()
-            return FormValidation.error(e.getMessage())
+            return FormValidation.error(Messages._Host_ConnectionFailed(e.getMessage()).toString())
         }
     }
 
