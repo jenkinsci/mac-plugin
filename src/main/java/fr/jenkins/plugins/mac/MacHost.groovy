@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.config
+package fr.jenkins.plugins.mac
 
 import javax.annotation.Nullable
 
@@ -22,7 +22,7 @@ import jenkins.model.Jenkins
  * @author Mathieu DELROCQ
  *
  */
-class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
+class MacHost implements Describable<MacHost> {
 
     String host
     String credentialsId
@@ -33,7 +33,7 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
     Integer kexTimeout
 
     @DataBoundConstructor
-    MacPluginConfiguration(String host, String credentialsId, Integer port, Integer maxUsers,
+    MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
     Integer connectionTimeout, Integer readTimeout, Integer kexTimeout) {
         this.host = host
         this.credentialsId = credentialsId
@@ -47,39 +47,39 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
      * Return the current instance of MacPluginConfiguration
      * @return
      */
-    static @Nullable MacPluginConfiguration getMacPluginConfigs() {
-        return GlobalMacPluginConfiguration.globalMacPluginConfiguration.macPluginConfigs?.find { true }
+    static @Nullable MacHost getMacHost() {
+        return MacCloud.macCloud?.find { true }
     }
     static @Nullable String getHost() {
-        getMacPluginConfigs()?.@host
+        getMacHost()?.@host
     }
 
     static @Nullable String getCredentialsId() {
-        getMacPluginConfigs()?.@credentialsId
+        getMacHost()?.@credentialsId
     }
 
     static @Nullable Integer getPort() {
-        getMacPluginConfigs()?.@port
+        getMacHost()?.@port
     }
 
     static @Nullable Integer getMaxUsers() {
-        getMacPluginConfigs()?.@maxUsers
+        getMacHost()?.@maxUsers
     }
 
     static @Nullable Integer getConnectionTimeout() {
-        getMacPluginConfigs()?.@connectionTimeout
+        getMacHost()?.@connectionTimeout
     }
 
     static @Nullable Integer getReadTimeout() {
-        getMacPluginConfigs()?.@readTimeout
+        getMacHost()?.@readTimeout
     }
 
     static @Nullable Integer getKexTimeout() {
-        getMacPluginConfigs()?.@kexTimeout
+        getMacHost()?.@kexTimeout
     }
 
     @Override
-    Descriptor<MacPluginConfiguration> getDescriptor() {
+    Descriptor<MacHost> getDescriptor() {
         return Jenkins.get().getDescriptorOrDie(this.getClass())
     }
 
@@ -90,7 +90,7 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
      *
      */
     @Extension
-    static class DescriptorImpl extends Descriptor<MacPluginConfiguration> {
+    static class DescriptorImpl extends Descriptor<MacHost> {
 
         /**
          * Check if the value of host field is correct
@@ -100,7 +100,7 @@ class MacPluginConfiguration implements Describable<MacPluginConfiguration> {
         FormValidation doCheckHost(@QueryParameter String value) {
             def validation = FormUtils.validateHost(value)
             if (validation.kind == Kind.OK) {
-                validation = FormUtils.validateNotEmpty(value, Messages.Configuration_HostRequired())
+                validation = FormUtils.validateNotEmpty(value, Messages.Host_HostRequired())
             }
             return validation
         }
