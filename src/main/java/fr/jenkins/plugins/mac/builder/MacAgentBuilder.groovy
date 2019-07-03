@@ -66,14 +66,12 @@ class MacAgentBuilder extends Builder implements SimpleBuildStep {
         String password = "password"
         //
         Connection connection = null
-        Session session = null
         try {
             List<MacCloud> macClouds = Jenkins.get().clouds.findAll { cloud ->
                 cloud instanceof MacCloud
             }
             MacCloud cloud = macClouds.get(0)
             MacHost host = cloud.getMacHost()
-            final File remoting = Which.jarFile(Channel.class);
             String remotingUrl = /*Jenkins.get().getRootUrl()*/ "http://10.31.195.86:8080/jenkins/" + Constants.REMOTING_JAR_PATH
             connection = SshClientFactory.getSshClient(new SshClientFactoryConfiguration(credentialsId: host.credentialsId, port: host.port,
                         context: run.getParent(), host: host.host, connectionTimeout: host.connectionTimeout,

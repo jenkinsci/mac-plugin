@@ -8,7 +8,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
-import fr.jenkins.plugins.mac.config.MacPluginConfiguration
+import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.util.CredentialsUtils
 import fr.jenkins.plugins.mac.util.FormUtils
 import jenkins.model.Jenkins
@@ -27,13 +27,13 @@ class SshClientFactory {
      */
     @Restricted(NoExternalUse)
     static Connection getSshClient(SshClientFactoryConfiguration conf = new SshClientFactoryConfiguration()) {
-        String host = conf.host ?: MacPluginConfiguration.host
-        Integer port = conf.port ?: MacPluginConfiguration.port
-        Integer connectionTimeout = null != conf.connectionTimeout ? conf.connectionTimeout : MacPluginConfiguration.connectionTimeout
-        Integer readTimeout = null != conf.readTimeout ? conf.readTimeout : MacPluginConfiguration.readTimeout
-        Integer kexTimeout = null != conf.kexTimeout ? conf.kexTimeout : MacPluginConfiguration.kexTimeout
+        String host = conf.host
+        Integer port = conf.port ?: new Integer(22)
+        Integer connectionTimeout = conf.connectionTimeout ?: new Integer(0)
+        Integer readTimeout = conf.readTimeout ?: new Integer(0)
+        Integer kexTimeout = conf.kexTimeout ?: new Integer(0)
         def context = conf.context ?: Jenkins.get()
-        def credentialsId = conf.credentialsId ?: MacPluginConfiguration.credentialsId
+        def credentialsId = conf.credentialsId ?: null
         def credentials = CredentialsUtils.findCredentials(FormUtils.getUri(host), credentialsId, context)
         return getClient(credentials, host, port, connectionTimeout, readTimeout, kexTimeout)
     }
@@ -58,26 +58,4 @@ class SshClientFactory {
                 }
             return conn
         }
-
-//    /**
-//     * Return the ssh client to the Mac
-//     * @param credentials
-//     * @param host
-//     * @param port
-//     * @return Shell
-//     */
-//    @Restricted(NoExternalUse)
-//    private static Session getClient(final StandardCredentials credentials, final String host, final Integer port,
-//            final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
-//        Session session = null
-//        JSch jsch = new JSch();
-//        String adr = InetAddress.getByName(host).toString().split("/")[1]
-//        if(credentials instanceof StandardUsernamePasswordCredentials) {
-//            StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
-//            session = jsch.getSession(usernamePasswordCredentials.getUsername(), adr, port)
-//            session.setTimeout(connectionTimeout.intValue())
-//            session.setPassword(usernamePasswordCredentials.getPassword().getPlainText())
-//        }
-//        return session
-//    }
 }

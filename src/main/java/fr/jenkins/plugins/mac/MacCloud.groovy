@@ -1,8 +1,11 @@
 package fr.jenkins.plugins.mac
 
+import javax.annotation.CheckForNull
+
 import org.antlr.v4.runtime.misc.Nullable
 import org.kohsuke.stapler.DataBoundConstructor
 
+import fr.jenkins.plugins.mac.connector.MacComputerConnector
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
@@ -12,18 +15,20 @@ import hudson.slaves.NodeProvisioner.PlannedNode
 class MacCloud extends Cloud {
 
     MacHost macHost
+    MacComputerConnector connector
 
     @DataBoundConstructor
-    MacCloud(String name, MacHost macHost) {
+    MacCloud(String name, MacHost macHost, MacComputerConnector connector) {
         super(name)
         this.macHost = macHost
+        this.connector = connector
     }
 
     public MacHost getMacHost() {
         return macHost;
     }
 
-    static @Nullable getMacCloud() {
+    static @Nullable getMacClouds() {
         return all().get(MacCloud)
     }
 
