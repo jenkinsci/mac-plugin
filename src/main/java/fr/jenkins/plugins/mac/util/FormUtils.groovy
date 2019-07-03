@@ -6,7 +6,6 @@ import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fr
 import static fr.jenkins.plugins.mac.util.Constants.WHOAMI
 
 import org.antlr.v4.runtime.misc.NotNull
-import org.apache.commons.io.IOUtils
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
@@ -19,7 +18,6 @@ import com.trilead.ssh2.Session
 import fr.jenkins.plugins.mac.Messages
 import fr.jenkins.plugins.mac.connection.SshClientFactory
 import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
-import groovy.util.logging.Slf4j
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -95,18 +93,17 @@ class FormUtils {
     static FormValidation verifyCredential(final String host, final Integer port,
             final String credentialsId, final Integer connectionTimeout,
             final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
-        Session session = null
+        Connection connection = null
         try {
-            Connection connection = SshClientFactory.getSshClient(
+            connection = SshClientFactory.getSshClient(
                     new SshClientFactoryConfiguration(credentialsId: credentialsId, port: port,
                     context: context, host: host, connectionTimeout: connectionTimeout,
                     readTimeout: readTimeout, kexTimeout: kexTimeout))
-            session = connection.openSession()
-            String result = SshUtils.executeCommand(session, WHOAMI)
-            session.close()
+            String result = SshUtils.executeCommand(connection, false,  WHOAMI)
+            connection.close()
             return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {
-            if(null != session) session.close()
+            if(null != connection) connection.close()
             return FormValidation.error(Messages._Host_ConnectionFailed(e.getMessage()).toString())
         }
     }

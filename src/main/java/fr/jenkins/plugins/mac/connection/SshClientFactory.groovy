@@ -38,24 +38,46 @@ class SshClientFactory {
         return getClient(credentials, host, port, connectionTimeout, readTimeout, kexTimeout)
     }
 
-    /**
-     * Return the ssh client to the Mac
-     * @param credentials
-     * @param host
-     * @param port
-     * @return Shell
-     */
-    @Restricted(NoExternalUse)
-    private static Connection getClient(final StandardCredentials credentials, final String host, final Integer port,
-            final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
-        Session sess = null;
-        String adr = InetAddress.getByName(host).toString().split("/")[1]
-        Connection conn = new Connection(adr)
-        if(credentials instanceof StandardUsernamePasswordCredentials) {
-            StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
-            conn.connect(null, connectionTimeout.intValue(), readTimeout.intValue(), kexTimeout.intValue())
-            conn.authenticateWithPassword(usernamePasswordCredentials.getUsername(), usernamePasswordCredentials.getPassword().getPlainText())
+        /**
+         * Return the ssh client to the Mac
+         * @param credentials
+         * @param host
+         * @param port
+         * @return Shell
+         */
+        @Restricted(NoExternalUse)
+        private static Connection getClient(final StandardCredentials credentials, final String host, final Integer port,
+                final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
+            Session sess = null;
+            String adr = InetAddress.getByName(host).toString().split("/")[1]
+            Connection conn = new Connection(adr)
+            if(credentials instanceof StandardUsernamePasswordCredentials) {
+                StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
+                conn.connect(null, connectionTimeout.intValue(), readTimeout.intValue(), kexTimeout.intValue())
+                conn.authenticateWithPassword(usernamePasswordCredentials.getUsername(), usernamePasswordCredentials.getPassword().getPlainText())
+                }
+            return conn
         }
-        return conn
-    }
+
+//    /**
+//     * Return the ssh client to the Mac
+//     * @param credentials
+//     * @param host
+//     * @param port
+//     * @return Shell
+//     */
+//    @Restricted(NoExternalUse)
+//    private static Session getClient(final StandardCredentials credentials, final String host, final Integer port,
+//            final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
+//        Session session = null
+//        JSch jsch = new JSch();
+//        String adr = InetAddress.getByName(host).toString().split("/")[1]
+//        if(credentials instanceof StandardUsernamePasswordCredentials) {
+//            StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
+//            session = jsch.getSession(usernamePasswordCredentials.getUsername(), adr, port)
+//            session.setTimeout(connectionTimeout.intValue())
+//            session.setPassword(usernamePasswordCredentials.getPassword().getPlainText())
+//        }
+//        return session
+//    }
 }

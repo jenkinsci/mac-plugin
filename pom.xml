@@ -88,6 +88,12 @@
             <artifactId>trilead-ssh2</artifactId>
             <version>build-217-jenkins-16</version>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
