@@ -43,7 +43,7 @@ class SshUtils {
             String out = convertInputStream(session.getStdout())
             String err = convertInputStream(session.getStderr())
             log.info(out)
-            log.info(err)
+            log.error(err)
             if(!ignoreError && null != session.exitStatus && session.exitStatus.intValue() != 0) {
                 String error = StringUtils.isNotEmpty(err) ? err : String.format("Failed to execute command %s", command)
                 log.error(error)

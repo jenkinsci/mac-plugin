@@ -45,8 +45,8 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.17</version>
+            <artifactId>groovy</artifactId>
+            <version>2.5.7</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>
@@ -84,16 +84,15 @@
             <version>1.7.26</version>
         </dependency>
         <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>ssh-slaves</artifactId>
+            <version>1.30.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.jenkins-ci</groupId>
             <artifactId>trilead-ssh2</artifactId>
             <version>build-217-jenkins-16</version>
         </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
@@ -111,12 +110,6 @@
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-basic-steps</artifactId>
             <version>2.18</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-api</artifactId>
-            <version>2.34</version>
             <scope>test</scope>
         </dependency>
         <dependency>

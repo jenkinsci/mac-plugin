@@ -4,14 +4,17 @@ import org.jenkinsci.Symbol
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 
-import com.thoughtworks.xstream.InitializationException
+import com.cloudbees.plugins.credentials.CredentialsScope
+import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 
+import fr.jenkins.plugins.mac.MacCloud
+import fr.jenkins.plugins.mac.MacUser
 import hudson.Extension
-import hudson.model.AbstractDescribableImpl
 import hudson.model.Descriptor
-import hudson.remoting.Channel
-import hudson.remoting.Which
-import jenkins.model.Jenkins
+import hudson.plugins.sshslaves.SSHLauncher
+import hudson.slaves.ComputerLauncher
 
 class MacComputerSSHConnector extends MacComputerConnector {
 
@@ -22,7 +25,7 @@ class MacComputerSSHConnector extends MacComputerConnector {
 
     @DataBoundConstructor
     MacComputerSSHConnector(String jvmOptions, String javaPath,
-        String prefixStartSlaveCmd, String suffixStartSlaveCmd) {
+    String prefixStartSlaveCmd, String suffixStartSlaveCmd) {
         this.jvmOptions = jvmOptions
         this.javaPath = javaPath
         this.prefixStartSlaveCmd = prefixStartSlaveCmd
@@ -70,6 +73,31 @@ class MacComputerSSHConnector extends MacComputerConnector {
         @Override
         public String getDisplayName() {
             return "Connect with SSH";
+        }
+    }
+
+    @Override
+    protected ComputerLauncher createLauncher(MacCloud cloud, MacUser user) throws IOException, InterruptedException {
+        return new MacSSHLauncher(cloud.macHost.host, cloud.macHost.port, user.username, user.password.plainText, jvmOptions, javaPath, prefixStartSlaveCmd, suffixStartSlaveCmd, cloud.macHost.readTimeout, 5, 3000)
+    }
+
+    private static class MacSSHLauncher extends SSHLauncher {
+        private String user
+        private String password
+
+        public MacSSHLauncher(String host, int port, String user, String password, String jvmOptions,
+        String javaPath, String prefixStartSlaveCmd, String suffixStartSlaveCmd, Integer launchTimeoutSeconds,
+        Integer maxNumRetries, Integer retryWaitTime) {
+            super(host, port, user, jvmOptions, javaPath, prefixStartSlaveCmd,
+            suffixStartSlaveCmd, launchTimeoutSeconds, maxNumRetries, retryWaitTime, null)
+            this.user = user
+            this.password = password
+        }
+
+        @Override
+        public StandardUsernameCredentials getCredentials() {
+            return new UsernamePasswordCredentialsImpl(CredentialsScope.SYSTEM, user,
+                    "private credentials for mac ssh agent", user, password)
         }
     }
 }

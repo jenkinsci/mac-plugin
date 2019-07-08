@@ -10,5 +10,9 @@ f.entry(title: Messages.Cloud_Name(), field:'name') {
 
 f.property(field:'macHost')
 
-f.dropdownDescriptorSelector(title:'Connect method', field:'connector')
-
+f.section(title:Messages.Cloud_AgentsProperties()) {
+    f.entry(title:Messages.Cloud_Labels(), field:'labels') {
+        f.textbox()
+    }
+    f.dropdownDescriptorSelector(title:'Connect method', field:'connector')
+}

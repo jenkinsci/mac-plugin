@@ -8,7 +8,9 @@ import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 import fr.jenkins.plugins.mac.MacCloud
 import fr.jenkins.plugins.mac.MacHost
+import fr.jenkins.plugins.mac.MacProvisionService
 import fr.jenkins.plugins.mac.MacTransientNode
+import fr.jenkins.plugins.mac.MacUser
 import fr.jenkins.plugins.mac.connection.SshClientFactory
 import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
 import fr.jenkins.plugins.mac.util.Constants
@@ -60,11 +62,6 @@ class MacAgentBuilder extends Builder implements SimpleBuildStep {
     @Override
     public void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener)
     throws InterruptedException, IOException {
-        //temp datas
-        String username = "new_user"
-        String fullName = "NEW User"
-        String password = "password"
-        //
         Connection connection = null
         try {
             List<MacCloud> macClouds = Jenkins.get().clouds.findAll { cloud ->
@@ -76,10 +73,12 @@ class MacAgentBuilder extends Builder implements SimpleBuildStep {
             connection = SshClientFactory.getSshClient(new SshClientFactoryConfiguration(credentialsId: host.credentialsId, port: host.port,
                         context: run.getParent(), host: host.host, connectionTimeout: host.connectionTimeout,
                         readTimeout: host.readTimeout, kexTimeout: host.kexTimeout))
-            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.CREATE_USER, username, fullName, password)))
-            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl, username)))
-            MacTransientNode node = new MacTransientNode(cloud.name, username, String.format(Constants.WORKDIR,username), connection)
+            MacUser user = MacProvisionService.getInstance().generateUser()
+            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
+            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl, user.username)))
+            MacProvisionService.getInstance().provisionAgent(cloud, user)
 //            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl, Constants.REMOTING_JAR_FILENAME)))
+            
             connection.close()
         }catch (Exception e) {
             log.error(e.getMessage(), e)

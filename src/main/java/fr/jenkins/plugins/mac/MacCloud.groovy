@@ -10,18 +10,21 @@ import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
 import hudson.slaves.Cloud
+import hudson.slaves.ComputerLauncher
 import hudson.slaves.NodeProvisioner.PlannedNode
 
 class MacCloud extends Cloud {
 
     MacHost macHost
     MacComputerConnector connector
+    String labels
 
     @DataBoundConstructor
-    MacCloud(String name, MacHost macHost, MacComputerConnector connector) {
+    MacCloud(String name, MacHost macHost, MacComputerConnector connector, String labels) {
         super(name)
         this.macHost = macHost
         this.connector = connector
+        this.labels = labels
     }
 
     public MacHost getMacHost() {
@@ -34,8 +37,13 @@ class MacCloud extends Cloud {
 
     @Override
     public Collection<PlannedNode> provision(Label label, int excessWorkload) {
-        // TODO Auto-generated method stub
-        return null;
+//        ComputerLauncher launcher = connector.createLauncher(this, user)
+//        MacTransientNode node = new MacTransientNode(cloud.name, user, launcher)
+//        if(!connectionMap.containsKey(cloud.name)) {
+//            connectionMap.put(cloud.name, new ArrayList())
+//        }
+//        connectionMap.get(cloud.name).add(node.name)
+//        Jenkins.get().addNode(node)
     }
 
     @Override
