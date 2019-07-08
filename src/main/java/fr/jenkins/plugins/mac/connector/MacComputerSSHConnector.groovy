@@ -32,46 +32,46 @@ class MacComputerSSHConnector extends MacComputerConnector {
         this.suffixStartSlaveCmd = suffixStartSlaveCmd
     }
 
-    public String getJvmOptions() {
+    String getJvmOptions() {
         return jvmOptions;
     }
 
     @DataBoundSetter
-    public void setJvmOptions(String jvmOptions) {
+    void setJvmOptions(String jvmOptions) {
         this.jvmOptions = jvmOptions;
     }
 
-    public String getJavaPath() {
+    String getJavaPath() {
         return javaPath;
     }
 
     @DataBoundSetter
-    public void setJavaPath(String javaPath) {
+    void setJavaPath(String javaPath) {
         this.javaPath = javaPath;
     }
 
-    public String getPrefixStartSlaveCmd() {
+    String getPrefixStartSlaveCmd() {
         return prefixStartSlaveCmd;
     }
 
     @DataBoundSetter
-    public void setPrefixStartSlaveCmd(String prefixStartSlaveCmd) {
+    void setPrefixStartSlaveCmd(String prefixStartSlaveCmd) {
         this.prefixStartSlaveCmd = prefixStartSlaveCmd;
     }
 
-    public String getSuffixStartSlaveCmd() {
+    String getSuffixStartSlaveCmd() {
         return suffixStartSlaveCmd;
     }
 
     @DataBoundSetter
-    public void setSuffixStartSlaveCmd(String suffixStartSlaveCmd) {
+    void setSuffixStartSlaveCmd(String suffixStartSlaveCmd) {
         this.suffixStartSlaveCmd = suffixStartSlaveCmd;
     }
 
     @Extension @Symbol("ssh")
-    public static final class DescriptorImpl extends Descriptor<MacComputerConnector> {
+    static final class DescriptorImpl extends Descriptor<MacComputerConnector> {
         @Override
-        public String getDisplayName() {
+        String getDisplayName() {
             return "Connect with SSH";
         }
     }
@@ -82,10 +82,10 @@ class MacComputerSSHConnector extends MacComputerConnector {
     }
 
     private static class MacSSHLauncher extends SSHLauncher {
-        private String user
-        private String password
+        String user
+        String password
 
-        public MacSSHLauncher(String host, int port, String user, String password, String jvmOptions,
+        MacSSHLauncher(String host, int port, String user, String password, String jvmOptions,
         String javaPath, String prefixStartSlaveCmd, String suffixStartSlaveCmd, Integer launchTimeoutSeconds,
         Integer maxNumRetries, Integer retryWaitTime) {
             super(host, port, user, jvmOptions, javaPath, prefixStartSlaveCmd,
@@ -95,7 +95,7 @@ class MacComputerSSHConnector extends MacComputerConnector {
         }
 
         @Override
-        public StandardUsernameCredentials getCredentials() {
+        StandardUsernameCredentials getCredentials() {
             return new UsernamePasswordCredentialsImpl(CredentialsScope.SYSTEM, user,
                     "private credentials for mac ssh agent", user, password)
         }

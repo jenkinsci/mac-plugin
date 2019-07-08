@@ -60,7 +60,7 @@ class MacAgentBuilder extends Builder implements SimpleBuildStep {
      * Launch Agent with JNLP
      */
     @Override
-    public void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener)
+    void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener)
     throws InterruptedException, IOException {
         Connection connection = null
         try {
@@ -88,14 +88,14 @@ class MacAgentBuilder extends Builder implements SimpleBuildStep {
     }
 
     @Extension
-    public static class DescriptorImpl extends BuildStepDescriptor<Builder> {
+    static class DescriptorImpl extends BuildStepDescriptor<Builder> {
         @Override
-        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+        boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true
         }
 
         @Override
-        public String getDisplayName() {
+        String getDisplayName() {
             return "Start Mac agents"
         }
     }

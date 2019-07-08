@@ -20,7 +20,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class SshUtils {
     
-    private final static String UTF8 = "UTF-8"
+    final static String UTF8 = "UTF-8"
     
     /**
      * Execute a command on the given session

@@ -7,8 +7,10 @@ import org.kohsuke.stapler.DataBoundConstructor
 
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
 import hudson.Extension
+import hudson.Util
 import hudson.model.Descriptor
 import hudson.model.Label
+import hudson.model.labels.LabelAtom
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.NodeProvisioner.PlannedNode
@@ -17,18 +19,28 @@ class MacCloud extends Cloud {
 
     MacHost macHost
     MacComputerConnector connector
-    String labels
+    String labelString
+    transient Set<LabelAtom> labelSet;
 
     @DataBoundConstructor
-    MacCloud(String name, MacHost macHost, MacComputerConnector connector, String labels) {
+    MacCloud(String name, MacHost macHost, MacComputerConnector connector, String labelString) {
         super(name)
         this.macHost = macHost
         this.connector = connector
-        this.labels = labels
+        this.labelString = Util.fixNull(labelString);
+        labelSet = Label.parse(labelString);
     }
 
-    public MacHost getMacHost() {
+    MacHost getMacHost() {
         return macHost;
+    }
+
+    Set<LabelAtom> getLabelSet() {
+        return labelSet;
+    }
+
+    void setLabelSet(Set<LabelAtom> labelSet) {
+        this.labelSet = labelSet;
     }
 
     static @Nullable getMacClouds() {
@@ -36,7 +48,7 @@ class MacCloud extends Cloud {
     }
 
     @Override
-    public Collection<PlannedNode> provision(Label label, int excessWorkload) {
+    Collection<PlannedNode> provision(Label label, int excessWorkload) {
 //        ComputerLauncher launcher = connector.createLauncher(this, user)
 //        MacTransientNode node = new MacTransientNode(cloud.name, user, launcher)
 //        if(!connectionMap.containsKey(cloud.name)) {
@@ -47,7 +59,7 @@ class MacCloud extends Cloud {
     }
 
     @Override
-    public boolean canProvision(Label label) {
+    boolean canProvision(Label label) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -56,7 +68,7 @@ class MacCloud extends Cloud {
     static class DescriptorImpl extends Descriptor<Cloud> {
 
         @Override
-        public String getDisplayName() {
+        String getDisplayName() {
             return Messages.Cloud_DisplayName()
         }
     }

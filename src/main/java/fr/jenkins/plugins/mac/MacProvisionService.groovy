@@ -15,14 +15,14 @@ class MacProvisionService {
 
     Map<String, List> connectionMap = new HashMap()
 
-    public MacUser generateUser() {
+    MacUser generateUser() {
         String password = RandomStringUtils.random(10, true, true);
         String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(5, true, true).toLowerCase())
         String workdir = String.format("/Users/%s/", username)
         return new MacUser(username:username, password:Secret.fromString(password), workdir:workdir)
     }
 
-    public void provisionAgent(MacCloud cloud, MacUser user) {
+    void provisionAgent(MacCloud cloud, MacUser user) {
         ComputerLauncher launcher = cloud.connector.createLauncher(cloud, user)
         MacTransientNode node = new MacTransientNode(cloud.name, cloud.labels, user, launcher)
         if(!connectionMap.containsKey(cloud.name)) {

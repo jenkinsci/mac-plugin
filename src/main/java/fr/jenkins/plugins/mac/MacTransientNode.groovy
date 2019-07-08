@@ -25,12 +25,12 @@ class MacTransientNode extends Slave {
     }
     
     @Override
-    public boolean isAcceptingTasks() {
+    boolean isAcceptingTasks() {
         return acceptingTasks == null || acceptingTasks.get();
     }
     
     @Override
-    public String getDisplayName() {
+    String getDisplayName() {
         if (cloudId != null) {
             return getNodeName() + " on " + cloudId;
         }
@@ -38,20 +38,20 @@ class MacTransientNode extends Slave {
     }
 
     @Override
-    public MacComputer createComputer() {
+    MacComputer createComputer() {
         return new MacComputer(this)
     }
     
     @Extension
-    public static final class MacTransientNodeDescriptor extends SlaveDescriptor {
+    static final class MacTransientNodeDescriptor extends SlaveDescriptor {
 
         @Override
-        public String getDisplayName() {
+        String getDisplayName() {
             return "Mac Agent";
         }
 
         @Override
-        public boolean isInstantiable() {
+        boolean isInstantiable() {
             return false;
         }
     }

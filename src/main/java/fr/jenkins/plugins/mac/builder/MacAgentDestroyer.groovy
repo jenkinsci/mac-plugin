@@ -29,7 +29,7 @@ class MacAgentDestroyer extends Recorder {
     }
     
     @Override
-    public DescriptorImpl getDescriptor() {
+    DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
     }
 
@@ -39,7 +39,7 @@ class MacAgentDestroyer extends Recorder {
      * Clear temps files created for the builds
      */
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         Connection connection = null
         Session session = null
         try {
