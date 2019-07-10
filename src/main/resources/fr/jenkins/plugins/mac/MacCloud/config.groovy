@@ -11,7 +11,7 @@ f.entry(title: Messages.Cloud_Name(), field:'name') {
 f.property(field:'macHost')
 
 f.section(title:Messages.Cloud_AgentsProperties()) {
-    f.entry(title:Messages.Cloud_Labels(), field:'labels') {
+    f.entry(title:Messages.Cloud_Labels(), field:'labelString') {
         f.textbox()
     }
     f.dropdownDescriptorSelector(title:'Connect method', field:'connector')

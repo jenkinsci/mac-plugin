@@ -78,20 +78,22 @@ class MacComputerSSHConnector extends MacComputerConnector {
 
     @Override
     protected ComputerLauncher createLauncher(MacCloud cloud, MacUser user) throws IOException, InterruptedException {
-        return new MacSSHLauncher(cloud.macHost.host, cloud.macHost.port, user.username, user.password.plainText, jvmOptions, javaPath, prefixStartSlaveCmd, suffixStartSlaveCmd, cloud.macHost.readTimeout, 5, 3000)
+        return new MacSSHLauncher(cloud.macHost.host, cloud.macHost.port, user, jvmOptions, javaPath, prefixStartSlaveCmd, suffixStartSlaveCmd, cloud.macHost.readTimeout, 5, 3000)
     }
 
     private static class MacSSHLauncher extends SSHLauncher {
         String user
         String password
 
-        MacSSHLauncher(String host, int port, String user, String password, String jvmOptions,
+        MacSSHLauncher(String host, int port, MacUser user, String jvmOptions,
         String javaPath, String prefixStartSlaveCmd, String suffixStartSlaveCmd, Integer launchTimeoutSeconds,
         Integer maxNumRetries, Integer retryWaitTime) {
-            super(host, port, user, jvmOptions, javaPath, prefixStartSlaveCmd,
+            super(host, port, user.getUsername(), jvmOptions, javaPath, prefixStartSlaveCmd,
             suffixStartSlaveCmd, launchTimeoutSeconds, maxNumRetries, retryWaitTime, null)
-            this.user = user
-            this.password = password
+//            super(host, port, user)
+            this.workDir = user.getWorkdir()
+            this.user = user.getUsername()
+            this.password = user.getPassword()
         }
 
         @Override

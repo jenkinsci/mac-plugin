@@ -2,12 +2,23 @@ package fr.jenkins.plugins.mac
 
 import java.util.concurrent.atomic.AtomicBoolean
 
+import org.kohsuke.accmod.Restricted
+import org.kohsuke.accmod.restrictions.NoExternalUse
+
+
+import fr.jenkins.plugins.mac.cause.MacOfflineCause
+import fr.jenkins.plugins.mac.strategy.MacRetentionStrategy
 import groovy.util.logging.Slf4j
 import hudson.Extension
+import hudson.model.Computer
 import hudson.model.Slave
+import hudson.model.TaskListener
 import hudson.model.Node.Mode
 import hudson.model.Slave.SlaveDescriptor
+import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
+import hudson.slaves.RetentionStrategy
+import jenkins.model.Jenkins
 
 @Slf4j
 class MacTransientNode extends Slave {
@@ -21,7 +32,9 @@ class MacTransientNode extends Slave {
         setNumExecutors(1)
         setMode(Mode.EXCLUSIVE)
         setLabelString(labels)
-//        setRetentionStrategy(new DockerOnceRetentionStrategy(10));
+        setNodeProperties(Collections.EMPTY_LIST)
+        setNodeDescription("Agent Mac for the user " + user.username)
+        setRetentionStrategy(new MacRetentionStrategy(10L))
     }
     
     @Override
@@ -40,6 +53,44 @@ class MacTransientNode extends Slave {
     @Override
     MacComputer createComputer() {
         return new MacComputer(this)
+    }
+
+    @Restricted(NoExternalUse)
+    void terminate(final TaskListener listener) {
+        try {
+            final Computer computer = toComputer();
+            if (computer != null) {
+                computer.disconnect(new MacOfflineCause());
+                log.info("Disconnected computer for node '" + name + "'.");
+            }
+        } catch (Exception ex) {
+            log.error("Can't disconnect computer for node '" + name + "' due to exception:", ex);
+        }
+        Computer.threadPoolForRemoting.submit({ ->
+            synchronized(this) {}
+        });
+
+        try {
+            Jenkins.get().removeNode(this);
+            log.info("Removed Node for node '" + name + "'.");
+        } catch (IOException ex) {
+            log.info("Failed to remove Node for node '" + name + "' due to exception:", ex);
+        }
+    }
+    
+    public MacCloud getCloud() {
+        if (cloudId == null) return null;
+        final Cloud cloud = Jenkins.get().getCloud(cloudId);
+
+        if (cloud == null) {
+            throw new RuntimeException("Failed to retrieve Cloud " + cloudId);
+        }
+
+        if (!(cloud instanceof MacCloud)) {
+            throw new RuntimeException(cloudId + " is not a MacCloud, it's a " + cloud.getClass().toString());
+        }
+
+        return (MacCloud) cloud;
     }
     
     @Extension

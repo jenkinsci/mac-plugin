@@ -24,7 +24,7 @@ class MacProvisionService {
 
     void provisionAgent(MacCloud cloud, MacUser user) {
         ComputerLauncher launcher = cloud.connector.createLauncher(cloud, user)
-        MacTransientNode node = new MacTransientNode(cloud.name, cloud.labels, user, launcher)
+        MacTransientNode node = new MacTransientNode(cloud.name, cloud.labelString, user, launcher)
         if(!connectionMap.containsKey(cloud.name)) {
             connectionMap.put(cloud.name, new ArrayList())
         }
