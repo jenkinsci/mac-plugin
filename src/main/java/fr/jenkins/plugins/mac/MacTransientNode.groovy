@@ -29,6 +29,7 @@ class MacTransientNode extends Slave {
     MacTransientNode(String cloudId, String labels, MacUser user, ComputerLauncher launcher) {
         super(user.username, user.workdir, launcher)
         this.cloudId = cloudId
+        setUserId(user.username)
         setNumExecutors(1)
         setMode(Mode.EXCLUSIVE)
         setLabelString(labels)

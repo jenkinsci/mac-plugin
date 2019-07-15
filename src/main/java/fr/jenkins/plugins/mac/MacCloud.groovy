@@ -71,15 +71,14 @@ class MacCloud extends Cloud {
         Connection connection = null
         MacCloud cloud = this
         try {
-            String remotingUrl = /*Jenkins.get().getRootUrl()*/ "http://10.31.195.86:8080/jenkins/" + Constants.REMOTING_JAR_PATH
+            String jenkinsUrl = /*Jenkins.get().getRootUrl()*/ "http://10.31.195.86:8080/jenkins/"
+            String remotingUrl = jenkinsUrl + Constants.REMOTING_JAR_PATH
             connection = SshClientFactory.getSshClient(new SshClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
                         context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
                         readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             MacUser user = MacProvisionService.getInstance().generateUser()
             log.info(SshUtils.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
-            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl, user.username)))
-//            MacProvisionService.getInstance().provisionAgent(this, user)
-//            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl, Constants.REMOTING_JAR_FILENAME)))
+            connection.close()
             final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
             r.add(new PlannedNode(user.username, plannedNode, macHost.maxUsers))
             final Runnable taskToCreateNewSlave = new Runnable() {
@@ -103,6 +102,11 @@ class MacCloud extends Cloud {
                 }
             };
             Computer.threadPoolForRemoting.submit(taskToCreateNewSlave);
+            connection.close()
+            connection = SshClientFactory.getUserConnection(user.username, user.password, macHost.host,
+                macHost.port, macHost.connectionTimeout, macHost.readTimeout, macHost.kexTimeout)
+            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
+            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, user.username)))
             connection.close()
             return r
         }catch (Exception e) {

@@ -14,6 +14,7 @@ import fr.jenkins.plugins.mac.MacUser
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.plugins.sshslaves.SSHLauncher
+import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 import hudson.slaves.ComputerLauncher
 
 class MacComputerSSHConnector extends MacComputerConnector {
@@ -89,7 +90,7 @@ class MacComputerSSHConnector extends MacComputerConnector {
         String javaPath, String prefixStartSlaveCmd, String suffixStartSlaveCmd, Integer launchTimeoutSeconds,
         Integer maxNumRetries, Integer retryWaitTime) {
             super(host, port, user.getUsername(), jvmOptions, javaPath, prefixStartSlaveCmd,
-            suffixStartSlaveCmd, launchTimeoutSeconds, maxNumRetries, retryWaitTime, null)
+            suffixStartSlaveCmd, launchTimeoutSeconds, maxNumRetries, retryWaitTime, new NonVerifyingKeyVerificationStrategy())
 //            super(host, port, user)
             this.workDir = user.getWorkdir()
             this.user = user.getUsername()

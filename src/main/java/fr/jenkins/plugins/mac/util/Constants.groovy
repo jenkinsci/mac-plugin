@@ -9,7 +9,7 @@ package fr.jenkins.plugins.mac.util
 class Constants {
     //Path of remoting.jar
     /** jnlpJars/remoting.jar */
-    public static final String REMOTING_JAR_PATH = "jnlpJars/remoting.jar"
+    public static final String REMOTING_JAR_PATH = "jnlpJars/slave.jar"
     // Forms
     /** "-----------" */
     public static final String EMPTY_LIST_BOX_NAME = "-----------"
@@ -34,6 +34,9 @@ class Constants {
     public static final String HOME_DIRECTORY = "cd ~"
     /** "sudo sysadminctl -deleteUser %s" */
     public static final String DELETE_USER = "sudo sysadminctl -deleteUser %s"
-    /** "sudo curl %s -o /Users/%s/remoting.jar" */
-    public static final String GET_REMOTING_JAR = "sudo curl %s -o /Users/%s/remoting.jar"
+    /** "sudo curl %s -o /Users/%s/slave.jar" */
+    public static final String GET_REMOTING_JAR = "curl %s -o ~/slave.jar"
+    //TODO : A variabiliser
+//    public static final String LAUNCH_JNLP = 'java -jar agent.jar -jnlpUrl http://10.31.195.86:8080/jenkins/computer/jenkins_1a2so/slave-agent.jnlp -workDir "/Users/jenkins_1a2so/"'
+    public static final String LAUNCH_JNLP = 'java -jar slave.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -workDir "/Users/%s/"'
 }
