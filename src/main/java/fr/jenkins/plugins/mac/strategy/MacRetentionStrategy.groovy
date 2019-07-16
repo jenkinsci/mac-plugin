@@ -3,7 +3,6 @@ package fr.jenkins.plugins.mac.strategy
 import static java.util.concurrent.TimeUnit.MINUTES
 
 import java.util.logging.Level
-
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.QueryParameter
 
@@ -13,12 +12,15 @@ import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Computer
 import hudson.model.Descriptor
+import hudson.model.Executor
+import hudson.model.ExecutorListener
 import hudson.model.Queue
+import hudson.model.Queue.Task
 import hudson.slaves.RetentionStrategy
 import hudson.util.FormValidation
 
 @Slf4j
-class MacRetentionStrategy extends RetentionStrategy<MacComputer> {
+class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements ExecutorListener {
 
     static Long DEFAULT_IDLEMINUTES = 10
     private Long idleDelay = DEFAULT_IDLEMINUTES
@@ -53,5 +55,25 @@ class MacRetentionStrategy extends RetentionStrategy<MacComputer> {
                 }
             });
         });
+    }
+
+    @Override
+    public void taskAccepted(Executor executor, Task task) {
+        Thread.sleep(10000L)
+    }
+
+    @Override
+    public void taskCompleted(Executor executor, Task task, long duration) {
+        final MacComputer c = (MacComputer) executor.getOwner();
+        Queue.Executable exec = executor.getCurrentExecutable();
+        log.info("terminating {} since {} seems to be finished", c.getName(), exec);
+        done(c);
+    }
+
+    @Override
+    public void taskCompletedWithProblems(Executor executor, Task task, long duration, Throwable error) {
+        final MacComputer c = (MacComputer) executor.getOwner();
+        log.error(String.format("%s returned an error : %s", c.getName(), error.getMessage()), error)
+        taskCompleted(executor, task, duration);
     }
 }
