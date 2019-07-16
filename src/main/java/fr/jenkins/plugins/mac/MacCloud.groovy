@@ -102,7 +102,6 @@ class MacCloud extends Cloud {
                 }
             };
             Computer.threadPoolForRemoting.submit(taskToCreateNewSlave);
-            connection.close()
             connection = SshClientFactory.getUserConnection(user.username, user.password, macHost.host,
                 macHost.port, macHost.connectionTimeout, macHost.readTimeout, macHost.kexTimeout)
             log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
