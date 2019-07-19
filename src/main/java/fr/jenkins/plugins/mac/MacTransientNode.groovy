@@ -73,6 +73,7 @@ class MacTransientNode extends Slave {
 
         try {
             Jenkins.get().removeNode(this);
+            MacProvisionService.deleteUserOnMac(this.cloudId, this.name)
             log.info("Removed Node for node '" + name + "'.");
         } catch (IOException ex) {
             log.info("Failed to remove Node for node '" + name + "' due to exception:", ex);

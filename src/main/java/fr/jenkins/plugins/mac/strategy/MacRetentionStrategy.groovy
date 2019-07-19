@@ -59,7 +59,6 @@ class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements Exe
 
     @Override
     public void taskAccepted(Executor executor, Task task) {
-        Thread.sleep(10000L)
     }
 
     @Override

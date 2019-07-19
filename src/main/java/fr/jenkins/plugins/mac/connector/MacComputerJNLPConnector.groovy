@@ -45,7 +45,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     }
 
     @DataBoundSetter
-    public void setJenkinsUrl(String jenkinsUrl){ this.jenkinsUrl = jenkinsUrl }
+    public void setJenkinsUrl(String jenkinsUrl){
+         this.jenkinsUrl = jenkinsUrl 
+    }
 
     public JNLPLauncher getJnlpLauncher() {
         return jnlpLauncher
@@ -107,66 +109,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         }
     }
 
-    private EnvVars calculateVariablesForVariableSubstitution(final String nodeName, final String secret,
-            final String jnlpTunnel, final String jenkinsUrl) throws IOException, InterruptedException {
-        final EnvVars knownVariables = new EnvVars()
-        final Jenkins j = Jenkins.getInstance()
-        addEnvVars(knownVariables, j.getGlobalNodeProperties())
-        for (final ArgumentVariables v : ArgumentVariables.values()) {
-            // This switch statement MUST handle all possible
-            // values of v.
-            String argValue
-            switch (v) {
-                case ArgumentVariables.JenkinsUrl :
-                    argValue = jenkinsUrl
-                    break
-                case ArgumentVariables.TunnelArgument :
-                    argValue = StringUtils.isNotBlank(jnlpTunnel) ? "-tunnel" : ""
-                    break
-                case ArgumentVariables.TunnelValue :
-                    argValue = jnlpTunnel
-                    break
-                case ArgumentVariables.Secret :
-                    argValue = secret
-                    break
-                case ArgumentVariables.NodeName :
-                    argValue = nodeName
-                    break
-                default :
-                    final String msg = "Internal code error: Switch statement is missing \"case " + v.name()
-                            + " : argValue = ... ; break;\" code."
-                    // If this line throws an exception then it's because
-                    // someone has added a new variable to the enum without
-                    // adding code above to handle it.
-                    // The two have to be kept in step in order to
-                    // ensure that the help text stays in step.
-                    throw new RuntimeException(msg);
-            }
-            addEnvVar(knownVariables, v.getName(), argValue)
-        }
-        return knownVariables
-    }
-
-    private static void addEnvVars(final EnvVars vars, final Iterable<? extends NodeProperty<?>> nodeProperties)
-            throws IOException, InterruptedException {
-        if (nodeProperties != null) {
-            for (final NodeProperty<?> nodeProperty : nodeProperties) {
-                nodeProperty.buildEnvVars(vars, LOGGER_LISTENER)
-            }
-        }
-    }
-
-    private static void addEnvVar(final EnvVars vars, final String name, final Object valueOrNull) {
-        vars.put(name, valueOrNull == null ? "" : valueOrNull.toString())
-    }
-
     @Extension @Symbol("jnlp")
     public static final class DescriptorImpl extends Descriptor<MacComputerConnector> {
 
-        public Collection<ArgumentVariables> getEntryPointArgumentVariables() {
-            return Arrays.asList(ArgumentVariables.values());
-        }
-        
         @Override
         public String getDisplayName() {
             return "Connect with JNLP"

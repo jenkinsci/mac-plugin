@@ -38,5 +38,5 @@ class Constants {
     public static final String GET_REMOTING_JAR = "curl %s -o ~/remoting.jar"
     //TODO : A variabiliser
 //    public static final String LAUNCH_JNLP = 'java -jar agent.jar -jnlpUrl http://10.31.195.86:8080/jenkins/computer/jenkins_1a2so/slave-agent.jnlp -workDir "/Users/jenkins_1a2so/"'
-    public static final String LAUNCH_JNLP = 'java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -workDir "/Users/%s/"'
+    public static final String LAUNCH_JNLP = 'java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s'
 }

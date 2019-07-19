@@ -14,8 +14,10 @@ import com.trilead.ssh2.Connection
 import fr.jenkins.plugins.mac.connection.SshClientFactory
 import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
+import fr.jenkins.plugins.mac.connector.MacComputerJNLPConnector
 import fr.jenkins.plugins.mac.util.Constants
 import fr.jenkins.plugins.mac.util.SshUtils
+import groovy.transform.ThreadInterrupt
 import groovy.util.logging.Slf4j
 import hudson.AbortException
 import hudson.Extension
@@ -31,6 +33,7 @@ import hudson.slaves.ComputerLauncher
 import hudson.slaves.NodeProvisioner
 import hudson.slaves.NodeProvisioner.PlannedNode
 import jenkins.model.Jenkins
+import jenkins.slaves.JnlpSlaveAgentProtocol
 
 @Slf4j
 class MacCloud extends Cloud {
@@ -66,47 +69,33 @@ class MacCloud extends Cloud {
     }
 
     @Override
-    Collection<PlannedNode> provision(Label label, int excessWorkload) {
+    synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
         final List<PlannedNode> r = new ArrayList<>();
         Connection connection = null
         MacCloud cloud = this
         try {
-            String jenkinsUrl = /*Jenkins.get().getRootUrl()*/ "http://10.31.195.86:8080/jenkins/"
-            String remotingUrl = jenkinsUrl + Constants.REMOTING_JAR_PATH
-            connection = SshClientFactory.getSshClient(new SshClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
-                        context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
-                        readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
-            MacUser user = MacProvisionService.getInstance().generateUser()
-            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
-            connection.close()
+            MacUser user = MacProvisionService.createUserOnMac(macHost)
             final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
-            r.add(new PlannedNode(user.username, plannedNode, macHost.maxUsers))
-            final Runnable taskToCreateNewSlave = new Runnable() {
-                @Override
-                public void run() {
-                    MacTransientNode slave = null;
-                    try {
-                        ComputerLauncher launcher = cloud.connector.createLauncher(cloud, user)
-                        slave = new MacTransientNode(cloud.name, cloud.labelString, user, launcher)
-                        plannedNode.complete(slave)
+            r.add(new PlannedNode(user.username, plannedNode, excessWorkload))
+            MacTransientNode slave = null
+            try {
+                ComputerLauncher launcher = cloud.connector.createLauncher(cloud, user)
+                slave = new MacTransientNode(cloud.name, cloud.labelString, user, launcher)
+                JnlpSlaveAgentProtocol.SLAVE_SECRET.mac(slave.name)
+                plannedNode.complete(slave)
 
-                        // On provisioning completion, let's trigger NodeProvisioner
-                        Jenkins.get().addNode(slave)
+                Jenkins.get().addNode(slave)
 
-                    } catch (Exception ex) {
-                        log.error("Error in provisioning; user='{}' for cloud='{}'",
-                                user.username, getDisplayName(), ex)
-                        plannedNode.completeExceptionally(ex)
-                        throw Throwables.propagate(ex)
-                    }
-                }
-            };
-            Computer.threadPoolForRemoting.submit(taskToCreateNewSlave);
-            connection = SshClientFactory.getUserConnection(user.username, user.password, macHost.host,
-                macHost.port, macHost.connectionTimeout, macHost.readTimeout, macHost.kexTimeout)
-            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
-            log.info(SshUtils.executeCommand(connection, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, user.username)))
-            connection.close()
+            } catch (Exception ex) {
+                log.error("Error in provisioning; user='{}' for cloud='{}'",
+                        user.username, getDisplayName(), ex)
+                plannedNode.completeExceptionally(ex)
+                throw Throwables.propagate(ex)
+            }
+            if(connector instanceof MacComputerJNLPConnector) {
+                MacComputerJNLPConnector jnlpConnector = (MacComputerJNLPConnector) connector
+                MacProvisionService.jnlpConnect(macHost, user, connector, slave.getComputer().getJnlpMac())
+            }
             return r
         }catch (Exception e) {
             log.error(e.getMessage(), e)
