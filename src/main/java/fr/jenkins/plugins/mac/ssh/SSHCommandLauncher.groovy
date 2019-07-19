@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.util
+package fr.jenkins.plugins.mac.ssh
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.apache.commons.io.IOUtils
@@ -13,20 +13,21 @@ import com.trilead.ssh2.Session
 import groovy.util.logging.Slf4j
 
 /**
- * Utilities to run SSH command.
+ * Runner of SSH command.
  * @author Mathieu DELROCQ
  *
  */
 @Slf4j
-class SshUtils {
-    
+protected class SSHCommandLauncher {
+
     final static String UTF8 = "UTF-8"
-    
+
     /**
-     * Execute a command on the given session
-     * @param session
+     * Execute a command with the given connection
+     * @param conn
+     * @param ignoreError
      * @param command
-     * @return output of the command
+     * @return
      * @throws Exception if cannot execute the command or if the command return an error
      */
     @Restricted(NoExternalUse)
@@ -66,5 +67,4 @@ class SshUtils {
         IOUtils.copy(out, result, UTF8)
         return result.toString()
     }
-
 }

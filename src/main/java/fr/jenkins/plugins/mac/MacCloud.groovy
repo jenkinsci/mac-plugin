@@ -2,8 +2,6 @@ package fr.jenkins.plugins.mac
 
 import java.util.concurrent.CompletableFuture
 
-import javax.annotation.CheckForNull
-
 import org.antlr.v4.runtime.misc.Nullable
 import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.DataBoundConstructor
@@ -11,22 +9,15 @@ import org.kohsuke.stapler.DataBoundConstructor
 import com.google.common.base.Throwables
 import com.trilead.ssh2.Connection
 
-import fr.jenkins.plugins.mac.connection.SshClientFactory
-import fr.jenkins.plugins.mac.connection.SshClientFactoryConfiguration
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.jenkins.plugins.mac.connector.MacComputerJNLPConnector
-import fr.jenkins.plugins.mac.util.Constants
-import fr.jenkins.plugins.mac.util.SshUtils
-import groovy.transform.ThreadInterrupt
+import fr.jenkins.plugins.mac.slave.MacTransientNode
+import fr.jenkins.plugins.mac.ssh.SSHCommander
 import groovy.util.logging.Slf4j
-import hudson.AbortException
 import hudson.Extension
-import hudson.Util
-import hudson.model.Computer
 import hudson.model.Descriptor
 import hudson.model.Label
 import hudson.model.Node
-import hudson.model.TaskListener
 import hudson.model.labels.LabelAtom
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
@@ -74,7 +65,7 @@ class MacCloud extends Cloud {
         Connection connection = null
         MacCloud cloud = this
         try {
-            MacUser user = MacProvisionService.createUserOnMac(macHost)
+            MacUser user = SSHCommander.createUserOnMac(macHost)
             final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
             r.add(new PlannedNode(user.username, plannedNode, excessWorkload))
             MacTransientNode slave = null
@@ -85,7 +76,6 @@ class MacCloud extends Cloud {
                 plannedNode.complete(slave)
 
                 Jenkins.get().addNode(slave)
-
             } catch (Exception ex) {
                 log.error("Error in provisioning; user='{}' for cloud='{}'",
                         user.username, getDisplayName(), ex)
@@ -94,7 +84,7 @@ class MacCloud extends Cloud {
             }
             if(connector instanceof MacComputerJNLPConnector) {
                 MacComputerJNLPConnector jnlpConnector = (MacComputerJNLPConnector) connector
-                MacProvisionService.jnlpConnect(macHost, user, connector, slave.getComputer().getJnlpMac())
+                SSHCommander.jnlpConnect(macHost, user, connector, slave.getComputer().getJnlpMac())
             }
             return r
         }catch (Exception e) {

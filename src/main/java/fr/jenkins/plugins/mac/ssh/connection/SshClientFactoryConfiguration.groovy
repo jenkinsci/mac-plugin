@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.connection
+package fr.jenkins.plugins.mac.ssh.connection
 
 import hudson.model.ModelObject
 

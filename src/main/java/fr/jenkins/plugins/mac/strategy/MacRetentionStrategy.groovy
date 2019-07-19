@@ -6,8 +6,8 @@ import java.util.logging.Level
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.QueryParameter
 
-import fr.jenkins.plugins.mac.MacComputer
-import fr.jenkins.plugins.mac.MacTransientNode
+import fr.jenkins.plugins.mac.slave.MacComputer
+import fr.jenkins.plugins.mac.slave.MacTransientNode
 import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Computer

@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac
+package fr.jenkins.plugins.mac.slave
 
 import javax.annotation.CheckForNull
 
@@ -7,6 +7,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import com.google.common.base.Objects
 
+import fr.jenkins.plugins.mac.MacCloud
 import groovy.util.logging.Slf4j
 import hudson.EnvVars
 import hudson.slaves.SlaveComputer
