@@ -59,7 +59,7 @@ class SSHCommander {
     }
 
     /**
-     * delete the given user in parameter
+     * Delete the given user in parameter
      * @param cloudId
      * @param username
      * @return true if user is deleted, false if an error occured
@@ -82,7 +82,7 @@ class SSHCommander {
     }
 
     /**
-     * 
+     * Get the slave.jar on Jnekins and connect the slave to JNLP
      * @param macHost
      * @param user
      * @param jnlpConnector

@@ -45,67 +45,39 @@ class MacHost implements Describable<MacHost> {
         this.kexTimeout = kexTimeout
     }
 
-    String getHost() {
-        return host;
-    }
-
     @DataBoundSetter
     void setHost(String host) {
-        this.host = host;
-    }
-
-    String getCredentialsId() {
-        return credentialsId;
+        this.host = host
     }
 
     @DataBoundSetter
     void setCredentialsId(String credentialsId) {
-        this.credentialsId = credentialsId;
-    }
-
-    Integer getPort() {
-        return port;
+        this.credentialsId = credentialsId
     }
 
     @DataBoundSetter
     void setPort(Integer port) {
-        this.port = port;
-    }
-
-    Integer getMaxUsers() {
-        return maxUsers;
+        this.port = port
     }
 
     @DataBoundSetter
     void setMaxUsers(Integer maxUsers) {
-        this.maxUsers = maxUsers;
-    }
-
-    Integer getConnectionTimeout() {
-        return connectionTimeout;
+        this.maxUsers = maxUsers
     }
 
     @DataBoundSetter
     void setConnectionTimeout(Integer connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
-    }
-
-    Integer getReadTimeout() {
-        return readTimeout;
+        this.connectionTimeout = connectionTimeout
     }
 
     @DataBoundSetter
     void setReadTimeout(Integer readTimeout) {
-        this.readTimeout = readTimeout;
-    }
-
-    Integer getKexTimeout() {
-        return kexTimeout;
+        this.readTimeout = readTimeout
     }
 
     @DataBoundSetter
     void setKexTimeout(Integer kexTimeout) {
-        this.kexTimeout = kexTimeout;
+        this.kexTimeout = kexTimeout
     }
 
     @Override

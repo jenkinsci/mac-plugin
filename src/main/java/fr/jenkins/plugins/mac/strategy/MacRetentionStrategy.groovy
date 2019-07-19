@@ -34,8 +34,8 @@ class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements Exe
         if(c.isIdle()) {
             final long idleMilliseconds = System.currentTimeMillis() - c.getIdleStartMilliseconds();
             if (idleMilliseconds > MINUTES.toMillis(getIdleDelay())) {
-                log.info("Disconnecting {}", c.getName());
-                done(c);
+                log.info("Disconnecting {}", c.getName())
+                done(c)
             }
         }
         return 1;
@@ -49,9 +49,9 @@ class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements Exe
         c.setAcceptingTasks(false); // just in case
         Computer.threadPoolForRemoting.submit({ ->
             Queue.withLock({ ->
-                MacTransientNode node = c.getNode();
+                MacTransientNode node = c.getNode()
                 if (node != null) {
-                    node.terminate(c.getListener());
+                    node.terminate(c.getListener())
                 }
             });
         });
@@ -59,20 +59,21 @@ class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements Exe
 
     @Override
     public void taskAccepted(Executor executor, Task task) {
+        Thread.sleep(5000L)
     }
 
     @Override
     public void taskCompleted(Executor executor, Task task, long duration) {
-        final MacComputer c = (MacComputer) executor.getOwner();
-        Queue.Executable exec = executor.getCurrentExecutable();
-        log.info("terminating {} since {} seems to be finished", c.getName(), exec);
-        done(c);
+        final MacComputer c = (MacComputer) executor.getOwner()
+        Queue.Executable exec = executor.getCurrentExecutable()
+        log.info("terminating {} since {} seems to be finished", c.getName(), exec)
+        done(c)
     }
 
     @Override
     public void taskCompletedWithProblems(Executor executor, Task task, long duration, Throwable error) {
-        final MacComputer c = (MacComputer) executor.getOwner();
+        final MacComputer c = (MacComputer) executor.getOwner()
         log.error(String.format("%s returned an error : %s", c.getName(), error.getMessage()), error)
-        taskCompleted(executor, task, duration);
+        taskCompleted(executor, task, duration)
     }
 }

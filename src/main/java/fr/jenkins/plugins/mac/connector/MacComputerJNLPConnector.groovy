@@ -33,80 +33,15 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     private static final TaskListener LOGGER_LISTENER = new LogTaskListener(log, Level.FINER)
     private final JNLPLauncher jnlpLauncher
     private String jenkinsUrl
-    private String[] entryPointArguments
 
     @DataBoundConstructor
     public MacComputerJNLPConnector(JNLPLauncher jnlpLauncher) {
         this.jnlpLauncher = jnlpLauncher
     }
 
-    public String getJenkinsUrl() {
-        return jenkinsUrl 
-    }
-
     @DataBoundSetter
     public void setJenkinsUrl(String jenkinsUrl){
          this.jenkinsUrl = jenkinsUrl 
-    }
-
-    public JNLPLauncher getJnlpLauncher() {
-        return jnlpLauncher
-    }
-    
-    @CheckForNull
-    public String[] getEntryPointArguments(){
-        return entryPointArguments;
-    }
-
-    @CheckForNull
-    public String getEntryPointArgumentsString() {
-        if (entryPointArguments == null) return null;
-        return Joiner.on("\n").join(entryPointArguments);
-    }
-
-    @DataBoundSetter
-    public void setEntryPointArgumentsString(String entryPointArgumentsString) {
-        if(StringUtils.isEmpty(entryPointArgumentsString)) {
-            setEntryPointArguments(new String[0])
-        }else {
-            setEntryPointArguments(Arrays.stream(entryPointArgumentsString.split("\n")).filter({value ->
-                StringUtils.isNotEmpty(value)}).toArray({size -> new String[size]}))
-        }
-    }
-
-    public void setEntryPointArguments(String[] entryPointArguments) {
-        if (entryPointArguments == null || entryPointArguments.length == 0) {
-            this.entryPointArguments = null;
-        } else {
-            this.entryPointArguments = entryPointArguments;
-        }
-    }
-
-
-    @Restricted(NoExternalUse.class)
-    public enum ArgumentVariables {
-        NodeName("NODE_NAME", "The name assigned to this node"), //
-        Secret("JNLP_SECRET",
-                "The secret that must be passed to slave.jar's -secret argument to pass JNLP authentication."), //
-        JenkinsUrl("JENKINS_URL", "The Jenkins root URL."), //
-        TunnelArgument("TUNNEL_ARG",
-                "If a JNLP tunnel has been specified then this evaluates to '-tunnel', otherwise it evaluates to the empty string"), //
-        TunnelValue("TUNNEL", "The JNLP tunnel value");
-        private final String name
-        private final String description
-
-        ArgumentVariables(String name, String description) {
-            this.name = name
-            this.description = description
-        }
-
-        public String getName() {
-            return name
-        }
-
-        public String getDescription() {
-            return description
-        }
     }
 
     @Extension @Symbol("jnlp")

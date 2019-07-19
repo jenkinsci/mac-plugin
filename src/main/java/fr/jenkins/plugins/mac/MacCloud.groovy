@@ -32,7 +32,7 @@ class MacCloud extends Cloud {
     MacHost macHost
     MacComputerConnector connector
     String labelString
-    transient Set<LabelAtom> labelSet;
+    transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacCloud(String name, MacHost macHost, MacComputerConnector connector, String labelString) {
@@ -41,18 +41,6 @@ class MacCloud extends Cloud {
         this.connector = connector
         this.labelString = labelString
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
-    }
-
-    MacHost getMacHost() {
-        return macHost;
-    }
-
-    Set<LabelAtom> getLabelSet() {
-        return labelSet;
-    }
-
-    void setLabelSet(Set<LabelAtom> labelSet) {
-        this.labelSet = labelSet;
     }
 
     static @Nullable getMacClouds() {
@@ -97,7 +85,7 @@ class MacCloud extends Cloud {
     @Override
     boolean canProvision(Label label) {
         // TODO Auto-generated method stub
-        return true;
+        return true
     }
 
     @Extension

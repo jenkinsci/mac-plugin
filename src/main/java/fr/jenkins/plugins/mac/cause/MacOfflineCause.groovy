@@ -6,6 +6,6 @@ class MacOfflineCause extends OfflineCause {
     
     @Override
     public String toString() {
-        return "Remove Mac user";
+        return "Remove Mac user"
     }
 }

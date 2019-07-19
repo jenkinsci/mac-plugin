@@ -62,7 +62,7 @@ protected class SSHCommandLauncher {
      * @param out
      * @return output
      */
-    static String convertInputStream(@NotNull InputStream out) {
+    private static String convertInputStream(@NotNull InputStream out) {
         StringWriter result = new StringWriter()
         IOUtils.copy(out, result, UTF8)
         return result.toString()

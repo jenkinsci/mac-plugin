@@ -26,7 +26,7 @@ import jenkins.model.Jenkins
 class MacTransientNode extends Slave {
     
     final String cloudId
-    AtomicBoolean acceptingTasks = new AtomicBoolean(true);
+    AtomicBoolean acceptingTasks = new AtomicBoolean(true)
 
     MacTransientNode(String cloudId, String labels, MacUser user, ComputerLauncher launcher) {
         super(user.username, user.workdir, launcher)
@@ -42,7 +42,7 @@ class MacTransientNode extends Slave {
     
     @Override
     boolean isAcceptingTasks() {
-        return acceptingTasks == null || acceptingTasks.get();
+        return acceptingTasks == null || acceptingTasks.get()
     }
     
     @Override
@@ -50,7 +50,7 @@ class MacTransientNode extends Slave {
         if (cloudId != null) {
             return getNodeName() + " on " + cloudId;
         }
-        return getNodeName();
+        return getNodeName()
     }
 
     @Override
@@ -61,40 +61,40 @@ class MacTransientNode extends Slave {
     @Restricted(NoExternalUse)
     void terminate(final TaskListener listener) {
         try {
-            final Computer computer = toComputer();
+            final Computer computer = toComputer()
             if (computer != null) {
-                computer.disconnect(new MacOfflineCause());
-                log.info("Disconnected computer for node '" + name + "'.");
+                computer.disconnect(new MacOfflineCause())
+                log.info("Disconnected computer for node '" + name + "'.")
             }
         } catch (Exception ex) {
-            log.error("Can't disconnect computer for node '" + name + "' due to exception:", ex);
+            log.error("Can't disconnect computer for node '" + name + "' due to exception:", ex)
         }
         Computer.threadPoolForRemoting.submit({ ->
             synchronized(this) {}
         });
 
         try {
-            Jenkins.get().removeNode(this);
+            Jenkins.get().removeNode(this)
             SSHCommander.deleteUserOnMac(this.cloudId, this.name)
-            log.info("Removed Node for node '" + name + "'.");
+            log.info("Removed Node for node '" + name + "'.")
         } catch (IOException ex) {
-            log.info("Failed to remove Node for node '" + name + "' due to exception:", ex);
+            log.info("Failed to remove Node for node '" + name + "' due to exception:", ex)
         }
     }
     
     public MacCloud getCloud() {
         if (cloudId == null) return null;
-        final Cloud cloud = Jenkins.get().getCloud(cloudId);
+        final Cloud cloud = Jenkins.get().getCloud(cloudId)
 
         if (cloud == null) {
-            throw new RuntimeException("Failed to retrieve Cloud " + cloudId);
+            throw new RuntimeException("Failed to retrieve Cloud " + cloudId)
         }
 
         if (!(cloud instanceof MacCloud)) {
-            throw new RuntimeException(cloudId + " is not a MacCloud, it's a " + cloud.getClass().toString());
+            throw new RuntimeException(cloudId + " is not a MacCloud, it's a " + cloud.getClass().toString())
         }
 
-        return (MacCloud) cloud;
+        return (MacCloud) cloud
     }
     
     @Extension
@@ -102,12 +102,12 @@ class MacTransientNode extends Slave {
 
         @Override
         String getDisplayName() {
-            return "Mac Agent";
+            return "Mac Agent"
         }
 
         @Override
         boolean isInstantiable() {
-            return false;
+            return false
         }
     }
 }

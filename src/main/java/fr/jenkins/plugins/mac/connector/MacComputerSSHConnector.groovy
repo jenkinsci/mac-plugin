@@ -33,47 +33,31 @@ class MacComputerSSHConnector extends MacComputerConnector {
         this.suffixStartSlaveCmd = suffixStartSlaveCmd
     }
 
-    String getJvmOptions() {
-        return jvmOptions;
-    }
-
     @DataBoundSetter
     void setJvmOptions(String jvmOptions) {
-        this.jvmOptions = jvmOptions;
-    }
-
-    String getJavaPath() {
-        return javaPath;
+        this.jvmOptions = jvmOptions
     }
 
     @DataBoundSetter
     void setJavaPath(String javaPath) {
-        this.javaPath = javaPath;
-    }
-
-    String getPrefixStartSlaveCmd() {
-        return prefixStartSlaveCmd;
+        this.javaPath = javaPath
     }
 
     @DataBoundSetter
     void setPrefixStartSlaveCmd(String prefixStartSlaveCmd) {
-        this.prefixStartSlaveCmd = prefixStartSlaveCmd;
-    }
-
-    String getSuffixStartSlaveCmd() {
-        return suffixStartSlaveCmd;
+        this.prefixStartSlaveCmd = prefixStartSlaveCmd
     }
 
     @DataBoundSetter
     void setSuffixStartSlaveCmd(String suffixStartSlaveCmd) {
-        this.suffixStartSlaveCmd = suffixStartSlaveCmd;
+        this.suffixStartSlaveCmd = suffixStartSlaveCmd
     }
 
     @Extension @Symbol("ssh")
     static final class DescriptorImpl extends Descriptor<MacComputerConnector> {
         @Override
         String getDisplayName() {
-            return "Connect with SSH";
+            return "Connect with SSH"
         }
     }
 

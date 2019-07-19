@@ -10,6 +10,6 @@ import hudson.slaves.ComputerLauncher
 
 abstract class MacComputerConnector extends AbstractDescribableImpl<MacComputerConnector> {
     
-    protected abstract ComputerLauncher createLauncher(MacCloud cloud, MacUser user) throws IOException, InterruptedException;
+    protected abstract ComputerLauncher createLauncher(MacCloud cloud, MacUser user) throws IOException, InterruptedException
 
 }

@@ -28,7 +28,7 @@ class MacComputer extends SlaveComputer {
     @CheckForNull
     public MacCloud getCloud() {
         final MacTransientNode node = getNode();
-        return node == null ? null : node.getCloud();
+        return node == null ? null : node.getCloud()
     }
     
     @CheckForNull
@@ -46,13 +46,13 @@ class MacComputer extends SlaveComputer {
     @Override
     @Restricted(NoExternalUse.class)
     public EnvVars getEnvironment() throws IOException, InterruptedException {
-        EnvVars variables = super.getEnvironment();
-        variables.put("MAC_USER_ID", getUserId());
-        final MacCloud cloud = getCloud();
+        EnvVars variables = super.getEnvironment()
+        variables.put("MAC_USER_ID", getUserId())
+        final MacCloud cloud = getCloud()
         if (cloud != null) {
             variables.put("JENKINS_CLOUD_ID", cloud.name);
             String macHost = cloud.macHost.host
-            variables.put("MAC_HOST", macHost);
+            variables.put("MAC_HOST", macHost)
         }
         return variables;
     }
@@ -62,6 +62,6 @@ class MacComputer extends SlaveComputer {
         return Objects.toStringHelper(this)
                 .add("name", super.getName())
                 .add("slave", getNode())
-                .toString();
+                .toString()
     }
 }
