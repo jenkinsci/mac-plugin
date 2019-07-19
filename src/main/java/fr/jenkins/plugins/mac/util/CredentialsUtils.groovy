@@ -24,7 +24,9 @@ class CredentialsUtils {
      * @param context
      * @return StandardCredentials
      */
-    static StandardCredentials findCredentials(URI domain, String credentialsId, ModelObject context) {
+    static StandardCredentials findCredentials(String host, String credentialsId, ModelObject context) {
+        checkNotNull(host)
+        URI domain = FormUtils.getUri(host)
         checkNotNull(credentialsId)
         checkNotNull(context)
         checkNotNull(domain)

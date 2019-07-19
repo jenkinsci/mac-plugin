@@ -17,8 +17,8 @@ import com.trilead.ssh2.Session
 
 import fr.jenkins.plugins.mac.Messages
 import fr.jenkins.plugins.mac.ssh.SSHCommander
-import fr.jenkins.plugins.mac.ssh.connection.SshClientFactory
-import fr.jenkins.plugins.mac.ssh.connection.SshClientFactoryConfiguration
+import fr.jenkins.plugins.mac.ssh.connection.SSHClientFactory
+import fr.jenkins.plugins.mac.ssh.connection.SSHClientFactoryConfiguration
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -96,8 +96,8 @@ class FormUtils {
             final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
         Connection connection = null
         try {
-            connection = SshClientFactory.getSshClient(
-                    new SshClientFactoryConfiguration(credentialsId: credentialsId, port: port,
+            connection = SSHClientFactory.getSshClient(
+                    new SSHClientFactoryConfiguration(credentialsId: credentialsId, port: port,
                     context: context, host: host, connectionTimeout: connectionTimeout,
                     readTimeout: readTimeout, kexTimeout: kexTimeout))
             String result = SSHCommander.checkConnection(connection)
