@@ -17,7 +17,11 @@ class Constants {
     //Username pattern
     /**"jenkins_%s"*/
     public static final String USERNAME_PATTERN = "jenkins_%s"
-
+    
+    //Workdir pattern
+    /** /Users/%s/ */
+    public static final String WORKDIR_PATTERN = "/Users/%s/"
+    
     //Path of remoting.jar
     /** jnlpJars/remoting.jar */
     public static final String REMOTING_JAR_PATH = "jnlpJars/remoting.jar"
@@ -32,5 +36,8 @@ class Constants {
     /** "sudo curl %s -o /Users/%s/slave.jar" */
     public static final String GET_REMOTING_JAR = "curl %s -o ~/remoting.jar"
     /** "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s" */
-    public static final String LAUNCH_JNLP = 'java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s'
+    public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
+    /** dscl . list /Users | grep -v ^_ | grep %s */
+    public static final String CHECK_USER_EXIST = "dscl . list /Users | grep -v ^_ | grep %s"
+    
 }

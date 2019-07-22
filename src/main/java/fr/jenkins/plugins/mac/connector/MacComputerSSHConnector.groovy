@@ -6,16 +6,20 @@ import org.kohsuke.stapler.DataBoundSetter
 
 import com.cloudbees.plugins.credentials.CredentialsScope
 import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 
-import fr.jenkins.plugins.mac.MacCloud
+import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
+import fr.jenkins.plugins.mac.slave.MacTransientNode
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.plugins.sshslaves.SSHLauncher
 import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 import hudson.slaves.ComputerLauncher
+import hudson.util.LogTaskListener
+
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class MacComputerSSHConnector extends MacComputerConnector {
 
@@ -62,8 +66,8 @@ class MacComputerSSHConnector extends MacComputerConnector {
     }
 
     @Override
-    protected ComputerLauncher createLauncher(MacCloud cloud, MacUser user) throws IOException, InterruptedException {
-        return new MacSSHLauncher(cloud.macHost.host, cloud.macHost.port, user, jvmOptions, javaPath, prefixStartSlaveCmd, suffixStartSlaveCmd, cloud.macHost.readTimeout, 5, 3000)
+    protected ComputerLauncher createLauncher(MacHost macHost, MacUser user) throws IOException, InterruptedException {
+        return new MacSSHLauncher(macHost.host, macHost.port, user, jvmOptions, javaPath, prefixStartSlaveCmd, suffixStartSlaveCmd, macHost.readTimeout, 5, 3000)
     }
 
     private static class MacSSHLauncher extends SSHLauncher {
@@ -75,7 +79,7 @@ class MacComputerSSHConnector extends MacComputerConnector {
         Integer maxNumRetries, Integer retryWaitTime) {
             super(host, port, user.getUsername(), jvmOptions, javaPath, prefixStartSlaveCmd,
             suffixStartSlaveCmd, launchTimeoutSeconds, maxNumRetries, retryWaitTime, new NonVerifyingKeyVerificationStrategy())
-//            super(host, port, user)
+            //            super(host, port, user)
             this.workDir = user.getWorkdir()
             this.user = user.getUsername()
             this.password = user.getPassword()
@@ -86,5 +90,11 @@ class MacComputerSSHConnector extends MacComputerConnector {
             return new UsernamePasswordCredentialsImpl(CredentialsScope.SYSTEM, user,
                     "private credentials for mac ssh agent", user, password)
         }
+    }
+
+    @Override
+    protected void connect(MacHost host, MacUser user, MacTransientNode slave) throws Exception {
+        ComputerLauncher launcher = createLauncher(host, user)
+        launcher.launch(slave.computer, new LogTaskListener(new Logger(), Level.FINE))
     }
 }

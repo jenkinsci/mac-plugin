@@ -29,7 +29,7 @@ import jenkins.model.Jenkins
  *
  */
 @Slf4j
-class SSHCommander {
+class SSHCommand {
 
     
     /**
@@ -48,17 +48,20 @@ class SSHCommander {
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    static MacUser createUserOnMac(MacHost macHost) throws SSHCommanderException {
+    static MacUser createUserOnMac(MacHost macHost) throws SSHCommandException {
         try {
             Connection connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
                 context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
                 readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             MacUser user = generateUser()
             log.info(SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
+            if(!isUserExist(connection, user.username))
+                throw new Exception(String.format("The user %s wasn't created after verification", user.username))
             connection.close()
             return user
         } catch(Exception e) {
-            
+            final String message = String.format(SSHCommandException.CREATE_MAC_USER_ERROR_MESSAGE, macHost.host)
+            throw new SSHCommandException(message, e)
         }
     }
 
@@ -69,7 +72,7 @@ class SSHCommander {
      * @return true if user is deleted, false if an error occured
      */
     @Restricted(NoExternalUse)
-    static boolean deleteUserOnMac(String cloudId, String username) throws SSHCommanderException {
+    static void deleteUserOnMac(String cloudId, String username) throws SSHCommandException {
         MacCloud cloud = Jenkins.get().getCloud(cloudId)
         MacHost macHost = cloud.getMacHost()
         try {
@@ -77,11 +80,12 @@ class SSHCommander {
                 context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
                 readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             log.info(SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.DELETE_USER, username)))
+            if(isUserExist(connection, username))
+                throw new Exception(String.format("The user %s still exist after verification", username))
             connection.close()
-            return true
         } catch (Exception e) {
-            log.error("Error while deleting user " + username + " on mac " + macHost.host)
-            throw new SSHCommanderException("Error while deleting user " + username + " on mac " + macHost.host, e)
+            final String message = String.format(SSHCommandException.DELETE_MAC_USER_ERROR_MESSAGE, username, macHost.host)
+            throw new SSHCommandException(message, e)
         }
     }
 
@@ -94,8 +98,8 @@ class SSHCommander {
      * @return true if connection succeed, false otherwise
      */
     @Restricted(NoExternalUse)
-    static boolean jnlpConnect(MacHost macHost, MacUser user, MacComputerJNLPConnector jnlpConnector, String slaveSecret) throws SSHCommanderException {
-        String jenkinsUrl = StringUtils.isNotEmpty(jnlpConnector.jenkinsUrl) ? jnlpConnector.jenkinsUrl : Jenkins.get().getRootUrl()
+    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException {
+        jenkinsUrl = StringUtils.isNotEmpty(jenkinsUrl) ? jenkinsUrl : Jenkins.get().getRootUrl()
         if(!jenkinsUrl.endsWith("/")) {
             jenkinsUrl += "/"
         }
@@ -104,24 +108,31 @@ class SSHCommander {
             Connection connection = SSHClientFactory.getUserClient(user.username, user.password, macHost.host,
                 macHost.port, macHost.connectionTimeout, macHost.readTimeout, macHost.kexTimeout)
             log.info(SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
-            log.info(SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret)))
+            String result = SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret))
+            log.info(result)
             connection.close()
             return true
         } catch(Exception e) {
-            log.error("Cannot connect Mac " + macHost.host + " with user " + user.username + " to jenkins with JNLP")
-            return false
+            final String message = String.format(SSHCommandException.JNLP_CONNECTION_ERROR_MESSAGE, macHost.host, user.username)
+            throw new SSHCommandException(message, e)
         }
     }
-
+    
     /**
      * Generate a Mac user with the pattern in Constants
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    private static MacUser generateUser() throws SSHCommanderException {
+    private static MacUser generateUser() throws SSHCommandException {
         String password = RandomStringUtils.random(10, true, true);
         String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(5, true, true).toLowerCase())
-        String workdir = String.format("/Users/%s/", username)
+        String workdir = String.format(Constants.WORKDIR_PATTERN, username)
         return new MacUser(username:username, password:Secret.fromString(password), workdir:workdir)
+    }
+    
+    private static boolean isUserExist(Connection connection, String username) {
+        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_USER_EXIST, username))
+        result.trim() == username
+        return result.contains(username)
     }
 }

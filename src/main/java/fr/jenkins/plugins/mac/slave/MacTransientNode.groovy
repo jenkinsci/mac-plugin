@@ -8,7 +8,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import fr.jenkins.plugins.mac.MacCloud
 import fr.jenkins.plugins.mac.MacUser
 import fr.jenkins.plugins.mac.cause.MacOfflineCause
-import fr.jenkins.plugins.mac.ssh.SSHCommander
+import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.strategy.MacRetentionStrategy
 import groovy.util.logging.Slf4j
 import hudson.Extension
@@ -75,7 +75,7 @@ class MacTransientNode extends Slave {
 
         try {
             Jenkins.get().removeNode(this)
-            SSHCommander.deleteUserOnMac(this.cloudId, this.name)
+            SSHCommand.deleteUserOnMac(this.cloudId, this.name)
             log.info("Removed Node for node '" + name + "'.")
         } catch (IOException ex) {
             log.info("Failed to remove Node for node '" + name + "' due to exception:", ex)

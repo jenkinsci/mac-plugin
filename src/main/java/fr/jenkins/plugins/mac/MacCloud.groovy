@@ -4,6 +4,8 @@ import java.util.concurrent.CompletableFuture
 
 import org.antlr.v4.runtime.misc.Nullable
 import org.apache.commons.lang.StringUtils
+import org.kohsuke.accmod.Restricted
+import org.kohsuke.accmod.restrictions.NoExternalUse
 import org.kohsuke.stapler.DataBoundConstructor
 
 import com.google.common.base.Throwables
@@ -12,12 +14,14 @@ import com.trilead.ssh2.Connection
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.jenkins.plugins.mac.connector.MacComputerJNLPConnector
 import fr.jenkins.plugins.mac.slave.MacTransientNode
-import fr.jenkins.plugins.mac.ssh.SSHCommander
+import fr.jenkins.plugins.mac.ssh.SSHCommand
+import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
 import hudson.model.Node
+import hudson.model.TaskListener
 import hudson.model.labels.LabelAtom
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
@@ -50,36 +54,46 @@ class MacCloud extends Cloud {
     @Override
     synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
         final List<PlannedNode> r = new ArrayList<>();
-        Connection connection = null
         MacCloud cloud = this
+        MacUser user = null
+
         try {
-            MacUser user = SSHCommander.createUserOnMac(macHost)
+            user = SSHCommand.createUserOnMac(cloud.macHost)
             final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
             r.add(new PlannedNode(user.username, plannedNode, excessWorkload))
-            MacTransientNode slave = null
-            try {
-                ComputerLauncher launcher = cloud.connector.createLauncher(cloud, user)
-                slave = new MacTransientNode(cloud.name, cloud.labelString, user, launcher)
-                JnlpSlaveAgentProtocol.SLAVE_SECRET.mac(slave.name)
-                plannedNode.complete(slave)
-
-                Jenkins.get().addNode(slave)
-            } catch (Exception ex) {
-                log.error("Error in provisioning; user='{}' for cloud='{}'",
-                        user.username, getDisplayName(), ex)
-                plannedNode.completeExceptionally(ex)
-                throw Throwables.propagate(ex)
-            }
-            if(connector instanceof MacComputerJNLPConnector) {
-                MacComputerJNLPConnector jnlpConnector = (MacComputerJNLPConnector) connector
-                SSHCommander.jnlpConnect(macHost, user, connector, slave.getComputer().getJnlpMac())
-            }
+            MacTransientNode slave = createSlave(cloud, user, plannedNode)
+//            slave.launcher.launch(slave.computer, TaskListener.NULL)
+            connector.connect(cloud.macHost, user, slave)
             return r
         }catch (Exception e) {
+            if(null != user) {
+                try {
+                    SSHCommand.deleteUserOnMac(cloud.name, user.username)
+                } catch(SSHCommandException sshe) {
+                    log.error(sshe.getMessage(), sshe)
+                }
+            }
             log.error(e.getMessage(), e)
-            if (null != connection) connection.close()
             return Collections.emptyList()
         }
+    }
+
+    @Restricted(NoExternalUse)
+    private MacTransientNode createSlave(MacCloud cloud, MacUser user, CompletableFuture plannedNode) {
+        MacTransientNode slave = null
+        try {
+            ComputerLauncher launcher = cloud.connector.createLauncher(cloud.macHost, user)
+            slave = new MacTransientNode(cloud.name, cloud.labelString, user, launcher)
+            JnlpSlaveAgentProtocol.SLAVE_SECRET.mac(slave.name)
+            plannedNode.complete(slave)
+            Jenkins.get().addNode(slave)
+        } catch (Exception ex) {
+            log.error("Error in provisioning; user='{}' for cloud='{}'",
+                    user.username, getDisplayName(), ex)
+            plannedNode.completeExceptionally(ex)
+            throw Throwables.propagate(ex)
+        }
+        return slave
     }
 
     @Override
