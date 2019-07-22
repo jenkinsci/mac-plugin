@@ -90,7 +90,7 @@ class SSHCommand {
     }
 
     /**
-     * Get the slave.jar on Jnekins and connect the slave to JNLP
+     * Get the slave.jar on Jenkins and connect the slave to JNLP
      * @param macHost
      * @param user
      * @param jnlpConnector
@@ -129,10 +129,16 @@ class SSHCommand {
         String workdir = String.format(Constants.WORKDIR_PATTERN, username)
         return new MacUser(username:username, password:Secret.fromString(password), workdir:workdir)
     }
-    
+
+    /**
+     * Verify if an user exist on the Mac
+     * @param connection
+     * @param username
+     * @return true if exist, false if not
+     */
+    @Restricted(NoExternalUse)
     private static boolean isUserExist(Connection connection, String username) {
         String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_USER_EXIST, username))
-        result.trim() == username
-        return result.contains(username)
+        return result.trim() == username
     }
 }

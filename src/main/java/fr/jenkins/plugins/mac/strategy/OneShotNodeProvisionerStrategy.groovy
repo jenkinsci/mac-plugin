@@ -21,7 +21,7 @@
 ///**
 // * Based on https://github.com/jenkinsci/one-shot-executor-plugin/blob/master/src/main/java/org/jenkinsci/plugins/oneshot/OneShotProvisionerStrategy.java
 // *
-// * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
+// * @author Mathieu DELROCQ
 // */
 //@Extension
 //@Slf4j
@@ -58,7 +58,6 @@
 //                snapshot.getAvailableExecutors()
 //        + snapshot.getConnectingExecutors()
 //        + state.getPlannedCapacitySnapshot()
-//
 //
 //        int currentDemand = snapshot.getQueueLength()
 //        log.info("Available capacity={}, currentDemand={}",

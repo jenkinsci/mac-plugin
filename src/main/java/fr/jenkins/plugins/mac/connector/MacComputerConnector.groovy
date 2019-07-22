@@ -13,6 +13,6 @@ abstract class MacComputerConnector extends AbstractDescribableImpl<MacComputerC
     
     protected abstract ComputerLauncher createLauncher(MacHost host, MacUser user) throws IOException, InterruptedException
     
-    protected abstract void connect(MacHost host, MacUser user, MacTransientNode slave) throws Exception
+    protected abstract void connect(MacTransientNode slave) throws Exception
 
 }
