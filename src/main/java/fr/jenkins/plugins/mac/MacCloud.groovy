@@ -61,23 +61,23 @@ class MacCloud extends Cloud {
             user = SSHCommand.createUserOnMac(cloud.macHost)
             final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
             r.add(new PlannedNode(user.username, plannedNode, excessWorkload))
-            createSlave(cloud, user, plannedNode)
+            MacTransientNode slave = createSlave(cloud, user, plannedNode)
             return r
         }catch (Exception e) {
-//            if(null != user) {
-//                try {
-//                    SSHCommand.deleteUserOnMac(cloud.name, user.username)
-//                } catch(SSHCommandException sshe) {
-//                    log.error(sshe.getMessage(), sshe)
-//                }
-//            }
+            if(null != user) {
+                try {
+                    SSHCommand.deleteUserOnMac(cloud.name, user.username)
+                } catch(SSHCommandException sshe) {
+                    log.error(sshe.getMessage(), sshe)
+                }
+            }
             log.error(e.getMessage(), e)
             return Collections.emptyList()
         }
     }
 
     @Restricted(NoExternalUse)
-    private MacTransientNode createSlave(MacCloud cloud, MacUser user, CompletableFuture plannedNode) {
+    private MacTransientNode createSlave(MacCloud cloud, MacUser user, CompletableFuture plannedNode) throws Exception{
         MacTransientNode slave = null
         int timeout = 0
             Computer.threadPoolForRemoting.submit({ ->
@@ -94,6 +94,7 @@ class MacCloud extends Cloud {
                         if(null != slave) {
                             slave.terminate(log)
                         }
+                        SSHCommand.deleteUserOnMac(cloud.name, user.username)
                         throw Throwables.propagate(e);
                     }
                 });

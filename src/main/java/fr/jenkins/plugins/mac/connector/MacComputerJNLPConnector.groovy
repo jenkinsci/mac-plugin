@@ -9,6 +9,7 @@ import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
 import fr.jenkins.plugins.mac.slave.MacTransientNode
 import fr.jenkins.plugins.mac.ssh.SSHCommand
+import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Descriptor
@@ -75,7 +76,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         void launch(SlaveComputer computer, TaskListener listener) {
             try {
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-            } catch(Exception e) {
+            } catch(SSHCommandException e) {
                 throw e
             }
         }
