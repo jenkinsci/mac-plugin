@@ -7,7 +7,7 @@ import org.kohsuke.stapler.DataBoundSetter
 
 import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
-import fr.jenkins.plugins.mac.slave.MacTransientNode
+import fr.jenkins.plugins.mac.slave.MacSlave
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import groovy.util.logging.Slf4j
@@ -53,7 +53,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     }
 
     @Override
-    protected void connect(MacTransientNode slave) throws Exception {
+    protected void connect(MacSlave slave) throws Exception {
         JnlpSlaveAgentProtocol.SLAVE_SECRET.mac(slave.name)
         MacJNLPLauncher launcher = (MacJNLPLauncher) slave.launcher
         launcher.launch(slave.computer, (TaskListener) TaskListener.NULL)
@@ -76,7 +76,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         void launch(SlaveComputer computer, TaskListener listener) {
             try {
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-            } catch(SSHCommandException e) {
+            } catch(Exception e) {
                 throw e
             }
         }

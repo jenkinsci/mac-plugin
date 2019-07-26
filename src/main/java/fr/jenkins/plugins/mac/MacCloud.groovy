@@ -11,7 +11,8 @@ import org.kohsuke.stapler.DataBoundConstructor
 import com.google.common.base.Throwables
 
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
-import fr.jenkins.plugins.mac.slave.MacTransientNode
+import fr.jenkins.plugins.mac.planned.PlannedNodeBuilderFactory
+import fr.jenkins.plugins.mac.slave.MacSlave
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import groovy.util.logging.Slf4j
@@ -58,10 +59,9 @@ class MacCloud extends Cloud {
         MacUser user = null
 
         try {
-            user = SSHCommand.createUserOnMac(cloud.macHost)
             final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
-            r.add(new PlannedNode(user.username, plannedNode, excessWorkload))
-            MacTransientNode slave = createSlave(cloud, user, plannedNode)
+            r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
+//            MacSlave slave = createSlave(cloud, user, plannedNode)
             return r
         }catch (Exception e) {
             if(null != user) {
@@ -77,14 +77,14 @@ class MacCloud extends Cloud {
     }
 
     @Restricted(NoExternalUse)
-    private MacTransientNode createSlave(MacCloud cloud, MacUser user, CompletableFuture plannedNode) throws Exception{
-        MacTransientNode slave = null
+    private MacSlave createSlave(MacCloud cloud, MacUser user, CompletableFuture plannedNode) throws Exception{
+        MacSlave slave = null
         int timeout = 0
             Computer.threadPoolForRemoting.submit({ ->
                 Queue.withLock({ ->
                     try {
                         ComputerLauncher launcher = cloud.connector.createLauncher(cloud.macHost, user)
-                        slave = new MacTransientNode(cloud.name, cloud.labelString, user, launcher)
+                        slave = new MacSlave(cloud.name, cloud.labelString, user, launcher)
                         plannedNode.complete(slave)
                         Jenkins.get().addNode(slave)
                         connector.connect(slave)
@@ -92,7 +92,7 @@ class MacCloud extends Cloud {
                     } catch (Exception e) {
                         plannedNode.completeExceptionally(e)
                         if(null != slave) {
-                            slave.terminate(log)
+                            slave._terminate(log)
                         }
                         SSHCommand.deleteUserOnMac(cloud.name, user.username)
                         throw Throwables.propagate(e);

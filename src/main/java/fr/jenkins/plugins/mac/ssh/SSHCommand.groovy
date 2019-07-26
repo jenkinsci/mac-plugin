@@ -48,7 +48,7 @@ class SSHCommand {
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    static MacUser createUserOnMac(MacHost macHost) throws SSHCommandException {
+    static MacUser createUserOnMac(MacHost macHost) throws Exception {
         try {
             Connection connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
                 context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
@@ -72,7 +72,7 @@ class SSHCommand {
      * @return true if user is deleted, false if an error occured
      */
     @Restricted(NoExternalUse)
-    static void deleteUserOnMac(String cloudId, String username) throws SSHCommandException {
+    static void deleteUserOnMac(String cloudId, String username) throws Exception {
         MacCloud cloud = Jenkins.get().getCloud(cloudId)
         MacHost macHost = cloud.getMacHost()
         try {
@@ -98,7 +98,7 @@ class SSHCommand {
      * @return true if connection succeed, false otherwise
      */
     @Restricted(NoExternalUse)
-    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException {
+    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws Exception {
         jenkinsUrl = StringUtils.isNotEmpty(jenkinsUrl) ? jenkinsUrl : Jenkins.get().getRootUrl()
         if(!jenkinsUrl.endsWith("/")) {
             jenkinsUrl += "/"
@@ -123,7 +123,7 @@ class SSHCommand {
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    private static MacUser generateUser() throws SSHCommandException {
+    private static MacUser generateUser() throws Exception {
         String password = RandomStringUtils.random(10, true, true);
         String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(5, true, true).toLowerCase())
         String workdir = String.format(Constants.WORKDIR_PATTERN, username)

@@ -1,5 +1,7 @@
 package fr.jenkins.plugins.mac.slave
 
+import java.util.logging.Level
+
 import javax.annotation.CheckForNull
 
 import org.kohsuke.accmod.Restricted
@@ -10,37 +12,57 @@ import com.google.common.base.Objects
 import fr.jenkins.plugins.mac.MacCloud
 import groovy.util.logging.Slf4j
 import hudson.EnvVars
-import hudson.slaves.SlaveComputer
+import hudson.model.Executor
+import hudson.model.Queue
+import hudson.slaves.AbstractCloudComputer
 
 @Slf4j
-class MacComputer extends SlaveComputer {
-    
-    MacComputer(MacTransientNode node) {
+class MacComputer extends AbstractCloudComputer<MacSlave> {
+
+    MacComputer(MacSlave node) {
         super(node)
     }
-    
+
     @CheckForNull
     @Override
-    MacTransientNode getNode() {
-        return (MacTransientNode) super.getNode()
+    MacSlave getNode() {
+        return (MacSlave) super.getNode()
     }
-    
+
     @CheckForNull
     public MacCloud getCloud() {
-        final MacTransientNode node = getNode();
+        final MacSlave node = getNode();
         return node == null ? null : node.getCloud()
     }
-    
+
     @CheckForNull
     String getUserId() {
-        final MacTransientNode node = getNode()
+        final MacSlave node = getNode()
         return node == null ? null : node.getUserId()
     }
-    
+
     @CheckForNull
     String getCloudId() {
-        final MacTransientNode node = getNode()
+        final MacSlave node = getNode()
         return node == null ? null : node.getCloudId()
+    }
+
+    @Override
+    public void taskAccepted(Executor executor, Queue.Task task) {
+        super.taskAccepted(executor, task);
+        log.info("Computer " + this + " taskAccepted")
+    }
+
+    @Override
+    public void taskCompleted(Executor executor, Queue.Task task, long durationMS) {
+        log.info("Computer " + this + " taskCompleted")
+        super.taskCompleted(executor, task, durationMS)
+    }
+
+    @Override
+    public void taskCompletedWithProblems(Executor executor, Queue.Task task, long durationMS, Throwable problems) {
+        super.taskCompletedWithProblems(executor, task, durationMS, problems)
+        log.info("Computer " + this + " taskCompletedWithProblems")
     }
 
     @Override

@@ -15,15 +15,7 @@ class SSHCommandException extends Exception {
     
     /** Cannot connect Mac %s with user %s to jenkins with JNLP */
     public static final String JNLP_CONNECTION_ERROR_MESSAGE = "Cannot connect Mac %s with user %s to jenkins with JNLP"
-    
-    /**
-     * Constructor with only message
-     * @param message
-     */
-    SSHCommandException(String message) {
-        super(message)
-    }
-    
+
     /**
      * Constructor with message and cause
      * @param message

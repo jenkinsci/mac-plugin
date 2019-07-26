@@ -46,7 +46,7 @@ protected class SSHCommandLauncher {
             log.info(out)
             log.error(err)
             if(!ignoreError && null != session.exitStatus && session.exitStatus.intValue() != 0) {
-                String error = StringUtils.isNotEmpty(err) ? err : String.format("Failed to execute command %s", command)
+                String error = String.format("Failed to execute command %s", command)
                 log.error(error)
                 throw new Exception(error)
             }

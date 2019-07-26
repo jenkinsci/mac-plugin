@@ -7,7 +7,7 @@ import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.QueryParameter
 
 import fr.jenkins.plugins.mac.slave.MacComputer
-import fr.jenkins.plugins.mac.slave.MacTransientNode
+import fr.jenkins.plugins.mac.slave.MacSlave
 import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Computer
@@ -20,7 +20,7 @@ import hudson.slaves.RetentionStrategy
 import hudson.util.FormValidation
 
 @Slf4j
-class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements ExecutorListener {
+class MacRetentionStrategy extends RetentionStrategy<MacComputer> {
 
     static Long DEFAULT_IDLEMINUTES = 10
     private Long idleDelay = DEFAULT_IDLEMINUTES
@@ -49,30 +49,11 @@ class MacRetentionStrategy extends RetentionStrategy<MacComputer> implements Exe
         c.setAcceptingTasks(false); // just in case
         Computer.threadPoolForRemoting.submit({ ->
             Queue.withLock({ ->
-                MacTransientNode node = c.getNode()
+                MacSlave node = c.getNode()
                 if (node != null) {
-                    node.terminate(c.getListener())
+                    node._terminate(c.getListener())
                 }
             });
         });
-    }
-
-    @Override
-    public void taskAccepted(Executor executor, Task task) {
-    }
-
-    @Override
-    public void taskCompleted(Executor executor, Task task, long duration) {
-        final MacComputer c = (MacComputer) executor.getOwner()
-        Queue.Executable exec = executor.getCurrentExecutable()
-        log.info("terminating {} since {} seems to be finished", c.getName(), exec)
-        done(c)
-    }
-
-    @Override
-    public void taskCompletedWithProblems(Executor executor, Task task, long duration, Throwable error) {
-        final MacComputer c = (MacComputer) executor.getOwner()
-        log.error(String.format("%s returned an error : %s", c.getName(), error.getMessage()), error)
-        taskCompleted(executor, task, duration)
     }
 }
