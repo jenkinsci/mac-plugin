@@ -1,6 +1,9 @@
 package fr.jenkins.plugins.mac.slave;
 
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.logging.Level
+import java.util.logging.Logger
+
 import org.jenkinsci.plugins.durabletask.executors.OnceRetentionStrategy
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
@@ -9,7 +12,6 @@ import fr.jenkins.plugins.mac.MacCloud
 import fr.jenkins.plugins.mac.MacUser
 import fr.jenkins.plugins.mac.cause.MacOfflineCause
 import fr.jenkins.plugins.mac.ssh.SSHCommand
-import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Computer
 import hudson.model.Slave
@@ -18,28 +20,28 @@ import hudson.model.Node.Mode
 import hudson.model.Slave.SlaveDescriptor
 import hudson.slaves.AbstractCloudSlave
 import hudson.slaves.Cloud
-import hudson.slaves.CloudRetentionStrategy
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.RetentionStrategy
 import jenkins.model.Jenkins
 
-@Slf4j
 class MacSlave extends AbstractCloudSlave {
+
+    private static final Logger LOGGER = Logger.getLogger(MacSlave.name)
 
     final String cloudId
     AtomicBoolean acceptingTasks = new AtomicBoolean(true)
 
     MacSlave(String cloudId, String labels, MacUser user, ComputerLauncher launcher) {
         super(
-            user.username,
-            "Agent Mac for the user " + user.username,
-            user.workdir,
-            1,
-            Mode.EXCLUSIVE,
-            labels,
-            launcher,
-            buildRetentionStrategy(),
-            Collections.EMPTY_LIST
+        user.username,
+        "Agent Mac for the user " + user.username,
+        user.workdir,
+        1,
+        Mode.EXCLUSIVE,
+        labels,
+        launcher,
+        buildRetentionStrategy(),
+        Collections.EMPTY_LIST
         )
         this.cloudId = cloudId
         setUserId(user.username)
@@ -49,11 +51,17 @@ class MacSlave extends AbstractCloudSlave {
         return new OnceRetentionStrategy(1)
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     boolean isAcceptingTasks() {
         return acceptingTasks == null || acceptingTasks.get()
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     String getDisplayName() {
         if (cloudId != null) {
@@ -62,34 +70,35 @@ class MacSlave extends AbstractCloudSlave {
         return getNodeName()
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     MacComputer createComputer() {
         return MacComputerFactory.createInstance(this)
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Restricted(NoExternalUse)
     void _terminate(final TaskListener listener) {
         try {
             final Computer computer = toComputer()
             if (computer != null) {
+                SSHCommand.deleteUserOnMac(this.cloudId, this.name)
                 computer.disconnect(new MacOfflineCause())
-                log.info("Disconnected computer for node '" + name + "'.")
+                LOGGER.log(Level.FINE, "Disconnected computer for node '{0}'.", name)
             }
         } catch (Exception ex) {
-            log.error("Can't disconnect computer for node '" + name + "' due to exception:", ex)
+            LOGGER.log(Level.SEVERE, "Can't disconnect computer for node '{0}' due to exception: {1}", [name, ex.getMessage()])
         }
-        Computer.threadPoolForRemoting.submit({
-            ->
-            synchronized(this) {}
-        });
-
         try {
             Jenkins.get().removeNode(this)
-            SSHCommand.deleteUserOnMac(this.cloudId, this.name)
-            log.info("Removed Node for node '" + name + "'.")
+            LOGGER.log(Level.FINE, "Removed Node for node '{0}'.", name)
         } catch (IOException ex) {
-            log.info("Failed to remove Node for node '" + name + "' due to exception:", ex)
+            LOGGER.log(Level.SEVERE, "Failed to remove Node for node '" + name + "' due to exception:", ex)
         }
     }
 
