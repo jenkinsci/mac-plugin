@@ -10,9 +10,7 @@ import hudson.model.TaskListener
 import hudson.slaves.ComputerLauncher
 
 abstract class MacComputerConnector extends AbstractDescribableImpl<MacComputerConnector> {
-    
+
     protected abstract ComputerLauncher createLauncher(MacHost host, MacUser user) throws IOException, InterruptedException
-    
-    protected abstract void connect(MacSlave slave) throws Exception
 
 }

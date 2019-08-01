@@ -1,36 +1,30 @@
 package fr.jenkins.plugins.mac
 
 import java.util.concurrent.CompletableFuture
+import java.util.logging.Level
+import java.util.logging.Logger
 
 import org.antlr.v4.runtime.misc.Nullable
 import org.apache.commons.lang.StringUtils
-import org.kohsuke.accmod.Restricted
-import org.kohsuke.accmod.restrictions.NoExternalUse
 import org.kohsuke.stapler.DataBoundConstructor
-
-import com.google.common.base.Throwables
 
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.jenkins.plugins.mac.planned.PlannedNodeBuilderFactory
-import fr.jenkins.plugins.mac.slave.MacSlave
+import fr.jenkins.plugins.mac.provision.InProvisioning
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
-import groovy.util.logging.Slf4j
 import hudson.Extension
-import hudson.model.Computer
 import hudson.model.Descriptor
 import hudson.model.Label
-import hudson.model.Queue
 import hudson.model.Node
 import hudson.model.labels.LabelAtom
 import hudson.slaves.Cloud
-import hudson.slaves.ComputerLauncher
 import hudson.slaves.NodeProvisioner
 import hudson.slaves.NodeProvisioner.PlannedNode
-import jenkins.model.Jenkins
 
-@Slf4j
 class MacCloud extends Cloud {
+
+    private static final Logger LOGGER = Logger.getLogger(MacCloud.name)
 
     MacHost macHost
     MacComputerConnector connector
@@ -57,49 +51,24 @@ class MacCloud extends Cloud {
         final List<PlannedNode> r = new ArrayList<>();
         MacCloud cloud = this
         MacUser user = null
-
+        Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
+        LOGGER.log(Level.FINE, "In provisioning : {}", allInProvisioning.size())
+        int toBeProvisioned = Math.max(0, excessWorkload - allInProvisioning.size())
+        LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
         try {
-            final CompletableFuture<Node> plannedNode = new CompletableFuture<>()
             r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
-//            MacSlave slave = createSlave(cloud, user, plannedNode)
             return r
         }catch (Exception e) {
             if(null != user) {
                 try {
                     SSHCommand.deleteUserOnMac(cloud.name, user.username)
                 } catch(SSHCommandException sshe) {
-                    log.error(sshe.getMessage(), sshe)
+                    LOGGER.log(Level.SEVERE, sshe.getMessage(), sshe)
                 }
             }
-            log.error(e.getMessage(), e)
+            LOGGER.log(Level.WARNING, e.getMessage(), e)
             return Collections.emptyList()
         }
-    }
-
-    @Restricted(NoExternalUse)
-    private MacSlave createSlave(MacCloud cloud, MacUser user, CompletableFuture plannedNode) throws Exception{
-        MacSlave slave = null
-        int timeout = 0
-            Computer.threadPoolForRemoting.submit({ ->
-                Queue.withLock({ ->
-                    try {
-                        ComputerLauncher launcher = cloud.connector.createLauncher(cloud.macHost, user)
-                        slave = new MacSlave(cloud.name, cloud.labelString, user, launcher)
-                        plannedNode.complete(slave)
-                        Jenkins.get().addNode(slave)
-                        connector.connect(slave)
-                        Thread.sleep(5000L)
-                    } catch (Exception e) {
-                        plannedNode.completeExceptionally(e)
-                        if(null != slave) {
-                            slave._terminate(log)
-                        }
-                        SSHCommand.deleteUserOnMac(cloud.name, user.username)
-                        throw Throwables.propagate(e);
-                    }
-                });
-            });
-        return slave
     }
 
     @Override

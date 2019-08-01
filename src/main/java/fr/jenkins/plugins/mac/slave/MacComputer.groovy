@@ -1,6 +1,7 @@
 package fr.jenkins.plugins.mac.slave
 
 import java.util.logging.Level
+import java.util.logging.Logger
 
 import javax.annotation.CheckForNull
 
@@ -10,15 +11,15 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import com.google.common.base.Objects
 
 import fr.jenkins.plugins.mac.MacCloud
-import groovy.util.logging.Slf4j
 import hudson.EnvVars
 import hudson.model.Executor
 import hudson.model.Queue
 import hudson.slaves.AbstractCloudComputer
 
-@Slf4j
 class MacComputer extends AbstractCloudComputer<MacSlave> {
 
+    private static final Logger LOGGER = Logger.getLogger(MacComputer.name)
+    
     MacComputer(MacSlave node) {
         super(node)
     }
@@ -49,20 +50,26 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
 
     @Override
     public void taskAccepted(Executor executor, Queue.Task task) {
-        super.taskAccepted(executor, task);
-        log.info("Computer " + this + " taskAccepted")
+        super.taskAccepted(executor, task)
+        Queue.Executable exec = executor.getCurrentExecutable()
+        LOGGER.log(Level.FINE, "Computer {0} accepted task {1}", [this, exec])
     }
 
     @Override
     public void taskCompleted(Executor executor, Queue.Task task, long durationMS) {
-        log.info("Computer " + this + " taskCompleted")
+        Queue.Executable exec = executor.getCurrentExecutable()
+        LOGGER.log(Level.FINE, "Computer {0} completed task {1}", [this, exec])
+
+        // May take the agent offline and remove it, in which case getNode()
+        // above would return null and we'd not find our MacSlave anymore.
         super.taskCompleted(executor, task, durationMS)
     }
 
     @Override
     public void taskCompletedWithProblems(Executor executor, Queue.Task task, long durationMS, Throwable problems) {
         super.taskCompletedWithProblems(executor, task, durationMS, problems)
-        log.info("Computer " + this + " taskCompletedWithProblems")
+        Queue.Executable exec = executor.getCurrentExecutable()
+        LOGGER.log(Level.FINE, "Computer {0} completed task {1} with problems", [this, exec])
     }
 
     @Override

@@ -1,8 +1,7 @@
 package fr.jenkins.plugins.mac.slave;
 
 import java.util.concurrent.atomic.AtomicBoolean
-
-import org.apache.commons.lang.Validate
+import org.jenkinsci.plugins.durabletask.executors.OnceRetentionStrategy
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
@@ -13,7 +12,6 @@ import fr.jenkins.plugins.mac.ssh.SSHCommand
 import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Computer
-import hudson.model.Descriptor
 import hudson.model.Slave
 import hudson.model.TaskListener
 import hudson.model.Node.Mode
@@ -33,21 +31,22 @@ class MacSlave extends AbstractCloudSlave {
 
     MacSlave(String cloudId, String labels, MacUser user, ComputerLauncher launcher) {
         super(
-        user.username,
-        "Agent Mac for the user " + user.username,
-        user.workdir,
-        1,
-        Mode.EXCLUSIVE,
-        labels,
-        launcher,
-        buildRetentionStrategy(),
-        Collections.EMPTY_LIST)
+            user.username,
+            "Agent Mac for the user " + user.username,
+            user.workdir,
+            1,
+            Mode.EXCLUSIVE,
+            labels,
+            launcher,
+            buildRetentionStrategy(),
+            Collections.EMPTY_LIST
+        )
         this.cloudId = cloudId
         setUserId(user.username)
     }
 
     private static RetentionStrategy buildRetentionStrategy() {
-        return new CloudRetentionStrategy(10)
+        return new OnceRetentionStrategy(1)
     }
 
     @Override
@@ -65,7 +64,7 @@ class MacSlave extends AbstractCloudSlave {
 
     @Override
     MacComputer createComputer() {
-        return new MacComputer(this)
+        return MacComputerFactory.createInstance(this)
     }
 
     @Override

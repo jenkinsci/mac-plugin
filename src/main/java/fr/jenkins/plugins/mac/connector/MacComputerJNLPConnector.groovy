@@ -7,19 +7,15 @@ import org.kohsuke.stapler.DataBoundSetter
 
 import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
-import fr.jenkins.plugins.mac.slave.MacSlave
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
-import groovy.util.logging.Slf4j
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.TaskListener
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.JNLPLauncher
 import hudson.slaves.SlaveComputer
-import jenkins.slaves.JnlpSlaveAgentProtocol
 
-@Slf4j
 class MacComputerJNLPConnector extends MacComputerConnector {
 
     private String jenkinsUrl
@@ -52,13 +48,6 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         return new MacJNLPLauncher(host, user, jenkinsUrl)
     }
 
-    @Override
-    protected void connect(MacSlave slave) throws Exception {
-        JnlpSlaveAgentProtocol.SLAVE_SECRET.mac(slave.name)
-        MacJNLPLauncher launcher = (MacJNLPLauncher) slave.launcher
-        launcher.launch(slave.computer, (TaskListener) TaskListener.NULL)
-    }
-
     private static class MacJNLPLauncher extends JNLPLauncher {
 
         MacHost host
@@ -76,7 +65,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         void launch(SlaveComputer computer, TaskListener listener) {
             try {
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-            } catch(Exception e) {
+            } catch(SSHCommandException e) {
                 throw e
             }
         }

@@ -20,13 +20,15 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
     @Override
     public NodeProvisioner.PlannedNode build() {
         Future f;
+        MacUser user = null
         try {
-            MacUser user = SSHCommand.createUserOnMac(cloud.macHost)
+            user = SSHCommand.createUserOnMac(cloud.macHost)
             ComputerLauncher launcher = cloud.connector.createLauncher(cloud.macHost, user)
             MacSlave agent = new MacSlave(cloud.name, label.toString(), user, launcher)
             f = Futures.immediateFuture(agent)
         } catch (IOException | Descriptor.FormException | SSHCommandException e) {
-            f = Futures.immediateFailedFuture(e);
+            f = Futures.immediateFailedFuture(e)
+            if (user != null ) { SSHCommand.deleteUserOnMac(cloud.name, user.username) }
         }
         return new NodeProvisioner.PlannedNode(macHost.host, f, numExecutors)
     }

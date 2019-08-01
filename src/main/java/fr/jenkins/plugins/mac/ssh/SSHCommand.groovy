@@ -98,7 +98,7 @@ class SSHCommand {
      * @return true if connection succeed, false otherwise
      */
     @Restricted(NoExternalUse)
-    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws Exception {
+    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException {
         jenkinsUrl = StringUtils.isNotEmpty(jenkinsUrl) ? jenkinsUrl : Jenkins.get().getRootUrl()
         if(!jenkinsUrl.endsWith("/")) {
             jenkinsUrl += "/"
