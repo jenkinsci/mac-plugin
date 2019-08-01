@@ -2,21 +2,25 @@ package fr.jenkins.plugins.mac.planned;
 
 import java.util.concurrent.Future;
 
-import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.Futures
 
 import fr.jenkins.plugins.mac.MacUser
-import fr.jenkins.plugins.mac.slave.MacSlave;
+import fr.jenkins.plugins.mac.slave.MacSlave
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.model.Descriptor;
-import hudson.slaves.ComputerLauncher;
-import hudson.slaves.NodeProvisioner;
+import hudson.slaves.ComputerLauncher
+import hudson.slaves.NodeProvisioner
 
 /**
  * The default {@link PlannedNodeBuilder} implementation, in case there is other
  * registered.
  */
 public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public NodeProvisioner.PlannedNode build() {
         Future f;
@@ -28,7 +32,9 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
             f = Futures.immediateFuture(agent)
         } catch (IOException | Descriptor.FormException | SSHCommandException e) {
             f = Futures.immediateFailedFuture(e)
-            if (user != null ) { SSHCommand.deleteUserOnMac(cloud.name, user.username) }
+            if (user != null ) {
+                SSHCommand.deleteUserOnMac(cloud.name, user.username)
+            }
         }
         return new NodeProvisioner.PlannedNode(macHost.host, f, numExecutors)
     }

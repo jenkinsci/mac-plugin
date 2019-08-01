@@ -7,12 +7,8 @@ import hudson.model.Label;
 import hudson.slaves.NodeProvisioner;
 
 /**
- * A builder of {@link hudson.slaves.NodeProvisioner.PlannedNode} implementations for Kubernetes.
+ * A builder of {@link hudson.slaves.NodeProvisioner.PlannedNode} implementations for Mac.
  * Can be subclassed to provide alternative implementations of {@link hudson.slaves.NodeProvisioner.PlannedNode}.
- */
-/**
- * @author MD5C715N
- *
  */
 public abstract class PlannedNodeBuilder {
     protected MacCloud cloud;
@@ -22,7 +18,7 @@ public abstract class PlannedNodeBuilder {
     protected int numExecutors = 1;
 
     /**
-     * @param cloud the {@link KubernetesCloud} instance to use.
+     * @param cloud the {@link MacCloud} instance to use.
      * @return the current builder.
      */
     public PlannedNodeBuilder cloud(MacCloud cloud) {
@@ -31,7 +27,7 @@ public abstract class PlannedNodeBuilder {
     }
 
     /**
-     * @param host the {@link PodTemplate} instance to use.
+     * @param host the {@link MacHost} instance to use.
      * @return the current builder.
      */
     public PlannedNodeBuilder host(MacHost host) {
