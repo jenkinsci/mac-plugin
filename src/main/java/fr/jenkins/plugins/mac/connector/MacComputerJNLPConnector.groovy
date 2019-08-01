@@ -1,12 +1,15 @@
 package fr.jenkins.plugins.mac.connector
 
 
+import java.time.Instant
+
 import org.jenkinsci.Symbol
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 
 import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
+import fr.jenkins.plugins.mac.slave.MacComputer
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
@@ -43,6 +46,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected ComputerLauncher createLauncher(MacHost host, MacUser user) throws IOException, InterruptedException {
         return new MacJNLPLauncher(host, user, jenkinsUrl)
@@ -61,12 +67,18 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             this.jenkinsUrl = jenkinsUrl
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         void launch(SlaveComputer computer, TaskListener listener) {
-            try {
-                SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-            } catch(SSHCommandException e) {
-                throw e
+            MacComputer macComputer = (MacComputer) computer
+            SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
+            long currentTimestamp = Instant.now().toEpochMilli()
+            while(!macComputer.connecting) {
+                if((Instant.now().toEpochMilli() - currentTimestamp) > host.connectionTimeout) {
+                    throw new Exception("Connection timeout for the computer " + computer.name)
+                }
             }
         }
 
