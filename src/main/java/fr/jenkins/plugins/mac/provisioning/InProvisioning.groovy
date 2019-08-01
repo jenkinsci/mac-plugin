@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.provision
+package fr.jenkins.plugins.mac.provisioning
 
 import static java.util.stream.Collectors.toSet
 

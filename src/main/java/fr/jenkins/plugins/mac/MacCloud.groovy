@@ -10,7 +10,8 @@ import org.kohsuke.stapler.DataBoundConstructor
 
 import fr.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.jenkins.plugins.mac.planned.PlannedNodeBuilderFactory
-import fr.jenkins.plugins.mac.provision.InProvisioning
+import fr.jenkins.plugins.mac.provisioning.InProvisioning
+import fr.jenkins.plugins.mac.slave.MacSlave
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
@@ -21,6 +22,7 @@ import hudson.model.labels.LabelAtom
 import hudson.slaves.Cloud
 import hudson.slaves.NodeProvisioner
 import hudson.slaves.NodeProvisioner.PlannedNode
+import jenkins.model.Jenkins
 
 class MacCloud extends Cloud {
 
@@ -46,36 +48,37 @@ class MacCloud extends Cloud {
         return all().get(MacCloud)
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
         final List<PlannedNode> r = new ArrayList<>();
         MacCloud cloud = this
-        MacUser user = null
         Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
         LOGGER.log(Level.FINE, "In provisioning : {}", allInProvisioning.size())
         int toBeProvisioned = Math.max(0, excessWorkload - allInProvisioning.size())
         LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
-        try {
-            r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
-            return r
-        }catch (Exception e) {
-            if(null != user) {
-                try {
-                    SSHCommand.deleteUserOnMac(cloud.name, user.username)
-                } catch(SSHCommandException sshe) {
-                    LOGGER.log(Level.SEVERE, sshe.getMessage(), sshe)
-                }
+        if(toBeProvisioned > 0) {
+            try {
+                r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
+                return r
+            }catch (Exception e) {
+                LOGGER.log(Level.WARNING, e.getMessage(), e)
+                return Collections.emptyList()
             }
-            LOGGER.log(Level.WARNING, e.getMessage(), e)
-            return Collections.emptyList()
         }
+        return Collections.emptyList()
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     boolean canProvision(Label label) {
         return !disabled
     }
-
+    
     @Extension
     static class DescriptorImpl extends Descriptor<Cloud> {
 

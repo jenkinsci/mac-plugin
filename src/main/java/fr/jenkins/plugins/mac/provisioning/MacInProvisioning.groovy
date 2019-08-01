@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.provision
+package fr.jenkins.plugins.mac.provisioning
 
 import java.util.logging.Logger
 
@@ -15,10 +15,9 @@ class MacInProvisioning extends InProvisioning {
     private static final Logger LOGGER = Logger.getLogger(MacInProvisioning.name);
 
     private static boolean isNotAcceptingTasks(Node n) {
-        Computer computer = n.toComputer();
-        return computer != null && (computer.isLaunchSupported() // Launcher hasn't been called yet
+        Computer computer = n.toComputer()
+        return computer != null && computer.isOnline() && computer.isIdle() && (computer.isLaunchSupported() // Launcher hasn't been called yet
                 || !n.isAcceptingTasks()) // node is not ready yet
-        ;
     }
 
     @Override
