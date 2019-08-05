@@ -15,7 +15,7 @@ f.entry(title:Messages.Host_Title()) {
     f.repeatableHeteroProperty(
             field:"macHosts",
             addCaption: "Add Mac Host",
-            oneEach:"true",
+            oneEach:"false",
             repeatableDeleteButton:'true'
             )
 }
