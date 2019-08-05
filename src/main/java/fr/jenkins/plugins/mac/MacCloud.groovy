@@ -5,6 +5,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 import org.antlr.v4.runtime.misc.Nullable
+import org.apache.commons.collections.CollectionUtils
 import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.DataBoundConstructor
 
@@ -28,16 +29,16 @@ class MacCloud extends Cloud {
 
     private static final Logger LOGGER = Logger.getLogger(MacCloud.name)
 
-    MacHost macHost
+    List<MacHost> macHosts = new ArrayList()
     MacComputerConnector connector
     String labelString
     transient Set<LabelAtom> labelSet
     Boolean disabled
 
     @DataBoundConstructor
-    MacCloud(String name, MacHost macHost, MacComputerConnector connector, String labelString, Boolean disabled) {
+    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, String labelString, Boolean disabled) {
         super(name)
-        this.macHost = macHost
+        this.macHosts = macHosts
         this.connector = connector
         this.disabled = disabled
         this.labelString = labelString
@@ -53,24 +54,23 @@ class MacCloud extends Cloud {
      */
     @Override
     synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
-        final List<PlannedNode> r = new ArrayList<>();
-        MacCloud cloud = this
-        Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
-        LOGGER.log(Level.FINE, "In provisioning : {}", allInProvisioning.size())
-        int toBeProvisioned = Math.max(0, excessWorkload - allInProvisioning.size())
-        LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
-        if(toBeProvisioned > 0) {
-            try {
+        try {
+            final List<PlannedNode> r = new ArrayList<>();
+            MacHost macHost = chooseMacHost()
+            Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
+            LOGGER.log(Level.FINE, "In provisioning : {}", allInProvisioning.size())
+            int toBeProvisioned = Math.max(0, excessWorkload - allInProvisioning.size())
+            LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
+            for(int i=0; i<toBeProvisioned;i++) {
                 r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
                 return r
-            }catch (Exception e) {
-                LOGGER.log(Level.WARNING, e.getMessage(), e)
-                return Collections.emptyList()
             }
+        }catch (Exception e) {
+            LOGGER.log(Level.WARNING, e.getMessage(), e)
+            return Collections.emptyList()
         }
-        return Collections.emptyList()
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -78,7 +78,19 @@ class MacCloud extends Cloud {
     boolean canProvision(Label label) {
         return !disabled
     }
-    
+
+    private MacHost chooseMacHost() throws Exception {
+        if(CollectionUtils.isEmpty(macHosts)) {
+            this.disabled = true
+            throw new Exception("No host is configured for the cloud " + name)
+        }
+        MacHost hostChoosen = macHosts.find {
+            SSHCommand.listLabelUsers(it, labelString).size() < it.maxUsers
+        }
+        if(null == hostChoosen) throw new Exception("Unable to find a host available")
+        return hostChoosen
+    }
+
     @Extension
     static class DescriptorImpl extends Descriptor<Cloud> {
 

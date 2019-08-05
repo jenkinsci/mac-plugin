@@ -11,7 +11,14 @@ f.entry(title: Messages.Cloud_Disabled(), field:'disabled') {
     f.checkbox()
 }
 
-f.property(field:'macHost')
+f.entry(title:Messages.Host_Title()) {
+    f.repeatableHeteroProperty(
+            field:"macHosts",
+            addCaption: "Add Mac Host",
+            oneEach:"true",
+            repeatableDeleteButton:'true'
+            )
+}
 
 f.section(title:Messages.Cloud_AgentsProperties()) {
     f.entry(title:Messages.Cloud_Labels(), field:'labelString') {

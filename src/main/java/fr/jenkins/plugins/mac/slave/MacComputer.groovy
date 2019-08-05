@@ -51,6 +51,12 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
         return node == null ? null : node.getCloudId()
     }
 
+    @CheckForNull
+    String getMacHost() {
+        final MacSlave node = getNode()
+        return node == null ? null : node.getMacHost()
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -95,7 +101,7 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
         final MacCloud cloud = getCloud()
         if (cloud != null) {
             variables.put("JENKINS_CLOUD_ID", cloud.name);
-            String macHost = cloud.macHost.host
+            String macHost = getMacHost()
             variables.put("MAC_HOST", macHost)
         }
         return variables;

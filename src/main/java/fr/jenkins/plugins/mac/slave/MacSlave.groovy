@@ -9,6 +9,7 @@ import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import fr.jenkins.plugins.mac.MacCloud
+import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
 import fr.jenkins.plugins.mac.cause.MacOfflineCause
 import fr.jenkins.plugins.mac.ssh.SSHCommand
@@ -29,9 +30,10 @@ class MacSlave extends AbstractCloudSlave {
     private static final Logger LOGGER = Logger.getLogger(MacSlave.name)
 
     final String cloudId
+    final MacHost macHost
     AtomicBoolean acceptingTasks = new AtomicBoolean(true)
 
-    MacSlave(String cloudId, String labels, MacUser user, ComputerLauncher launcher) {
+    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher) {
         super(
         user.username,
         "Agent Mac for the user " + user.username,
@@ -44,6 +46,7 @@ class MacSlave extends AbstractCloudSlave {
         Collections.EMPTY_LIST
         )
         this.cloudId = cloudId
+        this.macHost = macHost
         setUserId(user.username)
     }
 
@@ -87,7 +90,7 @@ class MacSlave extends AbstractCloudSlave {
         try {
             final Computer computer = toComputer()
             if (computer != null) {
-                SSHCommand.deleteUserOnMac(this.cloudId, this.name)
+                SSHCommand.deleteUserOnMac(this.name, this.macHost)
                 computer.disconnect(new MacOfflineCause())
                 LOGGER.log(Level.FINE, "Disconnected computer for node '{0}'.", name)
             }

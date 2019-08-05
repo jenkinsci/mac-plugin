@@ -16,7 +16,7 @@ class Constants {
 
     //Username pattern
     /**"jenkins_%s"*/
-    public static final String USERNAME_PATTERN = "jenkins_%s"
+    public static final String USERNAME_PATTERN = "%s_jenkins_%s"
     
     //Workdir pattern
     /** /Users/%s/ */
@@ -39,5 +39,9 @@ class Constants {
     public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
     /** dscl . list /Users | grep -v ^_ | grep %s */
     public static final String CHECK_USER_EXIST = "dscl . list /Users | grep -v ^_ | grep %s"
+    /** list all users on mac */
+    public static final String LIST_USERS = "dscl . list /Users | grep -v ^_ | grep %s"
     
+    //regex
+    public static final String REGEX_NEW_LINE = "\\r?\\n|\\r"
 }
