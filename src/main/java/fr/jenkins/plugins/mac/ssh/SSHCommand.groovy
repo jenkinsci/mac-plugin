@@ -51,7 +51,8 @@ class SSHCommand {
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             MacUser user = generateUser(label)
-            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
+            String result = SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password))
+            LOGGER.log(Level.FINE, result)
             if(!isUserExist(connection, user.username))
                 throw new Exception(String.format("The user %s wasn't created after verification", user.username))
             connection.close()
