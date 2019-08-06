@@ -137,32 +137,4 @@ class FormUtils {
                 fromUri(getUri(host).toString()).build(),
                 anyOf(instanceOf(StandardCredentials)))
     }
-    
-    /**
-     * Return ListBoxModel with filled item and empty option
-     * @param nameSelector
-     * @param valueSelector
-     * @param items
-     * @return ListBoxModel
-     */
-    static ListBoxModel newListBoxModel(Closure<String> nameSelector, Closure<String> valueSelector, List items) {
-        def listBoxModel = newListBoxModelWithEmptyOption()
-        items.each { item ->
-            listBoxModel.add(nameSelector(item), valueSelector(item))
-        }
-        return listBoxModel
-    }
-
-    /**
-     * Return an empty ListBoxModel with empty option
-     * @param nameSelector
-     * @param valueSelector
-     * @param items
-     * @return ListBoxModel
-     */
-    static ListBoxModel newListBoxModelWithEmptyOption() {
-        def listBoxModel = new ListBoxModel()
-        listBoxModel.add(Constants.EMPTY_LIST_BOX_NAME, Constants.EMPTY_LIST_BOX_VALUE)
-        return listBoxModel
-    }
 }
