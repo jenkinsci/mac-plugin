@@ -50,7 +50,7 @@ protected class SSHCommandLauncher {
                 log.error(error)
                 throw new Exception(error)
             }
-            return StringUtils.isNotEmpty(out) ? out : String.format("Executed command %s", command) //TODO return only out (check outside)
+            return StringUtils.isNotEmpty(out) ? out : String.format("Executed command %s", command) //TODO : return only out (check outside)
         } catch(Exception e) {
             if(session != null) session.close()
             throw e

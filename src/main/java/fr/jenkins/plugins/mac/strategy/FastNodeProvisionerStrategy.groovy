@@ -1,4 +1,4 @@
-// TODO Provisionning strategy
+// TODO : Provisionning strategy
 //package fr.jenkins.plugins.mac.strategy;
 //
 //import static hudson.slaves.NodeProvisioner.StrategyDecision.CONSULT_REMAINING_STRATEGIES;

@@ -18,6 +18,26 @@ class SSHCommandTest extends Specification {
     @Rule
     JenkinsRule jenkins
 
+    // TODO : Get NoClassDefFoundException
+//    def "createUserOnMac should not throw exception"() {
+//        setup:
+//        String label = "label"
+//        MacHost macHost = Mock(MacHost)
+//        Connection conn = Mock(Connection)
+//        GroovySpy(SSHClientFactory, global:true)
+//        1 * SSHClientFactory.getSshClient(*_) >> conn
+//        GroovySpy(SSHCommandLauncher, global:true)
+//        GroovySpy(SSHCommand, global:true)
+//        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
+//        1 * SSHCommand.isUserExist(conn, _) >> true
+//        when:
+//        MacUser user = SSHCommand.createUserOnMac(label, macHost)
+//
+//        then:
+//        notThrown Exception
+//        user != null
+//    }
+
     def "createUserOnMac should throw exception because user does not exist after creation"() {
         setup:
         String label = "label"
@@ -28,6 +48,7 @@ class SSHCommandTest extends Specification {
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
         1 * SSHCommandLauncher.executeCommand(conn, true, _) >> "OK"
+
         when:
         MacUser user = SSHCommand.createUserOnMac(label, macHost)
 
@@ -47,13 +68,14 @@ class SSHCommandTest extends Specification {
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
         1 * SSHCommandLauncher.executeCommand(conn, true, _) >> ""
+
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
 
         then:
         notThrown Exception
     }
-    
+
     def "deleteUserOnMac should return exception because user always exist after command"() {
         setup:
         String username = "mac_user_test"
@@ -64,6 +86,7 @@ class SSHCommandTest extends Specification {
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
         1 * SSHCommandLauncher.executeCommand(conn, true, _) >> username
+
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
 
@@ -82,6 +105,7 @@ class SSHCommandTest extends Specification {
         1 * SSHClientFactory.getUserClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)
         2 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
+
         when:
         SSHCommand.jnlpConnect(macHost, user, null, slaveSecret)
 
@@ -97,7 +121,7 @@ class SSHCommandTest extends Specification {
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getUserClient(*_) >> conn
-        
+
         when:
         SSHCommand.jnlpConnect(macHost, user, null, slaveSecret)
 
@@ -105,7 +129,7 @@ class SSHCommandTest extends Specification {
         SSHCommandException e = thrown()
         e.getMessage().contains("Cannot connect Mac " + macHost.host + " with user " + user.username + " to jenkins with JNLP")
     }
-    
+
     def "listLabelUsers should works without exception"() {
         setup:
         String label = "label"
