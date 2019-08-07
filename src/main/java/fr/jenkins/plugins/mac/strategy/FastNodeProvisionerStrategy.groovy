@@ -1,35 +1,34 @@
-// TODO : Provisionning strategy
-//package fr.jenkins.plugins.mac.strategy;
-//
-//import static hudson.slaves.NodeProvisioner.StrategyDecision.CONSULT_REMAINING_STRATEGIES;
-//import static hudson.slaves.NodeProvisioner.StrategyDecision.PROVISIONING_COMPLETED;
-//import static java.util.logging.Level.FINE;
-//import static java.util.logging.Level.FINEST;
-//
-//import java.util.logging.Logger;
-//
-//import javax.annotation.Nonnull;
-//
-//import fr.jenkins.plugins.mac.MacCloud
-//import hudson.Extension;
-//import hudson.model.Label;
-//import hudson.model.LoadStatistics;
-//import hudson.model.Queue;
-//import hudson.model.queue.QueueListener;
-//import hudson.slaves.Cloud;
-//import hudson.slaves.NodeProvisioner;
-//import hudson.slaves.NodeProvisioner.Strategy
-//import hudson.slaves.NodeProvisioner.StrategyDecision
-//import jenkins.model.Jenkins;
-//
-///**
-// * Based on https://github.com/jenkinsci/one-shot-executor-plugin/blob/master/src/main/java/org/jenkinsci/plugins/oneshot/OneShotProvisionerStrategy.java
-// *
-// * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
-// */
-//@Extension
-//public class FastNodeProvisionerStrategy extends Strategy {
-//
+package fr.jenkins.plugins.mac.strategy;
+
+import static hudson.slaves.NodeProvisioner.StrategyDecision.CONSULT_REMAINING_STRATEGIES;
+import static hudson.slaves.NodeProvisioner.StrategyDecision.PROVISIONING_COMPLETED;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+
+import java.util.logging.Logger;
+
+import javax.annotation.Nonnull;
+
+import fr.jenkins.plugins.mac.MacCloud
+import hudson.Extension;
+import hudson.model.Label;
+import hudson.model.LoadStatistics;
+import hudson.model.Queue;
+import hudson.model.queue.QueueListener;
+import hudson.slaves.Cloud;
+import hudson.slaves.NodeProvisioner;
+import hudson.slaves.NodeProvisioner.Strategy
+import hudson.slaves.NodeProvisioner.StrategyDecision
+import jenkins.model.Jenkins;
+
+/**
+ * Based on https://github.com/jenkinsci/one-shot-executor-plugin/blob/master/src/main/java/org/jenkinsci/plugins/oneshot/OneShotProvisionerStrategy.java
+ *
+ * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
+ */
+@Extension
+public class FastNodeProvisionerStrategy /*extends Strategy*/ {
+//    TODO : Provisionning strategy
 //    private static final Logger LOGGER = Logger.getLogger(FastNodeProvisionerStrategy.class.getName())
 //
 //    @Nonnull
@@ -107,4 +106,4 @@
 //            }
 //        }
 //    }
-//}
+}

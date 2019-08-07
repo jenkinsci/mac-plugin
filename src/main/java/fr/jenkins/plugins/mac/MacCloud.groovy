@@ -55,7 +55,7 @@ class MacCloud extends Cloud {
     @Override
     synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
         try {
-            final List<PlannedNode> r = new ArrayList<>();
+            final List<PlannedNode> r = new ArrayList<>()
             MacHost macHost = chooseMacHost()
             Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
             LOGGER.log(Level.FINE, "In provisioning : {}", allInProvisioning.size())

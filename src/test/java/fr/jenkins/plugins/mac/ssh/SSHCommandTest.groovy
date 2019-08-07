@@ -43,6 +43,7 @@ class SSHCommandTest extends Specification {
         String label = "label"
         MacHost macHost = Mock(MacHost)
         Connection conn = Mock(Connection)
+        
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)

@@ -1,11 +1,10 @@
-// TODO : Monitor
-//package fr.jenkins.plugins.mac.slave
-//
-//import fr.jenkins.plugins.mac.MacHost
-//
-//@Singleton
-//class MacComputerMonitor {
-//
+package fr.jenkins.plugins.mac.slave
+
+import fr.jenkins.plugins.mac.MacHost
+
+@Singleton
+class MacComputerMonitor {
+//    TODO : Monitor
 //    Map<String, MacMonitor> macMonitorMap
 //    
 //    Map<String, MacHost> macHostByUsersMap = new HashMap()
@@ -30,4 +29,4 @@
 //        int nbUser = 0
 //        int workload = 0
 //    }
-//}
+}
