@@ -3,7 +3,6 @@ package fr.jenkins.plugins.mac.ssh
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import org.apache.commons.collections.CollectionUtils
 import org.apache.commons.lang.RandomStringUtils
 import org.apache.commons.lang.StringUtils
 import org.kohsuke.accmod.Restricted
@@ -11,7 +10,6 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import com.trilead.ssh2.Connection
 
-import fr.jenkins.plugins.mac.MacCloud
 import fr.jenkins.plugins.mac.MacHost
 import fr.jenkins.plugins.mac.MacUser
 import fr.jenkins.plugins.mac.ssh.connection.SSHClientFactory
