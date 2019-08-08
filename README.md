@@ -34,3 +34,12 @@ Configure the Logger of the plugin :
 <img src="https://image.noelshack.com/fichiers/2019/32/4/1565272766-custom-log-mac.png" width="750"/>
 
 Save your configuration.
+
+### Execution
+After configuration, when you run a job with a Mac Cloud label, it will create a jenkins agent on the mac you setted as host and run the build on it.
+
+You can see it on the home page of Jenkins :
+
+<img src="https://image.noelshack.com/fichiers/2019/32/4/1565277561-agent-mac-running.png" width="300"/>
+
+
