@@ -90,4 +90,21 @@ class MacSlaveTest extends Specification {
         notThrown Exception
         result == user.username + " on " + cloud.name
     }
+    
+    def "should return node name equals username"() {
+        setup:
+        List<MacHost> macHosts = MacPojoBuilder.buildMacHost()
+        MacComputerJNLPConnector connector = MacPojoBuilder.buildConnector(jenkinsRule)
+        MacUser user = MacPojoBuilder.buildUser()
+        MacSlave slave = new MacSlave(null,"testLabel", user, macHosts.get(0), connector.createLauncher(macHosts.get(0), user))
+
+        when:
+        jenkinsRule.jenkins.get().addNode(slave)
+        assert jenkinsRule.jenkins.get().getNode(slave.name) == slave
+        String result = slave.displayName
+
+        then:
+        notThrown Exception
+        result == user.username
+    }
 }

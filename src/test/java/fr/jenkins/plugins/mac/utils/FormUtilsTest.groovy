@@ -9,6 +9,7 @@ import fr.jenkins.plugins.mac.Messages
 import fr.jenkins.plugins.mac.ssh.SSHCommand
 import fr.jenkins.plugins.mac.ssh.connection.SSHClientFactory
 import fr.jenkins.plugins.mac.util.FormUtils
+import hudson.model.Item
 import hudson.util.FormValidation
 import hudson.util.FormValidation.Kind
 import hudson.util.ListBoxModel
@@ -39,7 +40,7 @@ class FormUtilsTest extends Specification {
         null != uri
         uri.getHost() == "localhost"
     }
-
+    
     def "validate host with jenkins url should not throw exception"() {
         setup:
         URI uri = jenkinsRule.getURL().toURI()
@@ -105,6 +106,15 @@ class FormUtilsTest extends Specification {
 //    }
 
     def "newCredentialsItemsListBoxModel should not throw exception and should not return null"() {
-        // TODO : newCredentialsItemsListBoxModel test
+        setup:
+        String host = "test.host"
+        String credentialsId = "credentials"
+        
+        when:
+        ListBoxModel list = FormUtils.newCredentialsItemsListBoxModel(host, credentialsId, null)
+        
+        then:
+        notThrown Exception
+        list != null
     }
 }

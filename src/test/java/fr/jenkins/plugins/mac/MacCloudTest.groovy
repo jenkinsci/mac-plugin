@@ -2,17 +2,11 @@ package fr.jenkins.plugins.mac
 
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
+
 import fr.jenkins.plugins.mac.test.builders.MacPojoBuilder
-import fr.jenkins.plugins.mac.connector.MacComputerConnector
-import fr.jenkins.plugins.mac.connector.MacComputerJNLPConnector
-import hudson.Launcher
-import hudson.model.AbstractBuild
-import hudson.model.BuildListener
-import hudson.model.Cause
 import hudson.model.FreeStyleProject
-import hudson.model.Job
 import hudson.model.Label
-import hudson.util.OneShotEvent
+import hudson.slaves.Cloud
 import spock.lang.Specification
 
 class MacCloudTest extends Specification {
@@ -47,4 +41,5 @@ class MacCloudTest extends Specification {
         notThrown Exception
         isBuilt == true
     }
+    
 }
