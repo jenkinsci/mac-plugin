@@ -11,7 +11,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>mac-plugin</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.0-alpha-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
         <findbugs.failOnError>false</findbugs.failOnError>
