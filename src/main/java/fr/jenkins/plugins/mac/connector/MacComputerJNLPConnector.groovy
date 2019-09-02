@@ -59,6 +59,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         MacHost host
         MacUser user
         String jenkinsUrl
+        boolean launched
 
         MacJNLPLauncher(MacHost host, MacUser user, String jenkinsUrl) {
             super(true)
@@ -80,11 +81,12 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     throw new Exception("Connection timeout for the computer " + computer.name)
                 }
             }
+            launched = true
         }
 
         @Override
         boolean isLaunchSupported() {
-            return true
+            return !launched
         }
     }
 }

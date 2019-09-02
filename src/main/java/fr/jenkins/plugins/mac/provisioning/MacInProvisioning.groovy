@@ -16,7 +16,8 @@ class MacInProvisioning extends InProvisioning {
 
     private static boolean isNotAcceptingTasks(Node n) {
         Computer computer = n.toComputer()
-        return computer != null && (!computer.isAcceptingTasks() // Launcher hasn't been called yet
+        return computer != null && (computer.isLaunchSupported() 
+                || !computer.isAcceptingTasks() // Launcher hasn't been called yet
                 || !n.isAcceptingTasks()) // node is not ready yet
     }
 
