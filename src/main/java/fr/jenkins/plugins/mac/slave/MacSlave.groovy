@@ -33,7 +33,7 @@ class MacSlave extends AbstractCloudSlave {
     final MacHost macHost
     AtomicBoolean acceptingTasks = new AtomicBoolean(true)
 
-    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher) {
+    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher, Integer idleMinutes) {
         super(
         user.username,
         "Agent Mac for the user " + user.username,
@@ -42,7 +42,7 @@ class MacSlave extends AbstractCloudSlave {
         Mode.EXCLUSIVE,
         labels,
         launcher,
-        buildRetentionStrategy(),
+        buildRetentionStrategy(idleMinutes),
         Collections.EMPTY_LIST
         )
         this.cloudId = cloudId
@@ -50,8 +50,13 @@ class MacSlave extends AbstractCloudSlave {
         setUserId(user.username)
     }
 
-    private static RetentionStrategy buildRetentionStrategy() {
-        return new OnceRetentionStrategy(1)
+    /**
+     * Return the retention strategy used for this MacSlave
+     * @param idleMinutes
+     * @return OnceRetentionStrategy
+     */
+    private static RetentionStrategy buildRetentionStrategy(Integer idleMinutes) {
+        return new OnceRetentionStrategy(idleMinutes.intValue())
     }
 
     /**

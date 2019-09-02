@@ -34,14 +34,16 @@ class MacCloud extends Cloud {
     String labelString
     transient Set<LabelAtom> labelSet
     Boolean disabled
+    Integer idleMinutes
 
     @DataBoundConstructor
-    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, String labelString, Boolean disabled) {
+    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, String labelString, Boolean disabled, Integer idleMinutes) {
         super(name)
         this.macHosts = macHosts
         this.connector = connector
         this.disabled = disabled
         this.labelString = labelString
+        this.idleMinutes = idleMinutes
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
