@@ -86,7 +86,7 @@ class SSHClientFactory {
         Connection conn = new Connection(adr)
         if(credentials instanceof StandardUsernamePasswordCredentials) {
             StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
-            conn.connect(null, connectionTimeout.intValue(), readTimeout.intValue(), kexTimeout.intValue())
+            conn.connect(null, connectionTimeout.multiply(1000).intValue(), readTimeout.multiply(1000).intValue(), kexTimeout.multiply(1000).intValue())
             conn.authenticateWithPassword(usernamePasswordCredentials.getUsername(), usernamePasswordCredentials.getPassword().getPlainText())
         }
         return conn

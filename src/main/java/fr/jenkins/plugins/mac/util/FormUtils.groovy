@@ -98,7 +98,7 @@ class FormUtils {
         try {
             connection = SSHClientFactory.getSshClient(
                     new SSHClientFactoryConfiguration(credentialsId: credentialsId, port: port,
-                    context: context, host: host, connectionTimeout: connectionTimeout,
+                    context: context, host: host, connectionTimeout: 30,
                     readTimeout: readTimeout, kexTimeout: kexTimeout))
             String result = SSHCommand.checkConnection(connection)
             connection.close()

@@ -76,7 +76,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             long currentTimestamp = Instant.now().toEpochMilli()
             while(!macComputer.connecting) {
-                if((Instant.now().toEpochMilli() - currentTimestamp) > host.connectionTimeout) {
+                if((Instant.now().toEpochMilli() - currentTimestamp) > host.connectionTimeout.multiply(1000).intValue()) {
                     throw new Exception("Connection timeout for the computer " + computer.name)
                 }
             }
