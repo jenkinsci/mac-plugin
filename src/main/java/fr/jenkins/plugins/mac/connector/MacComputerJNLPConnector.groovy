@@ -76,12 +76,20 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             MacComputer macComputer = (MacComputer) computer
             SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             long currentTimestamp = Instant.now().toEpochMilli()
-            while(!macComputer.connecting) {
-                if((Instant.now().toEpochMilli() - currentTimestamp) > host.connectionTimeout.multiply(1000).intValue()) {
-                    throw new Exception("Connection timeout for the computer " + computer.name)
+            launched = true
+            while(!macComputer.isOnline()) {
+                if (macComputer == null) {
+                    launched = false
+                    throw new IllegalStateException("Node was deleted, computer is null");
+                }
+                if (macComputer.isOnline()) {
+                    break;
+                }
+                if((Instant.now().toEpochMilli() - currentTimestamp) > host.agentConnectionTimeout.multiply(1000).intValue()) {
+                    launched = false
+                    throw new InterruptedException("Connection timeout for the computer " + computer.name)
                 }
             }
-            launched = true
         }
 
         @Override

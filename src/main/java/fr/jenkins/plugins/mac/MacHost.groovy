@@ -32,6 +32,7 @@ class MacHost implements Describable<MacHost> {
     Integer connectionTimeout
     Integer readTimeout
     Integer kexTimeout
+    Integer agentConnectionTimeout
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
@@ -43,6 +44,7 @@ class MacHost implements Describable<MacHost> {
         this.connectionTimeout = connectionTimeout
         this.readTimeout = readTimeout
         this.kexTimeout = kexTimeout
+        this.agentConnectionTimeout = agentConnectionTimeout
     }
 
     @DataBoundSetter
@@ -78,6 +80,11 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setKexTimeout(Integer kexTimeout) {
         this.kexTimeout = kexTimeout
+    }
+
+    @DataBoundSetter
+    void setAgentConnectionTimeout(Integer agentConnectionTimeout) {
+        this.agentConnectionTimeout = agentConnectionTimeout
     }
 
     @Override

@@ -35,6 +35,10 @@ f.section(title: Messages.Host_Title()) {
         f.number(clazz: 'required', default: 0, min: 0)
     }
 
+    f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectionTimeout') {
+        f.number(clazz: 'required', default: 15, min: 15)
+    }
+
     f.block() {
         f.validateButton(
                 title: _(Messages.Host_TestConnection()),
