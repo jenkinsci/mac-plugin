@@ -60,7 +60,7 @@ class MacCloud extends Cloud {
             final List<PlannedNode> r = new ArrayList<>()
             MacHost macHost = chooseMacHost()
             Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
-            LOGGER.log(Level.FINE, "In provisioning : {}", allInProvisioning.size())
+            LOGGER.log(Level.FINE, "In provisioning : {0}", allInProvisioning.size())
             int toBeProvisioned = Math.max(0, excessWorkload - allInProvisioning.size())
             LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
             for(int i=0; i<toBeProvisioned;i++) {
