@@ -73,10 +73,21 @@ class MacComputerJNLPConnector extends MacComputerConnector {
          */
         @Override
         void launch(SlaveComputer computer, TaskListener listener) {
-            MacComputer macComputer = (MacComputer) computer
-            SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-            long currentTimestamp = Instant.now().toEpochMilli()
+            int nbTry = 0
             launched = true
+            MacComputer macComputer = (MacComputer) computer
+            while(true) {
+                try {
+                    nbTry++
+                    SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
+                    break
+                }catch(SSHCommandException sshe) {
+                    if(nbTry > 5)
+                        launched = false
+                        throw new InterruptedException("Error while connecting computer " + computer.name)
+                }
+            }
+            long currentTimestamp = Instant.now().toEpochMilli()
             while(!macComputer.isOnline()) {
                 if (macComputer == null) {
                     launched = false
