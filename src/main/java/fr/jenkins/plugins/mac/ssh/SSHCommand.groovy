@@ -157,8 +157,8 @@ class SSHCommand {
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.LIST_USERS, label+"_jenkins_"))
             LOGGER.log(Level.FINE, result)
-            if(result.contains("Executed command")) return new ArrayList()
             connection.close()
+            if(result.contains("Executed command")) return new ArrayList()
             return result.split(Constants.REGEX_NEW_LINE) as List
         } catch(Exception e) {
             if(null != connection) connection.close()
