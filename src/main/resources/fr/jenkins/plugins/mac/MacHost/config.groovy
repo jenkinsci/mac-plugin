@@ -6,6 +6,10 @@ def f = namespace(lib.FormTagLib)
 def c = namespace(lib.CredentialsTagLib)
 
 f.section(title: Messages.Host_Title()) {
+    
+    f.entry(title: Messages.Host_Disabled(), field:'disabled') {
+        f.checkbox()
+    }
 
     f.entry(title: _(Messages.Host_Host()), field: 'host') {
         f.textbox(clazz: 'required')

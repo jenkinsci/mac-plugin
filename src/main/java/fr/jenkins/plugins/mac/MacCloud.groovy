@@ -33,15 +33,13 @@ class MacCloud extends Cloud {
     MacComputerConnector connector
     String labelString
     transient Set<LabelAtom> labelSet
-    Boolean disabled
     Integer idleMinutes
 
     @DataBoundConstructor
-    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, String labelString, Boolean disabled, Integer idleMinutes) {
+    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, String labelString, Integer idleMinutes) {
         super(name)
         this.macHosts = macHosts
         this.connector = connector
-        this.disabled = disabled
         this.labelString = labelString
         this.idleMinutes = idleMinutes
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
@@ -78,16 +76,25 @@ class MacCloud extends Cloud {
      */
     @Override
     boolean canProvision(Label label) {
-        return !disabled
+        return macHosts.find {!it.disabled} != null
     }
 
     private MacHost chooseMacHost() throws Exception {
         if(CollectionUtils.isEmpty(macHosts)) {
-            this.disabled = true
             throw new Exception("No host is configured for the cloud " + name)
         }
         MacHost hostChoosen = macHosts.find {
-            SSHCommand.listLabelUsers(it, labelString).size() < it.maxUsers
+            if(it.disabled) {
+                return false
+            }
+            try {
+                int existingUsers = SSHCommand.listLabelUsers(it, labelString).size()
+                return existingUsers < it.maxUsers
+            } catch(SSHCommandException sshe) {
+                LOGGER.log(Level.INFO, "Disabling Mac Host {0}", it.host)
+                it.disabled = true
+                return false
+            }
         }
         if(null == hostChoosen) throw new Exception("Unable to find a host available")
         return hostChoosen

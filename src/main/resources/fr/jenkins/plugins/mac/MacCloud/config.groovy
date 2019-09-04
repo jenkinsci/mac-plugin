@@ -7,9 +7,6 @@ def f = namespace(lib.FormTagLib)
 f.entry(title: Messages.Cloud_Name(), field:'name') {
     f.textbox(default:'mac')
 }
-f.entry(title: Messages.Cloud_Disabled(), field:'disabled') {
-    f.checkbox()
-}
 
 f.entry(title:Messages.Host_Title()) {
     f.repeatableHeteroProperty(

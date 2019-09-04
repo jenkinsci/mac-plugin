@@ -16,7 +16,7 @@ class MacCloudTest extends Specification {
 
     def "should create cloud"() {
         setup:
-        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkinsRule), "testLabel", false, new Integer(1))
+        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkinsRule), "testLabel", new Integer(1))
 
         when:
         jenkinsRule.jenkins.clouds.add(cloud)
@@ -29,7 +29,7 @@ class MacCloudTest extends Specification {
 
     def "should call provision method"() {
         setup:
-        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkinsRule), "testLabel", false, new Integer(1))
+        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkinsRule), "testLabel", new Integer(1))
         jenkinsRule.jenkins.clouds.add(cloud)
         FreeStyleProject project = jenkinsRule.createFreeStyleProject("test")
         project.setAssignedLabel(Label.parse("testLabel").getAt(0))

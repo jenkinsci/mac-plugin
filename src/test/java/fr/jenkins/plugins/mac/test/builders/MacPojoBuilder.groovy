@@ -18,7 +18,8 @@ class MacPojoBuilder {
                 10, //maxUsers
                 5, //connectionTimeout
                 5, //readTimeout
-                5 //kexTimeout
+                5,//kexTimeout
+                false //disabled
                 )
         List<MacHost> hostList = new ArrayList()
         hostList.add(host)

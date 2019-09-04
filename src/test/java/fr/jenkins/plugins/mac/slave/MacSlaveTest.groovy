@@ -22,7 +22,7 @@ class MacSlaveTest extends Specification {
         List<MacHost> macHosts = MacPojoBuilder.buildMacHost()
         MacComputerJNLPConnector connector = MacPojoBuilder.buildConnector(jenkinsRule)
         MacUser user = MacPojoBuilder.buildUser()
-        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", false, new Integer(1))
+        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", new Integer(1))
         MacSlave slave = new MacSlave("test","testLabel", user, macHosts.get(0), connector.createLauncher(macHosts.get(0), user), new Integer(1))
 
         when:
@@ -39,7 +39,7 @@ class MacSlaveTest extends Specification {
         List<MacHost> macHosts = MacPojoBuilder.buildMacHost()
         MacComputerJNLPConnector connector = MacPojoBuilder.buildConnector(jenkinsRule)
         MacUser user = MacPojoBuilder.buildUser()
-        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", false, new Integer(1))
+        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", new Integer(1))
         MacSlave slave = new MacSlave("test","testLabel", user, macHosts.get(0), connector.createLauncher(macHosts.get(0), user), new Integer(1))
 
         when:
@@ -58,7 +58,7 @@ class MacSlaveTest extends Specification {
         List<MacHost> macHosts = MacPojoBuilder.buildMacHost()
         MacComputerJNLPConnector connector = MacPojoBuilder.buildConnector(jenkinsRule)
         MacUser user = MacPojoBuilder.buildUser()
-        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", false, new Integer(1))
+        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", new Integer(1))
         MacSlave slave = new MacSlave("test","testLabel", user, macHosts.get(0), connector.createLauncher(macHosts.get(0), user), new Integer(1))
 
         when:
@@ -77,7 +77,7 @@ class MacSlaveTest extends Specification {
         List<MacHost> macHosts = MacPojoBuilder.buildMacHost()
         MacComputerJNLPConnector connector = MacPojoBuilder.buildConnector(jenkinsRule)
         MacUser user = MacPojoBuilder.buildUser()
-        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", false, new Integer(1))
+        MacCloud cloud = new MacCloud("test", macHosts, connector, "testLabel", new Integer(1))
         MacSlave slave = new MacSlave("test","testLabel", user, macHosts.get(0), connector.createLauncher(macHosts.get(0), user), new Integer(1))
 
         when:
