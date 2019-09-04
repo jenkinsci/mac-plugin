@@ -44,8 +44,9 @@ class SSHCommand {
      */
     @Restricted(NoExternalUse)
     static MacUser createUserOnMac(String label, MacHost macHost) throws Exception {
+        Connection connection = null
         try {
-            Connection connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
+            connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             MacUser user = generateUser(label)
@@ -56,6 +57,7 @@ class SSHCommand {
             connection.close()
             return user
         } catch(Exception e) {
+            if(null != connection) connection.close()
             final String message = String.format(SSHCommandException.CREATE_MAC_USER_ERROR_MESSAGE, macHost.host)
             throw new SSHCommandException(message, e)
         }
@@ -69,8 +71,9 @@ class SSHCommand {
      */
     @Restricted(NoExternalUse)
     static void deleteUserOnMac(String username, MacHost macHost) throws Exception {
+        Connection connection = null
         try {
-            Connection connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
+            connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.DELETE_USER, username)))
@@ -78,6 +81,7 @@ class SSHCommand {
                 throw new Exception(String.format("The user %s still exist after verification", username))
             connection.close()
         } catch (Exception e) {
+            if(null != connection) connection.close()
             final String message = String.format(SSHCommandException.DELETE_MAC_USER_ERROR_MESSAGE, username, macHost.host)
             throw new SSHCommandException(message, e)
         }
@@ -98,8 +102,9 @@ class SSHCommand {
             jenkinsUrl += "/"
         }
         String remotingUrl = jenkinsUrl + Constants.REMOTING_JAR_PATH
+        Connection connection = null
         try {
-            Connection connection = SSHClientFactory.getUserClient(user.username, user.password, macHost.host,
+            connection = SSHClientFactory.getUserClient(user.username, user.password, macHost.host,
                     macHost.port, macHost.connectionTimeout, macHost.readTimeout, macHost.kexTimeout)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
             String result = SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret))
@@ -107,6 +112,7 @@ class SSHCommand {
             connection.close()
             return true
         } catch(Exception e) {
+            if(null != connection) connection.close()
             final String message = String.format(SSHCommandException.JNLP_CONNECTION_ERROR_MESSAGE, macHost.host, user.username)
             throw new SSHCommandException(message, e)
         }
@@ -143,16 +149,19 @@ class SSHCommand {
      * @return true if exist, false if not
      */
     @Restricted(NoExternalUse)
-    static List<String> listLabelUsers(MacHost macHost, String label) throws SSHCommandException{
+    static List<String> listLabelUsers(MacHost macHost, String label) throws SSHCommandException {
+        Connection connection = null
         try {
-            Connection connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
+            connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.LIST_USERS, label+"_jenkins_"))
             LOGGER.log(Level.FINE, result)
             if(result.contains("Executed command")) return new ArrayList()
+            connection.close()
             return result.split(Constants.REGEX_NEW_LINE) as List
         } catch(Exception e) {
+            if(null != connection) connection.close()
             String message = String.format(SSHCommandException.LIST_USERS_ERROR_MESSAGE, macHost.host)
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
