@@ -162,8 +162,9 @@ class SSHCommand {
             return result.split(Constants.REGEX_NEW_LINE) as List
         } catch(Exception e) {
             if(null != connection) connection.close()
-            String message = String.format(SSHCommandException.LIST_USERS_ERROR_MESSAGE, macHost.host)
-            LOGGER.log(Level.SEVERE, message, e)
+            String message = String.format(SSHCommandException.LIST_USERS_ERROR_MESSAGE, macHost.host, e.getMessage())
+            LOGGER.log(Level.WARNING, message)
+            LOGGER.log(Level.FINEST, "Exception : ", e)
             throw new SSHCommandException(message, e)
         }
     }

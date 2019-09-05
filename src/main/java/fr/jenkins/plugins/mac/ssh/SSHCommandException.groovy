@@ -17,7 +17,7 @@ class SSHCommandException extends Exception {
     public static final String JNLP_CONNECTION_ERROR_MESSAGE = "Cannot connect Mac %s with user %s to jenkins with JNLP"
     
     /** Cannot get existing users on mac %s */
-    public static final String LIST_USERS_ERROR_MESSAGE = "Cannot get existing users on mac %s"
+    public static final String LIST_USERS_ERROR_MESSAGE = "Cannot get existing users on mac %s : %s"
 
     /**
      * Constructor with message and cause

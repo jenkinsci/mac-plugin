@@ -1,6 +1,8 @@
 package fr.jenkins.plugins.mac.planned;
 
 import java.util.concurrent.Future;
+import java.util.logging.Level
+import java.util.logging.Logger
 
 import com.google.common.util.concurrent.Futures
 
@@ -18,6 +20,8 @@ import hudson.slaves.NodeProvisioner
  */
 public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
 
+    private static final Logger LOGGER = Logger.getLogger(StandardPlannedNodeBuilder.name)
+
     /**
      * {@inheritDoc}
      */
@@ -31,6 +35,8 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
             MacSlave agent = new MacSlave(cloud.name, label.toString(), user, macHost, launcher, cloud.idleMinutes)
             f = Futures.immediateFuture(agent)
         } catch (IOException | Descriptor.FormException | SSHCommandException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage())
+            LOGGER.log(Level.FINEST, "Exception : ", e)
             f = Futures.immediateFailedFuture(e)
             if (user != null ) {
                 SSHCommand.deleteUserOnMac(user.username)
