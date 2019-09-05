@@ -11,6 +11,7 @@ f.entry(title: Messages.Cloud_Name(), field:'name') {
 f.entry(title:Messages.Host_Title()) {
     f.repeatableHeteroProperty(
             field:"macHosts",
+            hasHeader: "true",
             addCaption: "Add Mac Host",
             oneEach:"false",
             repeatableDeleteButton:'true'

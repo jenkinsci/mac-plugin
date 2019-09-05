@@ -88,7 +88,7 @@ class MacHost implements Describable<MacHost> {
     void setAgentConnectionTimeout(Integer agentConnectionTimeout) {
         this.agentConnectionTimeout = agentConnectionTimeout
     }
-    
+
     @DataBoundSetter
     void setDisabled(Boolean disabled) {
         this.disabled = disabled
@@ -107,6 +107,14 @@ class MacHost implements Describable<MacHost> {
      */
     @Extension
     static class DescriptorImpl extends Descriptor<MacHost> {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        String getDisplayName() {
+            return Messages.Host_DisplayName()
+        }
 
         /**
          * Check if the value of host field is correct

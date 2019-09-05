@@ -103,6 +103,9 @@ class MacCloud extends Cloud {
     @Extension
     static class DescriptorImpl extends Descriptor<Cloud> {
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         String getDisplayName() {
             return Messages.Cloud_DisplayName()
