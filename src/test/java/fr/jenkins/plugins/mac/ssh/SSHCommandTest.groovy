@@ -117,7 +117,7 @@ class SSHCommandTest extends Specification {
     def "jnlpConnect should throw exception"() {
         setup:
         MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false)
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5)
         String slaveSecret = "secret"
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
@@ -134,7 +134,7 @@ class SSHCommandTest extends Specification {
     def "listLabelUsers should works without exception"() {
         setup:
         String label = "label"
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false)
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5)
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn

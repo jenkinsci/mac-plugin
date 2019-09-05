@@ -79,6 +79,13 @@ class MacCloud extends Cloud {
         return macHosts.find {!it.disabled} != null
     }
 
+    /**
+     * Return a Mac Host available <br/>
+     * It must not be disabled and must have some users left to create <br/>
+     * If this method cannot connect to the mac via SSH, it mark it as disabled after the max retry number
+     * @return MacHost
+     * @throws Exception
+     */
     private MacHost chooseMacHost() throws Exception {
         if(CollectionUtils.isEmpty(macHosts)) {
             throw new Exception("No host is configured for the cloud " + name)
@@ -87,14 +94,23 @@ class MacCloud extends Cloud {
             if(it.disabled) {
                 return false
             }
-            try {
-                int existingUsers = SSHCommand.listLabelUsers(it, labelString).size()
-                return existingUsers < it.maxUsers
-            } catch(SSHCommandException sshe) {
-                LOGGER.log(Level.INFO, "Disabling Mac Host {0}", it.host)
-                it.disabled = true
-                return false
+            int nbTries = 0
+            while(true) {
+                try {
+                    int existingUsers = SSHCommand.listLabelUsers(it, labelString).size()
+                    return existingUsers < it.maxUsers
+                } catch(SSHCommandException sshe) {
+                    nbTries ++
+                    LOGGER.log(Level.INFO, "Disabling Mac Host {0}", it.host)
+                    it.disabled = true
+                    if(nbTries < it.maxTries) {
+                        continue
+                    } else {
+                        return false
+                    }
+                }
             }
+            
         }
         if(null == hostChoosen) throw new Exception("Unable to find a host available")
         return hostChoosen

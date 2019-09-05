@@ -33,11 +33,12 @@ class MacHost implements Describable<MacHost> {
     Integer readTimeout
     Integer kexTimeout
     Integer agentConnectionTimeout
+    Integer maxTries
     Boolean disabled
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
-    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled) {
+    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled, Integer maxTries) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -47,6 +48,7 @@ class MacHost implements Describable<MacHost> {
         this.kexTimeout = kexTimeout
         this.agentConnectionTimeout = agentConnectionTimeout
         this.disabled = disabled
+        this.maxTries = maxTries
     }
 
     @DataBoundSetter
@@ -92,6 +94,11 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setDisabled(Boolean disabled) {
         this.disabled = disabled
+    }
+    
+    @DataBoundSetter
+    void setMaxTries(Integer maxTries) {
+        this.maxTries = maxTries
     }
 
     @Override
