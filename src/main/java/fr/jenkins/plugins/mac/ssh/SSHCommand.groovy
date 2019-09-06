@@ -114,6 +114,8 @@ class SSHCommand {
         } catch(Exception e) {
             if(null != connection) connection.close()
             final String message = String.format(SSHCommandException.JNLP_CONNECTION_ERROR_MESSAGE, macHost.host, user.username)
+            LOGGER.log(Level.WARNING, message)
+            LOGGER.log(Level.FINEST, "Exception : ", e)
             throw new SSHCommandException(message, e)
         }
     }
