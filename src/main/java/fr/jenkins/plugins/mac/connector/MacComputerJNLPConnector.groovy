@@ -82,9 +82,10 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
                     break
                 }catch(SSHCommandException sshe) {
-                    if(nbTry > 5)
+                    if(nbTry > 5) {
                         launched = false
                         throw new InterruptedException("Error while connecting computer " + computer.name)
+                    }
                 }
             }
             long currentTimestamp = Instant.now().toEpochMilli()
