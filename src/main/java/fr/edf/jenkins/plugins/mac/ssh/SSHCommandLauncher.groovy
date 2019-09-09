@@ -1,5 +1,8 @@
 package fr.edf.jenkins.plugins.mac.ssh
 
+import java.util.logging.Level
+import java.util.logging.Logger
+
 import org.antlr.v4.runtime.misc.NotNull
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
@@ -17,9 +20,10 @@ import groovy.util.logging.Slf4j
  * @author Mathieu DELROCQ
  *
  */
-@Slf4j
 protected class SSHCommandLauncher {
 
+    private static final Logger LOGGER = Logger.getLogger(SSHCommandLauncher.name)
+    
     final static String UTF8 = "UTF-8"
 
     /**
@@ -35,22 +39,23 @@ protected class SSHCommandLauncher {
         Session session = null
         try {
             session = conn.openSession()
-            log.info("Executing command " + command)
+            LOGGER.log(Level.FINE, "Executing command {0}", command)
             session.execCommand(command)
             session.waitForCondition(ChannelCondition.EXIT_STATUS | ChannelCondition.EXIT_SIGNAL, 5000)
-            log.info("Exit SIGNAL : {}", session.getExitSignal())
-            log.info("Exit STATUS : {}", null != session.getExitStatus() ? session.getExitStatus().intValue() : null)
+            LOGGER.log(Level.FINEST, "Exit SIGNAL : {0}", session.getExitSignal())
+            LOGGER.log(Level.FINEST,"Exit STATUS : {0}", null != session.getExitStatus() ? session.getExitStatus().intValue() : null)
             session.close()
             String out = convertInputStream(session.getStdout())
             String err = convertInputStream(session.getStderr())
-            log.info(out)
-            log.error(err)
+            LOGGER.log(Level.FINEST, out)
+            LOGGER.log(Level.FINEST,err)
             if(!ignoreError && null != session.exitStatus && session.exitStatus.intValue() != 0) {
                 String error = String.format("Failed to execute command %s", command)
-                log.error(error)
+                LOGGER.log(Level.SEVERE, error)
                 throw new Exception(error)
             }
-            return StringUtils.isNotEmpty(out) ? out : String.format("Executed command %s", command) //TODO : return only out (check outside)
+            LOGGER.log(Level.FINE, "Executed command {0} with exit status {1}", command, null != session.exitStatus ? session.exitStatus.intValue() : null)
+            return StringUtils.isNotEmpty(out) ? out : StringUtils.isNotEmpty(err) ? err : ""
         } catch(Exception e) {
             if(session != null) session.close()
             throw e

@@ -79,6 +79,6 @@ class SSHCommandLauncherTest extends Specification {
         
         then:
         notThrown Exception
-        result == "Executed command " + command
+        result == "err"
     }
 }
