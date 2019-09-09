@@ -80,7 +80,7 @@ class SSHCommandTest extends Specification {
         notThrown Exception
     }
 
-    def "deleteUserOnMac should return exception because user always exist after command"() {
+    def "deleteUserOnMac should return exception because user still exist after command"() {
         setup:
         String username = "mac_user_test"
         MacHost macHost = Mock(MacHost)
@@ -89,7 +89,8 @@ class SSHCommandTest extends Specification {
         1 * SSHClientFactory.getSshClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-        1 * SSHCommandLauncher.executeCommand(conn, true, _) >> username
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o checkmember -m %s %s", username, username)) >> "no mac_user_test is NOT a member of mac_user_test"
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("dscl . list /Users | grep -v ^_ | grep %s", username)) >> username
 
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
@@ -97,7 +98,50 @@ class SSHCommandTest extends Specification {
         then:
         SSHCommandException e = thrown()
         e.getMessage().contains("An error occured while deleting user " + username)
+        e.getCause().getMessage().contains("The user " + username + " still exist after verification")
     }
+    
+//    def "deleteUserOnMac should not return exception if user still exist in group after command"() {
+//        setup:
+//        String username = "mac_user_test"
+//        MacHost macHost = Mock(MacHost)
+//        Connection conn = Mock(Connection)
+//        GroovySpy(SSHClientFactory, global:true)
+//        1 * SSHClientFactory.getSshClient(*_) >> conn
+//        GroovySpy(SSHCommandLauncher, global:true)
+//        3 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o checkmember -m %s %s", username, username)) >> "yes mac_user_test is a member of mac_user_test"
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("dscl . list /Users | grep -v ^_ | grep %s", username)) >> ""
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o read %s", username)) >> ""
+//
+//        when:
+//        SSHCommand.deleteUserOnMac(username, macHost)
+//
+//        then:
+//        notThrown Exception
+//    }
+//    
+//    def "deleteUserOnMac should not return exception if group still exist after command"() {
+//        setup:
+//        String username = "mac_user_test"
+//        MacHost macHost = Mock(MacHost)
+//        Connection conn = Mock(Connection)
+//        GroovySpy(SSHClientFactory, global:true)
+//        1 * SSHClientFactory.getSshClient(*_) >> conn
+//        GroovySpy(SSHCommandLauncher, global:true)
+//        3 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o checkmember -m %s %s", username, username)) >> "yes mac_user_test is a member of mac_user_test"
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("dscl . list /Users | grep -v ^_ | grep %s", username)) >> ""
+//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o read %s", username)) >> username
+//
+//        when:
+//        SSHCommand.deleteUserOnMac(username, macHost)
+//
+//        then:
+//        SSHCommandException e = thrown()
+//        e.getMessage().contains("An error occured while deleting user " + username)
+//        e.getCause().getMessage().contains("The group " + username + " still exist after verification")
+//    }
 
     def "jnlpConnect should works"() {
         setup:

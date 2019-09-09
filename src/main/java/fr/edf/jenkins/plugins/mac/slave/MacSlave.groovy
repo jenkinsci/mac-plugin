@@ -97,14 +97,14 @@ class MacSlave extends AbstractCloudSlave {
             if (computer != null) {
                 SSHCommand.deleteUserOnMac(this.name, this.macHost)
                 computer.disconnect(new MacOfflineCause())
-                LOGGER.log(Level.FINE, "Disconnected computer for node '{0}'.", name)
+                LOGGER.log(Level.FINE, "Disconnected computer for node {0}.", name)
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Can't disconnect computer for node '{0}' due to exception: {1}", [name, ex.getMessage()])
+            LOGGER.log(Level.SEVERE, "Can't disconnect computer for node " + name, ex)
         }
         try {
             Jenkins.get().removeNode(this)
-            LOGGER.log(Level.FINE, "Removed Node for node '{0}'.", name)
+            LOGGER.log(Level.FINE, "Removed Node for node {0}.", name)
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Failed to remove Node for node '" + name + "' due to exception:", ex)
         }

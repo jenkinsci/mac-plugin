@@ -50,10 +50,21 @@ class SSHCommand {
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             MacUser user = generateUser(label)
-            String result = SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password))
-            LOGGER.log(Level.FINE, result)
-            if(!isUserExist(connection, user.username))
+            String groupname = user.username
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
+            if(!isUserExist(connection, user.username)) {
                 throw new Exception(String.format("The user %s wasn't created after verification", user.username))
+            }
+//            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_GROUP, groupname)))
+//            if(!isGroupExist(connection, groupname)) {
+//                throw new Exception(String.format("The group %s wasn't created after verification", user.username))
+//            }
+//            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.ADD_USER_TO_GROUP, user.username, groupname)))
+//            if(!isUserAssignedToGroup(connection, user.username, groupname)) {
+//                throw new Exception(String.format("The user %s wasn't assigned to the group %s after verification", user.username, groupname))
+//            }
+//            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.ASSIGN_USER_FOLDER_TO_GROUP, user.username, groupname, user.username)))
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)))
             connection.close()
             return user
         } catch(Exception e) {
@@ -72,13 +83,23 @@ class SSHCommand {
     @Restricted(NoExternalUse)
     static void deleteUserOnMac(String username, MacHost macHost) throws Exception {
         Connection connection = null
+        String groupname = username
         try {
             connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
+//            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.REMOVE_USER_FROM_GROUP, username, groupname)))
+//            if(isUserAssignedToGroup(connection, username, groupname)) {
+//                LOGGER.log(Level.WARNING, String.format("The user %s is still assigned to the group %s after verification", username, groupname))
+//            }
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.DELETE_USER, username)))
-            if(isUserExist(connection, username))
+            if(isUserExist(connection, username)) {
                 throw new Exception(String.format("The user %s still exist after verification", username))
+            }
+//            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.DELETE_GROUP, groupname)))
+//            if(isGroupExist(connection, groupname)) {
+//                throw new Exception(String.format("The group %s still exist after verification", groupname))
+//            }
             connection.close()
         } catch (Exception e) {
             if(null != connection) connection.close()
@@ -145,6 +166,31 @@ class SSHCommand {
     }
 
     /**
+     * Verify if a group exist on the Mac
+     * @param connection
+     * @param username
+     * @return true if exist, false if not
+     */
+    @Restricted(NoExternalUse)
+    private static boolean isGroupExist(Connection connection, String groupname) {
+        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_GROUP_EXIST, groupname))
+        return result.contains(groupname)
+    }
+
+    /**
+     * Verify if an user was assigned to a group
+     * @param connection
+     * @param username
+     * @param groupname
+     * @return true if assigned, false if not
+     */
+    @Restricted(NoExternalUse)
+    private static boolean isUserAssignedToGroup(Connection connection, String username, String groupname) {
+        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_USER_ADDED_TO_GROUP, username, groupname))
+        return result.contains("yes") && result.contains("is a member of")
+    }
+
+    /**
      * List all users on a mac host for a label
      * @param macHost
      * @param label
@@ -160,7 +206,7 @@ class SSHCommand {
             String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.LIST_USERS, label+"_jenkins_"))
             LOGGER.log(Level.FINE, result)
             connection.close()
-            if(result.contains("Executed command")) return new ArrayList()
+            if(StringUtils.isEmpty(result)) return new ArrayList()
             return result.split(Constants.REGEX_NEW_LINE) as List
         } catch(Exception e) {
             if(null != connection) connection.close()
