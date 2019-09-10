@@ -10,7 +10,7 @@
         <relativePath />
     </parent>
     <artifactId>mac-agent-plugin</artifactId>
-    <version>1.0-beta</version>
+    <version>1.0-RC1-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
         <findbugs.failOnError>false</findbugs.failOnError>
