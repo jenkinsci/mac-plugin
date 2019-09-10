@@ -165,30 +165,30 @@ class SSHCommand {
         return result.trim() == username
     }
 
-    /**
-     * Verify if a group exist on the Mac
-     * @param connection
-     * @param username
-     * @return true if exist, false if not
-     */
-    @Restricted(NoExternalUse)
-    private static boolean isGroupExist(Connection connection, String groupname) {
-        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_GROUP_EXIST, groupname))
-        return result.contains(groupname)
-    }
+//    /**
+//     * Verify if a group exist on the Mac
+//     * @param connection
+//     * @param groupname
+//     * @return true if exist, false if not
+//     */
+//    @Restricted(NoExternalUse)
+//    private static boolean isGroupExist(Connection connection, String groupname) {
+//        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_GROUP_EXIST, groupname))
+//        return result.contains(groupname)
+//    }
 
-    /**
-     * Verify if an user was assigned to a group
-     * @param connection
-     * @param username
-     * @param groupname
-     * @return true if assigned, false if not
-     */
-    @Restricted(NoExternalUse)
-    private static boolean isUserAssignedToGroup(Connection connection, String username, String groupname) {
-        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_USER_ADDED_TO_GROUP, username, groupname))
-        return result.contains("yes") && result.contains("is a member of")
-    }
+//    /**
+//     * Verify if an user was assigned to a group
+//     * @param connection
+//     * @param username
+//     * @param groupname
+//     * @return true if assigned, false if not
+//     */
+//    @Restricted(NoExternalUse)
+//    private static boolean isUserAssignedToGroup(Connection connection, String username, String groupname) {
+//        String result = SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHECK_USER_ADDED_TO_GROUP, username, groupname))
+//        return result.contains("yes") && result.contains("is a member of")
+//    }
 
     /**
      * List all users on a mac host for a label
