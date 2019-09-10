@@ -85,9 +85,9 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
      */
     @Override
     public void taskCompletedWithProblems(Executor executor, Queue.Task task, long durationMS, Throwable problems) {
-        super.taskCompletedWithProblems(executor, task, durationMS, problems)
         Queue.Executable exec = executor.getCurrentExecutable()
         LOGGER.log(Level.FINE, "Computer {0} completed task {1} with problems", this, exec)
+        super.taskCompletedWithProblems(executor, task, durationMS, problems)
     }
 
     /**

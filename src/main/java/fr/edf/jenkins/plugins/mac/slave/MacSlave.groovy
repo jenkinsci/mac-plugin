@@ -1,5 +1,6 @@
 package fr.edf.jenkins.plugins.mac.slave;
 
+import java.nio.channels.ClosedChannelException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -110,6 +111,10 @@ class MacSlave extends AbstractCloudSlave {
         }
     }
 
+    /**
+     * Retrieve the cloud attached to this MacSlave
+     * @return MacCloud
+     */
     public MacCloud getCloud() {
         if (cloudId == null) return null;
         final Cloud cloud = Jenkins.get().getCloud(cloudId)
@@ -128,11 +133,17 @@ class MacSlave extends AbstractCloudSlave {
     @Extension
     static final class MacSlaveDescriptor extends SlaveDescriptor {
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         String getDisplayName() {
             return "Mac Agent"
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         boolean isInstantiable() {
             return false

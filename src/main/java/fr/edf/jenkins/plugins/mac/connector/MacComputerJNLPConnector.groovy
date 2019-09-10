@@ -40,6 +40,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     @Extension @Symbol("jnlp")
     public static final class DescriptorImpl extends Descriptor<MacComputerConnector> {
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getDisplayName() {
             return "Connect with JNLP"
@@ -104,6 +107,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         boolean isLaunchSupported() {
             return !launched

@@ -50,7 +50,7 @@ class SSHCommand {
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
             MacUser user = generateUser(label)
-            String groupname = user.username
+//            String groupname = user.username
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
             if(!isUserExist(connection, user.username)) {
                 throw new Exception(String.format("The user %s wasn't created after verification", user.username))
@@ -64,7 +64,8 @@ class SSHCommand {
 //                throw new Exception(String.format("The user %s wasn't assigned to the group %s after verification", user.username, groupname))
 //            }
 //            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.ASSIGN_USER_FOLDER_TO_GROUP, user.username, groupname, user.username)))
-            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)))
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)))
+            LOGGER.log(Level.FINE, "The User {0} has been CREATED on Mac {1}", user.username, macHost.host)
             connection.close()
             return user
         } catch(Exception e) {
@@ -100,6 +101,7 @@ class SSHCommand {
 //            if(isGroupExist(connection, groupname)) {
 //                throw new Exception(String.format("The group %s still exist after verification", groupname))
 //            }
+            LOGGER.log(Level.FINE, "The User {0} has been DELETED from Mac {1}", username, macHost.host)
             connection.close()
         } catch (Exception e) {
             if(null != connection) connection.close()

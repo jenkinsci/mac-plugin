@@ -67,7 +67,8 @@ class MacCloud extends Cloud {
             }
             return r
         }catch (Exception e) {
-            LOGGER.log(Level.WARNING, e.getMessage(), e)
+            LOGGER.log(Level.WARNING, e.getMessage())
+            LOGGER.log(Level.FINEST, "Exception : ", e)
             return Collections.emptyList()
         }
     }
@@ -77,7 +78,11 @@ class MacCloud extends Cloud {
      */
     @Override
     boolean canProvision(Label label) {
-        return macHosts.find {!it.disabled} != null
+        boolean canProvision = macHosts.find {!it.disabled} != null
+        if(!canProvision) {
+            LOGGER.log(Level.WARNING, "The Mac Cloud {0} is disabled", this.name)
+        }
+        return canProvision
     }
 
     /**
@@ -113,7 +118,7 @@ class MacCloud extends Cloud {
             }
             
         }
-        if(null == hostChoosen) throw new Exception("Unable to find a host available")
+        if(null == hostChoosen) throw new Exception("Unable to find a mac host available")
         return hostChoosen
     }
 
