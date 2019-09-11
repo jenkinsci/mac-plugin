@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [v1.0-beta] - 10/09/2019
 ### Fixed
+- Change packages to fr.edf.jenkins.plugin.*
 - Close unclosed ssh connections
 - Removal of unused files
 - Correct detection of agents in provisioning
