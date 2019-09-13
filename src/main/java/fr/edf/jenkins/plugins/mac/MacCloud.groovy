@@ -14,8 +14,8 @@ import fr.edf.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.edf.jenkins.plugins.mac.planned.PlannedNodeBuilderFactory
 import fr.edf.jenkins.plugins.mac.provisioning.InProvisioning
 import fr.edf.jenkins.plugins.mac.slave.MacSlave
-import fr.edf.jenkins.plugins.mac.ssh.SshCommand
-import fr.edf.jenkins.plugins.mac.ssh.SshCommandException
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
@@ -103,9 +103,9 @@ class MacCloud extends Cloud {
             int nbTries = 0
             while(true) {
                 try {
-                    int existingUsers = SshCommand.listLabelUsers(it, labelString).size()
+                    int existingUsers = SSHCommand.listLabelUsers(it, labelString).size()
                     return existingUsers < it.maxUsers
-                } catch(SshCommandException sshe) {
+                } catch(SSHCommandException sshe) {
                     nbTries ++
                     it.disabled = true
                     if(nbTries < it.maxTries) {

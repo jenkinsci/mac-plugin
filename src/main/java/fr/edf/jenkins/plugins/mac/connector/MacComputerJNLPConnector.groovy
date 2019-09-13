@@ -10,8 +10,8 @@ import org.kohsuke.stapler.DataBoundSetter
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.slave.MacComputer
-import fr.edf.jenkins.plugins.mac.ssh.SshCommand
-import fr.edf.jenkins.plugins.mac.ssh.SshCommandException
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.TaskListener
@@ -82,9 +82,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             while(true) {
                 try {
                     nbTry++
-                    SshCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
+                    SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
                     break
-                }catch(SshCommandException sshe) {
+                }catch(SSHCommandException sshe) {
                     if(nbTry > 5) {
                         launched = false
                         throw new InterruptedException("Error while connecting computer " + computer.name)

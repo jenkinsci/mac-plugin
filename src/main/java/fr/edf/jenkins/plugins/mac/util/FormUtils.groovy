@@ -16,9 +16,9 @@ import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
 import fr.edf.jenkins.plugins.mac.Messages
-import fr.edf.jenkins.plugins.mac.ssh.SshCommand
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactory
-import fr.edf.jenkins.plugins.mac.ssh.connection.SshClientFactoryConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactoryConfiguration
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -97,10 +97,10 @@ class FormUtils {
         Connection connection = null
         try {
             connection = SSHClientFactory.getSshClient(
-                    new SshClientFactoryConfiguration(credentialsId: credentialsId, port: port,
+                    new SSHClientFactoryConfiguration(credentialsId: credentialsId, port: port,
                     context: context, host: host, connectionTimeout: 30,
                     readTimeout: readTimeout, kexTimeout: kexTimeout))
-            String result = SshCommand.checkConnection(connection)
+            String result = SSHCommand.checkConnection(connection)
             connection.close()
             return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {

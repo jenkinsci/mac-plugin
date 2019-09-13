@@ -8,8 +8,8 @@ import com.google.common.util.concurrent.Futures
 
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.slave.MacSlave
-import fr.edf.jenkins.plugins.mac.ssh.SshCommand
-import fr.edf.jenkins.plugins.mac.ssh.SshCommandException
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.model.Descriptor;
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.NodeProvisioner
@@ -30,16 +30,16 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
         Future f;
         MacUser user = null
         try {
-            user = SshCommand.createUserOnMac(label.toString(), macHost)
+            user = SSHCommand.createUserOnMac(label.toString(), macHost)
             ComputerLauncher launcher = cloud.connector.createLauncher(macHost, user)
             MacSlave agent = new MacSlave(cloud.name, label.toString(), user, macHost, launcher, cloud.idleMinutes)
             f = Futures.immediateFuture(agent)
-        } catch (IOException | Descriptor.FormException | SshCommandException e) {
+        } catch (IOException | Descriptor.FormException | SSHCommandException e) {
             LOGGER.log(Level.SEVERE, e.getMessage())
             LOGGER.log(Level.FINEST, "Exception : ", e)
             f = Futures.immediateFailedFuture(e)
             if (user != null ) {
-                SshCommand.deleteUserOnMac(user.username)
+                SSHCommand.deleteUserOnMac(user.username)
             }
         }
         return new NodeProvisioner.PlannedNode(macHost.host, f, numExecutors)

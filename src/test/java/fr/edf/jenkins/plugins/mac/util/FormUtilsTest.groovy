@@ -6,7 +6,7 @@ import org.jvnet.hudson.test.JenkinsRule
 import com.trilead.ssh2.Connection
 
 import fr.edf.jenkins.plugins.mac.Messages
-import fr.edf.jenkins.plugins.mac.ssh.SshCommand
+import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactory
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.model.Item

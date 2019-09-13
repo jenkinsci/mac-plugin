@@ -5,7 +5,7 @@ package fr.edf.jenkins.plugins.mac.ssh
  * @author Mathieu DELROCQ
  *
  */
-class SshCommandException extends Exception {
+class SSHCommandException extends Exception {
     
     /** Cannot create MacUser on host %s */
     public static final String CREATE_MAC_USER_ERROR_MESSAGE = "Cannot create MacUser on host %s"
@@ -24,7 +24,7 @@ class SshCommandException extends Exception {
      * @param message
      * @param cause
      */
-    SshCommandException(String message, Exception cause) {
+    SSHCommandException(String message, Exception cause) {
         super(message, cause)
     }
     

@@ -11,7 +11,7 @@ import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import hudson.util.Secret
 import spock.lang.Specification
 
-class SshClientFactoryTest extends Specification {
+class SSHClientFactoryTest extends Specification {
 
     @Rule
     JenkinsRule jenkins = new JenkinsRule()
