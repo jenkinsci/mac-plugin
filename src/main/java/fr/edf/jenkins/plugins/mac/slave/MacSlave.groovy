@@ -13,7 +13,7 @@ import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.cause.MacOfflineCause
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
+import fr.edf.jenkins.plugins.mac.ssh.SshCommand
 import hudson.Extension
 import hudson.model.Computer
 import hudson.model.Slave
@@ -96,7 +96,7 @@ class MacSlave extends AbstractCloudSlave {
         try {
             final Computer computer = toComputer()
             if (computer != null) {
-                SSHCommand.deleteUserOnMac(this.name, this.macHost)
+                SshCommand.deleteUserOnMac(this.name, this.macHost)
                 computer.disconnect(new MacOfflineCause())
                 LOGGER.log(Level.FINE, "Disconnected computer for node {0}.", name)
             }

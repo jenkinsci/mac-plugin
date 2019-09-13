@@ -7,7 +7,7 @@ import hudson.model.ModelObject
  * @author Mathieu DELROCQ
  *
  */
-class SSHClientFactoryConfiguration {
+class SshClientFactoryConfiguration {
     String host
     String credentialsId
     Integer port

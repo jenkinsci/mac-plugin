@@ -8,15 +8,15 @@ import com.trilead.ssh2.Connection
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandLauncher
+import fr.edf.jenkins.plugins.mac.ssh.SshCommand
+import fr.edf.jenkins.plugins.mac.ssh.SshCommandException
+import fr.edf.jenkins.plugins.mac.ssh.SshCommandLauncher
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactory
 import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.util.Secret
 import spock.lang.Specification
 
-class SSHCommandTest extends Specification {
+class SshCommandTest extends Specification {
 
     @Rule
     JenkinsRule jenkins
@@ -49,15 +49,15 @@ class SSHCommandTest extends Specification {
         
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
-        GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-        1 * SSHCommandLauncher.executeCommand(conn, true, _) >> "OK"
+        GroovySpy(SshCommandLauncher, global:true)
+        1 * SshCommandLauncher.executeCommand(conn, false, _) >> "OK"
+        1 * SshCommandLauncher.executeCommand(conn, true, _) >> "OK"
 
         when:
-        MacUser user = SSHCommand.createUserOnMac(label, macHost)
+        MacUser user = SshCommand.createUserOnMac(label, macHost)
 
         then:
-        SSHCommandException e = thrown()
+        SshCommandException e = thrown()
         e.getMessage().contains("Cannot create MacUser on host")
         user == null
     }
@@ -69,12 +69,12 @@ class SSHCommandTest extends Specification {
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
-        GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-        1 * SSHCommandLauncher.executeCommand(conn, true, _) >> ""
+        GroovySpy(SshCommandLauncher, global:true)
+        1 * SshCommandLauncher.executeCommand(conn, false, _) >> "OK"
+        1 * SshCommandLauncher.executeCommand(conn, true, _) >> ""
 
         when:
-        SSHCommand.deleteUserOnMac(username, macHost)
+        SshCommand.deleteUserOnMac(username, macHost)
 
         then:
         notThrown Exception
@@ -87,16 +87,16 @@ class SSHCommandTest extends Specification {
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
-        GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
+        GroovySpy(SshCommandLauncher, global:true)
+        1 * SshCommandLauncher.executeCommand(conn, false, _) >> "OK"
 //        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o checkmember -m %s %s", username, username)) >> "no mac_user_test is NOT a member of mac_user_test"
-        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("dscl . list /Users | grep -v ^_ | grep %s", username)) >> username
+        1 * SshCommandLauncher.executeCommand(conn, true, String.format("dscl . list /Users | grep -v ^_ | grep %s", username)) >> username
 
         when:
-        SSHCommand.deleteUserOnMac(username, macHost)
+        SshCommand.deleteUserOnMac(username, macHost)
 
         then:
-        SSHCommandException e = thrown()
+        SshCommandException e = thrown()
         e.getMessage().contains("An error occured while deleting user " + username)
         e.getCause().getMessage().contains("The user " + username + " still exist after verification")
     }
@@ -151,11 +151,11 @@ class SSHCommandTest extends Specification {
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getUserClient(*_) >> conn
-        GroovySpy(SSHCommandLauncher, global:true)
-        2 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
+        GroovySpy(SshCommandLauncher, global:true)
+        2 * SshCommandLauncher.executeCommand(conn, false, _) >> "OK"
 
         when:
-        SSHCommand.jnlpConnect(macHost, user, null, slaveSecret)
+        SshCommand.jnlpConnect(macHost, user, null, slaveSecret)
 
         then:
         notThrown Exception
@@ -171,10 +171,10 @@ class SSHCommandTest extends Specification {
         1 * SSHClientFactory.getUserClient(*_) >> conn
 
         when:
-        SSHCommand.jnlpConnect(macHost, user, null, slaveSecret)
+        SshCommand.jnlpConnect(macHost, user, null, slaveSecret)
 
         then:
-        SSHCommandException e = thrown()
+        SshCommandException e = thrown()
         e.getMessage().contains("Cannot connect Mac " + macHost.host + " with user " + user.username + " to jenkins with JNLP")
     }
 
@@ -185,11 +185,11 @@ class SSHCommandTest extends Specification {
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
-        GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.LIST_USERS, label+"_jenkins_")) >> ""
+        GroovySpy(SshCommandLauncher, global:true)
+        1 * SshCommandLauncher.executeCommand(conn, true, String.format(Constants.LIST_USERS, label+"_jenkins_")) >> ""
 
         when:
-        SSHCommand.listLabelUsers(macHost, label)
+        SshCommand.listLabelUsers(macHost, label)
 
         then:
         notThrown Exception

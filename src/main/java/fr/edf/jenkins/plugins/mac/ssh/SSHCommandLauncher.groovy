@@ -20,9 +20,9 @@ import groovy.util.logging.Slf4j
  * @author Mathieu DELROCQ
  *
  */
-protected class SSHCommandLauncher {
+protected class SshCommandLauncher {
 
-    private static final Logger LOGGER = Logger.getLogger(SSHCommandLauncher.name)
+    private static final Logger LOGGER = Logger.getLogger(SshCommandLauncher.name)
     
     final static String UTF8 = "UTF-8"
 

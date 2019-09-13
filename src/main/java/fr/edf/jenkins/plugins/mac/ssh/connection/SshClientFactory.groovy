@@ -32,7 +32,7 @@ class SSHClientFactory {
      * @return com.trilead.ssh2.Connection
      */
     @Restricted(NoExternalUse)
-    static Connection getSshClient(SSHClientFactoryConfiguration conf = new SSHClientFactoryConfiguration()) {
+    static Connection getSshClient(SshClientFactoryConfiguration conf = new SshClientFactoryConfiguration()) {
         String host = conf.host
         Integer port = conf.port ?: new Integer(22)
         Integer connectionTimeout = conf.connectionTimeout ?: new Integer(0)

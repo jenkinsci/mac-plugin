@@ -4,10 +4,10 @@ import com.trilead.ssh2.ChannelCondition
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandLauncher
+import fr.edf.jenkins.plugins.mac.ssh.SshCommandLauncher
 import spock.lang.Specification
 
-class SSHCommandLauncherTest extends Specification {
+class SshCommandLauncherTest extends Specification {
     
     def "executeCommand should not throw exception"() {
         setup:
@@ -26,7 +26,7 @@ class SSHCommandLauncherTest extends Specification {
             openSession() >> session
         }
         when:
-        String result = SSHCommandLauncher.executeCommand(conn, false, command)
+        String result = SshCommandLauncher.executeCommand(conn, false, command)
         
         then:
         notThrown Exception
@@ -51,7 +51,7 @@ class SSHCommandLauncherTest extends Specification {
             openSession() >> session
         }
         when:
-        String result = SSHCommandLauncher.executeCommand(conn, false, command)
+        String result = SshCommandLauncher.executeCommand(conn, false, command)
         
         then:
         Exception e = thrown()
@@ -75,7 +75,7 @@ class SSHCommandLauncherTest extends Specification {
             openSession() >> session
         }
         when:
-        String result = SSHCommandLauncher.executeCommand(conn, true, command)
+        String result = SshCommandLauncher.executeCommand(conn, true, command)
         
         then:
         notThrown Exception
