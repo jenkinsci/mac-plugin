@@ -107,11 +107,11 @@ class MacCloud extends Cloud {
                     return existingUsers < it.maxUsers
                 } catch(SSHCommandException sshe) {
                     nbTries ++
-                    it.disabled = true
                     if(nbTries < it.maxTries) {
                         continue
                     } else {
                         LOGGER.log(Level.INFO, "Disabling Mac Host {0}", it.host)
+                        it.disabled = true
                         return false
                     }
                 }
