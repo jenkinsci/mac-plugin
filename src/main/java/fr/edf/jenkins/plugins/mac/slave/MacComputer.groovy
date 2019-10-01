@@ -56,7 +56,7 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
         final MacSlave node = getNode()
         return node == null ? null : node.getMacHost()
     }
-    
+
     /**
      * {@inheritDoc}
      */
