@@ -16,8 +16,8 @@ class Constants {
     public static final String EMPTY_LIST_BOX_VALUE = ""
 
     //Username pattern
-    /**"jenkins_%s"*/
-    public static final String USERNAME_PATTERN = "%s_jenkins_%s"
+    /**"mac-%s"*/
+    public static final String USERNAME_PATTERN = "mac-%s"
 
     //Workdir pattern
     /** /Users/%s/ */

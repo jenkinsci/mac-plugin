@@ -150,7 +150,7 @@ class SSHCommand {
     @Restricted(NoExternalUse)
     private static MacUser generateUser(String label) throws Exception {
         String password = RandomStringUtils.random(10, true, true);
-        String username = String.format(Constants.USERNAME_PATTERN, label, RandomStringUtils.random(5, true, true).toLowerCase())
+        String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(10, true, true).toLowerCase())
         String workdir = String.format(Constants.WORKDIR_PATTERN, username)
         return new MacUser(username:username, password:Secret.fromString(password), workdir:workdir)
     }
