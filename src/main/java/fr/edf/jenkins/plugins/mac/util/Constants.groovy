@@ -17,7 +17,7 @@ class Constants {
 
     //Username pattern
     /**"mac-%s"*/
-    public static final String USERNAME_PATTERN = "mac-%s"
+    public static final String USERNAME_PATTERN = "mac-agent-%s"
 
     //Workdir pattern
     /** /Users/%s/ */
@@ -62,7 +62,7 @@ class Constants {
     public static final String CHANGE_RIGHTS_ON_USER = "sudo chmod -R 700 /Users/%s/"
 
     /** "sudo curl %s -o /Users/%s/slave.jar" */
-    public static final String GET_REMOTING_JAR = "curl %s -o ~/remoting.jar"
+    public static final String GET_REMOTING_JAR = "curl --retry 10 %s -o ~/remoting.jar"
 
     /** "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s" */
     public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
@@ -70,7 +70,7 @@ class Constants {
     /** dscl . list /Users | grep -v ^_ | grep %s */
     public static final String CHECK_USER_EXIST = "dscl . list /Users | grep -v ^_ | grep %s"
 
-    /** list all users on mac */
+    /** dscl . list /Users | grep -v ^_ | grep %s */
     public static final String LIST_USERS = "dscl . list /Users | grep -v ^_ | grep %s"
 
     //regex

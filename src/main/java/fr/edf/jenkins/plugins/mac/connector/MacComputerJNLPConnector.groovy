@@ -53,7 +53,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
      * {@inheritDoc}
      */
     @Override
-    protected ComputerLauncher createLauncher(MacHost host, MacUser user) throws IOException, InterruptedException {
+    protected ComputerLauncher createLauncher(MacHost host, MacUser user) {
         return new MacJNLPLauncher(host, user, jenkinsUrl)
     }
 
@@ -76,33 +76,26 @@ class MacComputerJNLPConnector extends MacComputerConnector {
          */
         @Override
         void launch(SlaveComputer computer, TaskListener listener) {
-            int nbTry = 0
             launched = true
             MacComputer macComputer = (MacComputer) computer
-            while(true) {
-                try {
-                    nbTry++
-                    SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-                    break
-                }catch(SSHCommandException sshe) {
-                    if(nbTry > 5) {
-                        launched = false
-                        throw new InterruptedException("Error while connecting computer " + computer.name)
-                    }
-                }
+            try {
+                SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
+            }catch(SSHCommandException sshe) {
+                launched = false
+                listener.error("Error while connecting computer " + computer.name)
             }
             long currentTimestamp = Instant.now().toEpochMilli()
             while(!macComputer.isOnline()) {
                 if (macComputer == null) {
                     launched = false
-                    throw new IllegalStateException("Node was deleted, computer is null");
+                    listener.error("Node was deleted, computer is null");
                 }
                 if (macComputer.isOnline()) {
                     break;
                 }
                 if((Instant.now().toEpochMilli() - currentTimestamp) > host.agentConnectionTimeout.multiply(1000).intValue()) {
                     launched = false
-                    throw new InterruptedException("Connection timeout for the computer " + computer.name)
+                    listener.error("Connection timeout for the computer " + computer.name)
                 }
             }
         }

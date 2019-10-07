@@ -113,7 +113,7 @@ class MacCloud extends Cloud {
             int nbTries = 0
             while(true) {
                 try {
-                    int existingUsers = SSHCommand.listLabelUsers(it).size()
+                    int existingUsers = SSHCommand.listUsers(it).size()
                     return existingUsers < it.maxUsers
                 } catch(SSHCommandException sshe) {
                     nbTries ++
