@@ -188,7 +188,7 @@ class SSHCommandTest extends Specification {
         1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> ""
 
         when:
-        SSHCommand.listLabelUsers(macHost)
+        SSHCommand.listUsers(macHost)
 
         then:
         notThrown Exception
