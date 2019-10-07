@@ -54,7 +54,7 @@ class SSHCommandTest extends Specification {
         1 * SSHCommandLauncher.executeCommand(conn, true, _) >> "OK"
 
         when:
-        MacUser user = SSHCommand.createUserOnMac(label, macHost)
+        MacUser user = SSHCommand.createUserOnMac(macHost)
 
         then:
         SSHCommandException e = thrown()
@@ -164,7 +164,7 @@ class SSHCommandTest extends Specification {
     def "jnlpConnect should throw exception"() {
         setup:
         MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5)
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
         String slaveSecret = "secret"
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
@@ -180,16 +180,15 @@ class SSHCommandTest extends Specification {
 
     def "listLabelUsers should works without exception"() {
         setup:
-        String label = "label"
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5)
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
         Connection conn = Mock(Connection)
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.LIST_USERS, label+"_jenkins_")) >> ""
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> ""
 
         when:
-        SSHCommand.listLabelUsers(macHost, label)
+        SSHCommand.listLabelUsers(macHost)
 
         then:
         notThrown Exception

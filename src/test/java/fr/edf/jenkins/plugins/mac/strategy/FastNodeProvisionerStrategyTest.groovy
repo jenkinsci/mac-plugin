@@ -27,7 +27,7 @@ public class FastNodeProvisionerStrategyTest extends Specification {
             getLabel() >> Label.parse("label").getAt(0)
             getSnapshot() >> snapshot
         }
-        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), "Label", new Integer(1))
+        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), new Integer(1))
 //        Cannot add a Mock of MacCloud in JenkinsRule...
 //        GroovySpy(constructorArgs: ["test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), "testLabel", new Integer(1)]) {
 //            canProvision("label") >> true
@@ -52,7 +52,7 @@ public class FastNodeProvisionerStrategyTest extends Specification {
             getLabel() >> Label.parse("label").getAt(0)
             getSnapshot() >> snapshot
         }
-        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), "LabelCloud", new Integer(1))
+        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), new Integer(1))
 //        Cannot add a Mock of MacCloud in JenkinsRule...
 //        GroovySpy(constructorArgs: ["test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), "testLabel", new Integer(1)]) {
 //            canProvision("label") >> true
