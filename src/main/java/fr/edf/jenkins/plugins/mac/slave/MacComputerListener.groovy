@@ -21,7 +21,7 @@ public class MacComputerListener extends ComputerListener {
         if(c instanceof MacComputer) {
             MacComputer macComputer = (MacComputer) c
             LOGGER.log(Level.WARNING, "Mac Agent {0} failed to launch and will be removed", macComputer.getName())
-            macComputer.getNode()._terminate(taskListener)
+            macComputer.getNode().terminate()
         }
     }
 
