@@ -1,30 +1,23 @@
 package fr.edf.jenkins.plugins.mac
 
-import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import java.util.logging.Logger
 
 import org.antlr.v4.runtime.misc.Nullable
 import org.apache.commons.collections.CollectionUtils
-import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.DataBoundConstructor
 
-import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.edf.jenkins.plugins.mac.planned.PlannedNodeBuilderFactory
 import fr.edf.jenkins.plugins.mac.provisioning.InProvisioning
-import fr.edf.jenkins.plugins.mac.slave.MacSlave
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
-import hudson.model.Node
-import hudson.model.labels.LabelAtom
 import hudson.slaves.Cloud
 import hudson.slaves.NodeProvisioner
 import hudson.slaves.NodeProvisioner.PlannedNode
-import jenkins.model.Jenkins
 
 class MacCloud extends Cloud {
 
@@ -32,18 +25,14 @@ class MacCloud extends Cloud {
 
     List<MacHost> macHosts = new ArrayList()
     MacComputerConnector connector
-    String labelString
-    transient Set<LabelAtom> labelSet
     Integer idleMinutes
 
     @DataBoundConstructor
-    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, String labelString, Integer idleMinutes) {
+    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, Integer idleMinutes) {
         super(name)
         this.macHosts = macHosts
         this.connector = connector
-        this.labelString = labelString
         this.idleMinutes = idleMinutes
-        labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
     static @Nullable getMacClouds() {
@@ -56,13 +45,18 @@ class MacCloud extends Cloud {
     @Override
     synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
         try {
+            List<MacHost> labelMacHosts = getMacHosts(label)
+            if(CollectionUtils.isEmpty(labelMacHosts)) {
+                LOGGER.log(Level.WARNING, "No host is configured for the label {0}", label.toString())
+                return Collections.emptyList()
+            }
             final List<PlannedNode> r = new ArrayList<>()
-            MacHost macHost = chooseMacHost()
             Set<String> allInProvisioning = InProvisioning.getAllInProvisioning(label)
             LOGGER.log(Level.FINE, "In provisioning : {0}", allInProvisioning.size())
             int toBeProvisioned = Math.max(0, excessWorkload - allInProvisioning.size())
             LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
             for(int i=0; i<toBeProvisioned;i++) {
+                MacHost macHost = chooseMacHost(labelMacHosts)
                 r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
             }
             return r
@@ -86,24 +80,40 @@ class MacCloud extends Cloud {
     }
 
     /**
+     * Return all MacHost available for the given label.<br>
+     * Multiples MacHost can have the same label.
+     *
+     * @return All MacHosts of this cloud not disabled and matched to the given label
+     */
+    public List<MacHost> getMacHosts(Label label) {
+        try {
+            return macHosts.findAll {
+                !it.disabled && label.matches((Collection) it.getLabelSet())
+            }
+        } catch(Exception e) {
+            String message = String.format("An error occured when trying to find hosts with label %s", label.toString())
+            LOGGER.log(Level.WARNING, message)
+            LOGGER.log(Level.FINEST, "Exception : ", e)
+            return Collections.emptyList()
+        }
+    }
+
+    /**
      * Return a Mac Host available <br/>
      * It must not be disabled and must have some users left to create <br/>
      * If this method cannot connect to the mac via SSH, it mark it as disabled after the max retry number
      * @return MacHost
      * @throws Exception
      */
-    private MacHost chooseMacHost() throws Exception {
-        if(CollectionUtils.isEmpty(macHosts)) {
-            throw new Exception("No host is configured for the cloud " + name)
-        }
-        MacHost hostChoosen = macHosts.find {
+    private MacHost chooseMacHost(List<MacHost> labelMacHosts) throws Exception {
+        MacHost hostChoosen = labelMacHosts.find {
             if(it.disabled) {
                 return false
             }
             int nbTries = 0
             while(true) {
                 try {
-                    int existingUsers = SSHCommand.listLabelUsers(it, labelString).size()
+                    int existingUsers = SSHCommand.listLabelUsers(it).size()
                     return existingUsers < it.maxUsers
                 } catch(SSHCommandException sshe) {
                     nbTries ++
@@ -116,7 +126,6 @@ class MacCloud extends Cloud {
                     }
                 }
             }
-            
         }
         if(null == hostChoosen) throw new Exception("Unable to find a mac host available")
         return hostChoosen

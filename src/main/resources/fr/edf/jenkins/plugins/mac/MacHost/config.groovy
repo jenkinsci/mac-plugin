@@ -9,6 +9,10 @@ f.entry(title: Messages.Host_Disabled(), field:'disabled') {
     f.checkbox()
 }
 
+f.entry(title:Messages.Cloud_Labels(), field:'labelString') {
+    f.textbox()
+}
+
 f.entry(title: Messages.Host_MaxTries(), field: 'maxTries') {
     f.number(clazz: 'required', min: 1, default: 5)
 }

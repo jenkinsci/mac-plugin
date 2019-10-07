@@ -2,6 +2,7 @@ package fr.edf.jenkins.plugins.mac
 
 import javax.annotation.Nullable
 
+import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
@@ -14,6 +15,8 @@ import hudson.model.Describable
 import hudson.model.Descriptor
 import hudson.model.Item
 import hudson.model.ItemGroup
+import hudson.model.Label
+import hudson.model.labels.LabelAtom
 import hudson.util.FormValidation
 import hudson.util.FormValidation.Kind
 import hudson.util.ListBoxModel
@@ -36,10 +39,12 @@ class MacHost implements Describable<MacHost> {
     Integer agentConnectionTimeout
     Integer maxTries
     Boolean disabled
+    String labelString
+    transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
-    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled, Integer maxTries) {
+    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled, Integer maxTries, String labelString) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -50,6 +55,8 @@ class MacHost implements Describable<MacHost> {
         this.agentConnectionTimeout = agentConnectionTimeout
         this.disabled = disabled
         this.maxTries = maxTries
+        this.labelString = labelString
+        labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
     @DataBoundSetter
@@ -96,15 +103,24 @@ class MacHost implements Describable<MacHost> {
     void setDisabled(Boolean disabled) {
         this.disabled = disabled
     }
-    
+
     @DataBoundSetter
     void setMaxTries(Integer maxTries) {
         this.maxTries = maxTries
     }
 
+    @DataBoundSetter
+    void setLabelString(String labelString) {
+        this.labelString = labelString
+    }
+
     @Override
     Descriptor<MacHost> getDescriptor() {
         return Jenkins.get().getDescriptorOrDie(this.getClass())
+    }
+
+    Set<LabelAtom> getLabelSet() {
+        return Label.parse(StringUtils.defaultIfEmpty(this.labelString, ""))
     }
 
     /**
