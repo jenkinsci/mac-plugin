@@ -30,7 +30,7 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
         Future f;
         MacUser user = null
         try {
-            user = SSHCommand.createUserOnMac(macHost)
+            user = SSHCommand.generateUser()
             ComputerLauncher launcher = cloud.connector.createLauncher(macHost, user)
             MacSlave agent = new MacSlave(cloud.name, label.toString(), user, macHost, launcher, cloud.idleMinutes)
             f = Futures.immediateFuture(agent)

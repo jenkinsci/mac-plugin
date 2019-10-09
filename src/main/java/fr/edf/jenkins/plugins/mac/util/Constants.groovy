@@ -61,10 +61,10 @@ class Constants {
     /** chmod -R u=rwx,g=rx,o=r /Users/%s/ */
     public static final String CHANGE_RIGHTS_ON_USER = "sudo chmod -R 700 /Users/%s/"
 
-    /** "sudo curl %s -o /Users/%s/slave.jar" */
-    public static final String GET_REMOTING_JAR = "curl --retry 10 %s -o ~/remoting.jar"
+    /** curl --retry 10 --verbose %s > remoting.jar */
+    public static final String GET_REMOTING_JAR = "curl --retry 10 --verbose %s > remoting.jar"
 
-    /** "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s" */
+    /** java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s */
     public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
 
     /** dscl . list /Users | grep -v ^_ | grep %s */

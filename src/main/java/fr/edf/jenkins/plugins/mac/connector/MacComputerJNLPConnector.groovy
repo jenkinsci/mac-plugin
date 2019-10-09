@@ -79,10 +79,12 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             launched = true
             MacComputer macComputer = (MacComputer) computer
             try {
+                SSHCommand.createUserOnMac(host, user)
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
-            }catch(SSHCommandException sshe) {
+            }catch(Exception e) {
                 launched = false
-                listener.error("Error while connecting computer " + computer.name)
+                String message = String.format("Error while connecting computer %s due to exception %s", computer.name, e.message)
+                listener.error(message)
             }
             long currentTimestamp = Instant.now().toEpochMilli()
             while(!macComputer.isOnline()) {

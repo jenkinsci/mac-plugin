@@ -43,13 +43,12 @@ class SSHCommand {
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    static MacUser createUserOnMac(MacHost macHost) throws Exception {
+    static MacUser createUserOnMac(MacHost macHost, MacUser user) throws Exception {
         Connection connection = null
         try {
             connection = SSHClientFactory.getSshClient(new SSHClientFactoryConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
-            MacUser user = generateUser()
 //            String groupname = user.username
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, false, String.format(Constants.CREATE_USER, user.username, user.password)))
             if(!isUserExist(connection, user.username)) {
@@ -148,7 +147,7 @@ class SSHCommand {
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    private static MacUser generateUser() throws Exception {
+    public static MacUser generateUser() throws Exception {
         String password = RandomStringUtils.random(10, true, true);
         String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(10, true, true).toLowerCase())
         String workdir = String.format(Constants.WORKDIR_PATTERN, username)

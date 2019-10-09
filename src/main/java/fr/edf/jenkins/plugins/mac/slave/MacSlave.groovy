@@ -20,6 +20,7 @@ import hudson.model.Slave
 import hudson.model.TaskListener
 import hudson.model.Node.Mode
 import hudson.model.Slave.SlaveDescriptor
+import hudson.remoting.VirtualChannel
 import hudson.slaves.AbstractCloudSlave
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
@@ -96,18 +97,20 @@ class MacSlave extends AbstractCloudSlave {
         try {
             final Computer computer = toComputer()
             if (computer != null) {
-                SSHCommand.deleteUserOnMac(this.name, this.macHost)
                 computer.disconnect(new MacOfflineCause())
                 LOGGER.log(Level.FINE, "Disconnected computer for node {0}.", name)
             }
-        } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Can't disconnect computer for node " + name, ex)
+        } catch (Exception e) {
+            String message = String.format("Can't disconnect computer for node %s", name)
+            LOGGER.log(Level.SEVERE, message, e)
+            listener.error(message)
         }
         try {
-            Jenkins.get().removeNode(this)
-            LOGGER.log(Level.FINE, "Removed Node for node {0}.", name)
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to remove Node for node '" + name + "' due to exception:", ex)
+            SSHCommand.deleteUserOnMac(this.name, this.macHost)
+        } catch (Exception e) {
+            String message = String.format("Failed to remove user %s on mac %s due to exception : %s", this.name, this.macHost.host, e.message)
+            LOGGER.log(Level.SEVERE, message, e)
+            listener.fatalError(message)
         }
     }
 
