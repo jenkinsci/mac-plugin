@@ -17,7 +17,7 @@ class Constants {
 
     //Username pattern
     /**"mac-%s"*/
-    public static final String USERNAME_PATTERN = "mac-agent-%s"
+    public static final String USERNAME_PATTERN = "mac-%s"
 
     //Workdir pattern
     /** /Users/%s/ */
