@@ -62,7 +62,7 @@ class Constants {
     public static final String CHANGE_RIGHTS_ON_USER = "sudo chmod -R 700 /Users/%s/"
 
     /** curl --retry 10 --verbose %s > remoting.jar */
-    public static final String GET_REMOTING_JAR = "curl --retry 10 --verbose %s > remoting.jar"
+    public static final String GET_REMOTING_JAR = "curl --retry 5 --retry-delay 10 --verbose %s > remoting.jar"
 
     /** java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s */
     public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"

@@ -85,19 +85,24 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                 launched = false
                 String message = String.format("Error while connecting computer %s due to exception %s", computer.name, e.message)
                 listener.error(message)
+                throw new InterruptedException(message, e)
             }
             long currentTimestamp = Instant.now().toEpochMilli()
             while(!macComputer.isOnline()) {
                 if (macComputer == null) {
                     launched = false
-                    listener.error("Node was deleted, computer is null");
+                    String message = "Node was deleted, computer is null"
+                    listener.error(message)
+                    throw new IOException(message)
                 }
                 if (macComputer.isOnline()) {
                     break;
                 }
                 if((Instant.now().toEpochMilli() - currentTimestamp) > host.agentConnectionTimeout.multiply(1000).intValue()) {
                     launched = false
-                    listener.error("Connection timeout for the computer " + computer.name)
+                    String message = toString().format("Connection timeout for the computer %s", computer.name)
+                    listener.error(message)
+                    throw new InterruptedException(message, e)
                 }
             }
         }

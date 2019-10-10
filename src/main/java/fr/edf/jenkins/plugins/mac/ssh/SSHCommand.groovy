@@ -51,6 +51,7 @@ class SSHCommand {
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout))
 //            String groupname = user.username
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.CREATE_USER, user.username, user.password)))
+            Thread.sleep(5000)
             if(!isUserExist(connection, user.username)) {
                 throw new Exception(String.format("The user %s wasn't created after verification", user.username))
             }
@@ -93,6 +94,7 @@ class SSHCommand {
 //                LOGGER.log(Level.WARNING, String.format("The user %s is still assigned to the group %s after verification", username, groupname))
 //            }
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connection, true, String.format(Constants.DELETE_USER, username)))
+            Thread.sleep(5000)
             if(isUserExist(connection, username)) {
                 throw new Exception(String.format("The user %s still exist after verification", username))
             }
@@ -147,7 +149,7 @@ class SSHCommand {
      * @return a MacUser
      */
     @Restricted(NoExternalUse)
-    public static MacUser generateUser() throws Exception {
+    static MacUser generateUser() throws Exception {
         String password = RandomStringUtils.random(10, true, true);
         String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(10, true, true).toLowerCase())
         String workdir = String.format(Constants.WORKDIR_PATTERN, username)

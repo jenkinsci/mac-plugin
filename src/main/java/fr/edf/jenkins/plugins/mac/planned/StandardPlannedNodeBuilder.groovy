@@ -26,7 +26,7 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
      * {@inheritDoc}
      */
     @Override
-    public NodeProvisioner.PlannedNode build() {
+    NodeProvisioner.PlannedNode build() {
         Future f;
         MacUser user = null
         try {

@@ -21,7 +21,7 @@ public abstract class PlannedNodeBuilder {
      * @param cloud the {@link MacCloud} instance to use.
      * @return the current builder.
      */
-    public PlannedNodeBuilder cloud(MacCloud cloud) {
+    PlannedNodeBuilder cloud(MacCloud cloud) {
         this.cloud = cloud;
         return this;
     }
@@ -30,7 +30,7 @@ public abstract class PlannedNodeBuilder {
      * @param host the {@link MacHost} instance to use.
      * @return the current builder.
      */
-    public PlannedNodeBuilder host(MacHost host) {
+    PlannedNodeBuilder host(MacHost host) {
         this.macHost = host;
         return this;
     }
@@ -39,7 +39,7 @@ public abstract class PlannedNodeBuilder {
      * @param label the {@link Label} to use.
      * @return the current builder.
      */
-    public PlannedNodeBuilder label(Label label) {
+    PlannedNodeBuilder label(Label label) {
         this.label = label;
         return this;
     }
@@ -48,7 +48,7 @@ public abstract class PlannedNodeBuilder {
      * @param numExecutors the number of executors.
      * @return the current builder.
      */
-    public PlannedNodeBuilder numExecutors(int numExecutors) {
+    PlannedNodeBuilder numExecutors(int numExecutors) {
         this.numExecutors = numExecutors;
         return this;
     }
@@ -60,5 +60,5 @@ public abstract class PlannedNodeBuilder {
      * @return a {@link hudson.slaves.NodeProvisioner.PlannedNode} configured from
      *         this builder.
      */
-    public abstract NodeProvisioner.PlannedNode build();
+    abstract NodeProvisioner.PlannedNode build();
 }

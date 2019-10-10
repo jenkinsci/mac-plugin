@@ -81,7 +81,6 @@ class SSHClientFactory {
     @Restricted(NoExternalUse)
     private static Connection getClient(final StandardCredentials credentials, final String host, final Integer port,
             final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
-        Session sess = null;
         String adr = InetAddress.getByName(host).toString().split("/")[1]
         Connection conn = new Connection(adr)
         if(credentials instanceof StandardUsernamePasswordCredentials) {
