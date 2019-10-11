@@ -21,45 +21,45 @@ class SSHCommandTest extends Specification {
     @Rule
     JenkinsRule jenkins
 
-    // TODO : Get NoClassDefFoundException
-//    def "createUserOnMac should not throw exception"() {
-//        setup:
-//        String label = "label"
-//        MacHost macHost = Mock(MacHost)
-//        Connection conn = Mock(Connection)
-//        GroovySpy(SSHClientFactory, global:true)
-//        1 * SSHClientFactory.getSshClient(*_) >> conn
-//        GroovySpy(SSHCommandLauncher, global:true)
-//        GroovySpy(SSHCommand, global:true)
-//        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-//        1 * SSHCommand.isUserExist(conn, _) >> true
-//        when:
-//        MacUser user = SSHCommand.createUserOnMac(label, macHost)
-//
-//        then:
-//        notThrown Exception
-//        user != null
-//    }
+    def "createUserOnMac should not throw exception"() {
+        setup:
+        String label = "label"
+        MacHost macHost = Mock(MacHost)
+        MacUser user = SSHCommand.generateUser()
+        Connection conn = Mock(Connection)
+        GroovySpy(SSHClientFactory, global:true)
+        1 * SSHClientFactory.getSshClient(*_) >> conn
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.CHECK_USER_EXIST, user.username)) >> user.username
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)) >> "OK"
+
+        when:
+        SSHCommand.createUserOnMac(macHost, user)
+
+        then:
+        notThrown Exception
+    }
 
     def "createUserOnMac should throw exception because user does not exist after creation"() {
         setup:
         String label = "label"
         MacHost macHost = Mock(MacHost)
         Connection conn = Mock(Connection)
+        MacUser user = SSHCommand.generateUser()
         
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-        1 * SSHCommandLauncher.executeCommand(conn, true, _) >> "OK"
-
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.CREATE_USER, user.username, user.password)) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.CHECK_USER_EXIST, user.username)) >> ""
+        
         when:
-        MacUser user = SSHCommand.createUserOnMac(macHost)
+        SSHCommand.createUserOnMac(macHost, user)
 
         then:
         SSHCommandException e = thrown()
         e.getMessage().contains("Cannot create MacUser on host")
-        user == null
     }
 
     def "deleteUserOnMac should works"() {
@@ -70,8 +70,7 @@ class SSHCommandTest extends Specification {
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-        1 * SSHCommandLauncher.executeCommand(conn, true, _) >> ""
+        2 * SSHCommandLauncher.executeCommand(conn, true, _) >> "OK"
 
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
@@ -88,9 +87,8 @@ class SSHCommandTest extends Specification {
         GroovySpy(SSHClientFactory, global:true)
         1 * SSHClientFactory.getSshClient(*_) >> conn
         GroovySpy(SSHCommandLauncher, global:true)
-        1 * SSHCommandLauncher.executeCommand(conn, false, _) >> "OK"
-//        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("sudo dseditgroup -o checkmember -m %s %s", username, username)) >> "no mac_user_test is NOT a member of mac_user_test"
-        1 * SSHCommandLauncher.executeCommand(conn, true, String.format("dscl . list /Users | grep -v ^_ | grep %s", username)) >> username
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.DELETE_USER, username)) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(conn, true, String.format(Constants.CHECK_USER_EXIST, username)) >> username
 
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
