@@ -43,7 +43,7 @@ class MacCloud extends Cloud {
      * {@inheritDoc}
      */
     @Override
-    synchronized Collection<PlannedNode> provision(Label label, int excessWorkload) {
+    Collection<PlannedNode> provision(Label label, int excessWorkload) {
         try {
             List<MacHost> labelMacHosts = getMacHosts(label)
             if(CollectionUtils.isEmpty(labelMacHosts)) {
