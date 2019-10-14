@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.0] - 15/10/2019
+
+### Changed
+- Udpated core version from 2.150.3 to 2.176.3
+- Updated README.md
+- The label is now on the hosts and not on the cloud
+- Create user moved in launch method
+- Wait after sysadminctl commands
+- Unit provision
+
+### Removed
+- Comments for users groups commands
+- kex timeout has been removed from configuration and hard setted to 0
+
+### Fixed
+- Exceed of user creation on a Mac
+- The labels on nodes always appears
+
 ## [v1.0-beta] - 10/09/2019
 ### Added
 - Add idle minutes in cloud configuration
