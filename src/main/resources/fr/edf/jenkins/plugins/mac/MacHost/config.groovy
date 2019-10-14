@@ -41,9 +41,9 @@ f.entry(title: _(Messages.Host_ReadTimeout()), field: 'readTimeout') {
     f.number(clazz: 'required', default: 0, min: 0)
 }
 
-f.entry(title: _(Messages.Host_KexTimeout()), field: 'kexTimeout') {
-    f.number(clazz: 'required', default: 0, min: 0)
-}
+//f.entry(title: _(Messages.Host_KexTimeout()), field: 'kexTimeout') {
+//    f.number(clazz: 'required', default: 0, min: 0)
+//}
 
 f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectionTimeout') {
     f.number(clazz: 'required', default: 15, min: 15)

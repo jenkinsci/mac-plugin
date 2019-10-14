@@ -51,7 +51,7 @@ class MacHost implements Describable<MacHost> {
         this.maxUsers = maxUsers
         this.connectionTimeout = connectionTimeout
         this.readTimeout = readTimeout
-        this.kexTimeout = kexTimeout
+        this.kexTimeout = new Integer(0)
         this.agentConnectionTimeout = agentConnectionTimeout
         this.disabled = disabled
         this.maxTries = maxTries
