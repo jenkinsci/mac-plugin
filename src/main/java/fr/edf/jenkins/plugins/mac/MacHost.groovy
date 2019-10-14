@@ -174,8 +174,8 @@ class MacHost implements Describable<MacHost> {
          */
         FormValidation doVerifyConnection(@QueryParameter String host, @QueryParameter Integer port,
                 @QueryParameter String credentialsId, @QueryParameter Integer connectionTimeout,
-                @QueryParameter Integer readTimeout, @QueryParameter Integer kexTimeout, @AncestorInPath Item context) {
-            return FormUtils.verifyCredential(host, port, credentialsId, connectionTimeout, readTimeout, kexTimeout, context)
+                @QueryParameter Integer readTimeout, @AncestorInPath Item context) {
+            return FormUtils.verifyCredential(host, port, credentialsId, connectionTimeout, readTimeout, 0, context)
         }
     }
 }
