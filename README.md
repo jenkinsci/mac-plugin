@@ -1,4 +1,4 @@
-# mac-agent-plugin
+# mac-plugin
 
 ### Plugin configuration
 In jenkins global configuration, add a new Mac Cloud :
