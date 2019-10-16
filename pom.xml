@@ -9,8 +9,8 @@
         <version>3.4</version>
         <relativePath />
     </parent>
-    <artifactId>mac-agent-plugin</artifactId>
-    <version>1.0-RC1-SNAPSHOT</version>
+    <artifactId>mac-plugin</artifactId>
+    <version>1.0</version>
     <packaging>hpi</packaging>
     <properties>
         <findbugs.failOnError>false</findbugs.failOnError>
