@@ -1,5 +1,7 @@
 # mac-plugin
 
+This plugin allows to configure a cloud of Macs, as Jenkins Slaves.
+
 ### Plugin configuration
 In jenkins global configuration, add a new Mac Cloud :
 
