@@ -9,7 +9,8 @@
         <version>3.4</version>
         <relativePath />
     </parent>
-    <artifactId>mac-plugin</artifactId>
+    <groupId>fr.edf.jenkins.plugins</groupId>
+    <artifactId>mac</artifactId>
     <version>1.0</version>
     <packaging>hpi</packaging>
     <properties>
@@ -21,15 +22,15 @@
     <description>A plugin to configure Mac as a Jenkins slaves</description>
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
     <developers>
         <developer>
             <id>mat1e</id>
             <name>Mathieu Delrocq</name>
-            <email>mathieu-externe.delrocq@edf.fr</email>
+            <email>delrocq.mathieu@gmail.com</email>
         </developer>
     </developers>
     <!-- Assuming you want to host on @jenkinsci: <url>https://wiki.jenkins.io/display/JENKINS/TODO+Plugin</url> 
