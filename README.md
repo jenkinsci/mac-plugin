@@ -1,4 +1,4 @@
-# mac-plugin
+# Mac Plugin
 
 This plugin allows to configure a cloud of Mac in Jenkins configuration.
 
