@@ -1,6 +1,10 @@
 # mac-plugin
 
-This plugin allows to configure a cloud of Macs, as Jenkins Slaves.
+This plugin allows to configure a cloud of Mac in Jenkins configuration.
+
+Like docker and kubernetes plugins does, you can configure your builds to run on a cloud of Mac.
+
+All builds are independent and there is a restricted space dedicated to read and write to this single build. This space is removed at the end of the build so that no traces remain on the machine.
 
 ### Plugin configuration
 In jenkins global configuration, add a new Mac Cloud :
