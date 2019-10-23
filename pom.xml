@@ -101,11 +101,6 @@
             <artifactId>ssh-slaves</artifactId>
             <version>1.30.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci</groupId>
-            <artifactId>trilead-ssh2</artifactId>
-            <version>build-217-jenkins-16</version>
-        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
