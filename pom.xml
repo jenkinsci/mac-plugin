@@ -11,7 +11,7 @@
     </parent>
     <groupId>fr.edf.jenkins.plugins</groupId>
     <artifactId>mac</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <url>https://github.com/jenkinsci/mac-plugin</url>
     <properties>
