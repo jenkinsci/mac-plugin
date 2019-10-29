@@ -28,8 +28,9 @@
     <description>A plugin to configure Mac as a Jenkins slaves</description>
     <licenses>
         <license>
-            <name>Apache License 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <name>MIT License</name>
+            <url>https://github.com/jenkinsci/mac-plugin/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
     <developers>
