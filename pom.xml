@@ -14,7 +14,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <scm>
-        <connection>scm:git:git@github.com:jenkinsci/mac-plugin.git</connection>
+        <connection>scm:git:git://github.com/jenkinsci/mac-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/mac-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/mac-plugin</url>
         <tag>${scmTag}</tag>
