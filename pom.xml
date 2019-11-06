@@ -24,6 +24,7 @@
     </properties>
     <name>Mac Plugin</name>
     <description>A plugin to configure Mac as a Jenkins slaves</description>
+    <url>https://github.com/jenkinsci/mac-plugin/</url>
     <licenses>
         <license>
             <name>MIT License</name>
