@@ -3,7 +3,6 @@ package fr.edf.jenkins.plugins.mac.util
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.anyOf
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf
 import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fromUri
-import static fr.edf.jenkins.plugins.mac.util.Constants.WHOAMI
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.kohsuke.accmod.Restricted
@@ -13,12 +12,11 @@ import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel
 import com.trilead.ssh2.Connection
-import com.trilead.ssh2.Session
 
 import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactory
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactoryConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -32,7 +30,7 @@ import jenkins.model.Jenkins
  *
  */
 class FormUtils {
-     /**
+    /**
      * Transform the host value to an URI
      * @param String host
      * @return URI
@@ -96,11 +94,9 @@ class FormUtils {
             final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
         Connection connection = null
         try {
-            connection = SSHClientFactory.getSshClient(
-                    new SSHClientFactoryConfiguration(credentialsId: credentialsId, port: port,
-                    context: context, host: host, connectionTimeout: 30,
-                    readTimeout: readTimeout, kexTimeout: kexTimeout))
-            String result = SSHCommand.checkConnection(connection)
+            String result = SSHCommand.checkConnection(new SSHGlobalConnectionConfiguration(credentialsId: credentialsId, port: port,
+            context: context, host: host, connectionTimeout: 30,
+            readTimeout: readTimeout, kexTimeout: kexTimeout))
             connection.close()
             return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {
