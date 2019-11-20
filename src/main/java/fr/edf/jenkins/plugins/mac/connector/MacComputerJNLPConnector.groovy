@@ -12,7 +12,6 @@ import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.slave.MacComputer
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.TaskListener

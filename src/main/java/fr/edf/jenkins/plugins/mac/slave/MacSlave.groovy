@@ -1,6 +1,5 @@
 package fr.edf.jenkins.plugins.mac.slave;
 
-import java.nio.channels.ClosedChannelException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -20,7 +19,6 @@ import hudson.model.Slave
 import hudson.model.TaskListener
 import hudson.model.Node.Mode
 import hudson.model.Slave.SlaveDescriptor
-import hudson.remoting.VirtualChannel
 import hudson.slaves.AbstractCloudSlave
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher

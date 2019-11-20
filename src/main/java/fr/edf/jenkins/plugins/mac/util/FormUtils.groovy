@@ -15,7 +15,6 @@ import com.trilead.ssh2.Connection
 
 import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import hudson.model.Item
 import hudson.model.ModelObject

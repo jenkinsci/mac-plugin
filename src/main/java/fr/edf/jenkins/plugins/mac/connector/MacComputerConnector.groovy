@@ -1,12 +1,9 @@
 package fr.edf.jenkins.plugins.mac.connector
 
 
-import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import fr.edf.jenkins.plugins.mac.slave.MacSlave
 import hudson.model.AbstractDescribableImpl
-import hudson.model.TaskListener
 import hudson.slaves.ComputerLauncher
 
 abstract class MacComputerConnector extends AbstractDescribableImpl<MacComputerConnector> {

@@ -1,7 +1,5 @@
 package fr.edf.jenkins.plugins.mac.provisioning
 
-import static java.util.stream.Collectors.toSet
-
 import javax.annotation.CheckForNull
 import javax.annotation.Nonnull
 
