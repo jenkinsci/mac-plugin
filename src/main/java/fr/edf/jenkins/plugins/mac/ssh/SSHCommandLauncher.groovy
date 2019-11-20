@@ -36,7 +36,7 @@ protected class SSHCommandLauncher {
      * @throws Exception if cannot execute the command or if the command return an error
      */
     @Restricted(NoExternalUse)
-    synchronized static String executeCommand(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
+    static String executeCommand(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
         Connection connection = null
         Session session = null
         try {

@@ -44,8 +44,8 @@ class SSHConnectionFactory {
     private static Connection getGlobalSshConnection(SSHGlobalConnectionConfiguration conf = new SSHGlobalConnectionConfiguration()) {
         String host = conf.host
         Integer port = conf.port ?: new Integer(22)
-        Integer connectionTimeout = conf.connectionTimeout ?: new Integer(0)
-        Integer readTimeout = conf.readTimeout ?: new Integer(0)
+        Integer connectionTimeout = conf.connectionTimeout ?: new Integer(5)
+        Integer readTimeout = conf.readTimeout ?: new Integer(60)
         Integer kexTimeout = conf.kexTimeout ?: new Integer(0)
         def context = conf.context ?: Jenkins.get()
         def credentialsId = conf.credentialsId ?: null

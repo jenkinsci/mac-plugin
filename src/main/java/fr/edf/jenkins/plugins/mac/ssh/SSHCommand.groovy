@@ -9,8 +9,6 @@ import org.apache.commons.lang.StringUtils
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
-import com.trilead.ssh2.Connection
-
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionConfiguration
