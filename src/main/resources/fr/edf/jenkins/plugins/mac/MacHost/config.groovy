@@ -34,7 +34,7 @@ f.entry(title: _(Messages.Host_Credentials()), field: 'credentialsId') {
 }
 
 f.entry(title: _(Messages.Host_ConnectionTimeout()), field: 'connectionTimeout') {
-    f.number(clazz: 'required', default: 5, min: 5)
+    f.number(clazz: 'required', default: 15, min: 5)
 }
 
 f.entry(title: _(Messages.Host_ReadTimeout()), field: 'readTimeout') {
