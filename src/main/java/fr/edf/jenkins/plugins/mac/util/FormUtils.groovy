@@ -91,15 +91,12 @@ class FormUtils {
     static FormValidation verifyCredential(final String host, final Integer port,
             final String credentialsId, final Integer connectionTimeout,
             final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
-        Connection connection = null
         try {
             String result = SSHCommand.checkConnection(new SSHGlobalConnectionConfiguration(credentialsId: credentialsId, port: port,
             context: context, host: host, connectionTimeout: 30,
             readTimeout: readTimeout, kexTimeout: kexTimeout))
-            connection.close()
             return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {
-            if(null != connection) connection.close()
             return FormValidation.error(Messages._Host_ConnectionFailed(e.getMessage()).toString())
         }
     }
