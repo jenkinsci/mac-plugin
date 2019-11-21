@@ -28,19 +28,10 @@ In /etc/ssh/sshd_config file, uncomment and update values of parameters MaxAuthT
 
 example of configuration for 10 Jenkins and 1 Mac with 10 users allowed :
 
-...
-
-MaxAuthTries 10
-
-MaxSessions 100
-
-...
-
-ClientAliveInterval 30
-
-ClientAliveCountMax 150
-
-...
+- MaxAuthTries 10
+- MaxSessions 100
+- ClientAliveInterval 30
+- ClientAliveCountMax 150
 
 For more informations about sshd_config consult the
 [Official Documentation](https://man.openbsd.org/sshd_config)
