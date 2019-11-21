@@ -3,15 +3,8 @@ package fr.edf.jenkins.plugins.mac.util
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
-import com.trilead.ssh2.Connection
-
 import fr.edf.jenkins.plugins.mac.Messages
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHClientFactory
-import fr.edf.jenkins.plugins.mac.util.FormUtils
-import hudson.model.Item
 import hudson.util.FormValidation
-import hudson.util.FormValidation.Kind
 import hudson.util.ListBoxModel
 import spock.lang.Specification
 
@@ -86,24 +79,6 @@ class FormUtilsTest extends Specification {
         result2.getMessage() == error
     }
     
-
-    // TODO : NoClassDefFound Error on SSHCommand
-//    def "verifyCredential should not throw exception"() {
-//        setup:
-//        String username = "test spock"
-//        Connection conn = Mock(Connection)
-//        GroovySpy(SSHClientFactory, global:true)
-//        GroovySpy(SSHCommand, global:true)
-//        1 * SSHClientFactory.getSshClient(*_) >> conn
-//        1 * SSHCommand.checkConnection(conn) >> username
-//
-//        when:
-//        FormValidation result = FormUtils.verifyCredential("host", 0, "credentialsId", 5, 5, 5, jenkinsRule.jenkins.get())
-//
-//        then:
-//        result.kind == Kind.OK
-//        result.getMessage() == Messages._Host_ConnectionSucceeded(username).toString()
-//    }
 
     def "newCredentialsItemsListBoxModel should not throw exception and should not return null"() {
         setup:

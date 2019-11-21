@@ -1,13 +1,22 @@
 package fr.edf.jenkins.plugins.mac.ssh
 
+import org.junit.Rule
+import org.jvnet.hudson.test.JenkinsRule
+
 import com.trilead.ssh2.ChannelCondition
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommandLauncher
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
+import hudson.plugins.sshslaves.SSHConnector
 import spock.lang.Specification
 
 class SSHCommandLauncherTest extends Specification {
+    
+    @Rule
+    JenkinsRule jenkins
     
     def "executeCommand should not throw exception"() {
         setup:
@@ -21,12 +30,14 @@ class SSHCommandLauncherTest extends Specification {
             getStdout() >> new ByteArrayInputStream(new String("out").getBytes())
             getStderr() >> new ByteArrayInputStream(new String("err").getBytes())
         }
-        
         Connection conn = Stub(Connection) {
             openSession() >> session
         }
+        GroovySpy(SSHConnectionFactory, global:true)
+        1 * SSHConnectionFactory.getSshConnection(*_) >> conn
+        SSHGlobalConnectionConfiguration connectionConfig = Mock(SSHGlobalConnectionConfiguration)
         when:
-        String result = SSHCommandLauncher.executeCommand(conn, false, command)
+        String result = SSHCommandLauncher.executeCommand(connectionConfig, false, command)
         
         then:
         notThrown Exception
@@ -50,8 +61,11 @@ class SSHCommandLauncherTest extends Specification {
         Connection conn = Stub(Connection) {
             openSession() >> session
         }
+        GroovySpy(SSHConnectionFactory, global:true)
+        1 * SSHConnectionFactory.getSshConnection(*_) >> conn
+        SSHGlobalConnectionConfiguration connectionConfig = Mock(SSHGlobalConnectionConfiguration)
         when:
-        String result = SSHCommandLauncher.executeCommand(conn, false, command)
+        String result = SSHCommandLauncher.executeCommand(connectionConfig, false, command)
         
         then:
         Exception e = thrown()
@@ -70,12 +84,14 @@ class SSHCommandLauncherTest extends Specification {
             getStdout() >> new ByteArrayInputStream(new String("").getBytes())
             getStderr() >> new ByteArrayInputStream(new String("err").getBytes())
         }
-        
         Connection conn = Stub(Connection) {
             openSession() >> session
         }
+        GroovySpy(SSHConnectionFactory, global:true)
+        1 * SSHConnectionFactory.getSshConnection(*_) >> conn
+        SSHGlobalConnectionConfiguration connectionConfig = Mock(SSHGlobalConnectionConfiguration)
         when:
-        String result = SSHCommandLauncher.executeCommand(conn, true, command)
+        String result = SSHCommandLauncher.executeCommand(connectionConfig, true, command)
         
         then:
         notThrown Exception

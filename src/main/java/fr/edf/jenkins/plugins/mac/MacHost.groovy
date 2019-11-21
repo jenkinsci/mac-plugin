@@ -1,25 +1,21 @@
 package fr.edf.jenkins.plugins.mac
 
-import javax.annotation.Nullable
-
 import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 import org.kohsuke.stapler.QueryParameter
 
-import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
 import hudson.model.Descriptor
 import hudson.model.Item
-import hudson.model.ItemGroup
 import hudson.model.Label
 import hudson.model.labels.LabelAtom
 import hudson.util.FormValidation
-import hudson.util.FormValidation.Kind
 import hudson.util.ListBoxModel
+import hudson.util.FormValidation.Kind
 import jenkins.model.Jenkins
 
 /**

@@ -34,11 +34,11 @@ f.entry(title: _(Messages.Host_Credentials()), field: 'credentialsId') {
 }
 
 f.entry(title: _(Messages.Host_ConnectionTimeout()), field: 'connectionTimeout') {
-    f.number(clazz: 'required', default: 0, min: 0)
+    f.number(clazz: 'required', default: 15, min: 5)
 }
 
 f.entry(title: _(Messages.Host_ReadTimeout()), field: 'readTimeout') {
-    f.number(clazz: 'required', default: 0, min: 0)
+    f.number(clazz: 'required', default: 60, min: 30)
 }
 
 //f.entry(title: _(Messages.Host_KexTimeout()), field: 'kexTimeout') {

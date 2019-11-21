@@ -3,6 +3,7 @@ package fr.edf.jenkins.plugins.mac.connector
 
 import java.time.Instant
 
+import org.apache.commons.lang.exception.ExceptionUtils
 import org.jenkinsci.Symbol
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
@@ -11,7 +12,6 @@ import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.slave.MacComputer
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.TaskListener
@@ -83,9 +83,10 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false
-                String message = String.format("Error while connecting computer %s due to exception %s", computer.name, e.message)
+                String message = String.format("Error while connecting computer %s due to error %s ",
+                    computer.name, ExceptionUtils.getStackTrace(e))
                 listener.error(message)
-                throw new InterruptedException(message, e)
+                throw new InterruptedException(message)
             }
             long currentTimestamp = Instant.now().toEpochMilli()
             while(!macComputer.isOnline()) {
@@ -102,7 +103,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     launched = false
                     String message = toString().format("Connection timeout for the computer %s", computer.name)
                     listener.error(message)
-                    throw new InterruptedException(message, e)
+                    throw new InterruptedException(message)
                 }
             }
         }

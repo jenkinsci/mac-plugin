@@ -13,7 +13,8 @@ import com.trilead.ssh2.ChannelCondition
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
-import groovy.util.logging.Slf4j
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 
 /**
  * Runner of SSH command.
@@ -35,16 +36,19 @@ protected class SSHCommandLauncher {
      * @throws Exception if cannot execute the command or if the command return an error
      */
     @Restricted(NoExternalUse)
-    synchronized static String executeCommand(@NotNull Connection conn, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
+    static String executeCommand(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
+        Connection connection = null
         Session session = null
         try {
-            session = conn.openSession()
+            connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)
+            session = connection.openSession()
             LOGGER.log(Level.FINE, "Executing command {0}", command)
             session.execCommand(command)
             session.waitForCondition(ChannelCondition.EXIT_STATUS | ChannelCondition.EXIT_SIGNAL, 5000)
             LOGGER.log(Level.FINEST, "Exit SIGNAL : {0}", session.getExitSignal())
             LOGGER.log(Level.FINEST,"Exit STATUS : {0}", null != session.getExitStatus() ? session.getExitStatus().intValue() : null)
             session.close()
+            connection.close()
             String out = convertInputStream(session.getStdout())
             String err = convertInputStream(session.getStderr())
             LOGGER.log(Level.FINEST, out)
@@ -58,6 +62,7 @@ protected class SSHCommandLauncher {
             return StringUtils.isNotEmpty(out) ? out : StringUtils.isNotEmpty(err) ? err : ""
         } catch(Exception e) {
             if(session != null) session.close()
+            if(connection != null) connection.close()
             throw e
         }
     }

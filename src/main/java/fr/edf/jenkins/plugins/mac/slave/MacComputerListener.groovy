@@ -1,6 +1,5 @@
 package fr.edf.jenkins.plugins.mac.slave
 
-import java.io.IOException
 import java.util.logging.Level
 import java.util.logging.Logger
 
