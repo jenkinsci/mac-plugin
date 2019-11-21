@@ -1,18 +1,11 @@
 package fr.edf.jenkins.plugins.mac.ssh
 
-import org.apache.sshd.common.SshException
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
-import com.trilead.ssh2.Connection
-
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandException
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandLauncher
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.util.Secret
 import spock.lang.Specification
@@ -44,11 +37,11 @@ class SSHCommandTest extends Specification {
         String label = "label"
         MacHost macHost = Mock(MacHost)
         MacUser user = SSHCommand.generateUser()
-        
+
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CREATE_USER, user.username, user.password)) >> "OK"
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, user.username)) >> ""
-        
+
         when:
         SSHCommand.createUserOnMac(macHost, user)
 
@@ -87,7 +80,7 @@ class SSHCommandTest extends Specification {
         e.getMessage().contains("An error occured while deleting user " + username)
         e.getCause().getMessage().contains("The user " + username + " still exist after verification")
     }
-    
+
 
     def "jnlpConnect should works"() {
         setup:
@@ -118,14 +111,55 @@ class SSHCommandTest extends Specification {
         e.getMessage().contains("Cannot connect Mac " + macHost.host + " with user " + user.username + " to jenkins with JNLP")
     }
 
-    def "listLabelUsers should works without exception"() {
+    def "listLabelUsers should works and return empty list"() {
         setup:
         MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> ""
 
         when:
-        SSHCommand.listUsers(macHost)
+        List result = SSHCommand.listUsers(macHost)
+
+        then:
+        notThrown Exception
+        result.isEmpty()
+    }
+
+    def "listLabelUsers should works and return list of user"() {
+        setup:
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> "user1\ruser2"
+
+        when:
+        List result = SSHCommand.listUsers(macHost)
+
+        then:
+        notThrown Exception
+        result.size() == 2
+    }
+    
+    def "listLabelUsers should throw SSHCommandException"() {
+        setup:
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> { throw new Exception("Error") }
+
+        when:
+        List result = SSHCommand.listUsers(macHost)
+
+        then:
+        SSHCommandException sshe = thrown()
+    }
+
+    def "checkConnection should works without exception"() {
+        setup:
+        SSHGlobalConnectionConfiguration connectionConfig = Mock(SSHGlobalConnectionConfiguration)
+        GroovySpy(SSHCommandLauncher, global:true)
+        1* SSHCommandLauncher.executeCommand(connectionConfig, false,  Constants.WHOAMI) >> "ok"
+
+        when:
+        SSHCommand.checkConnection(connectionConfig)
 
         then:
         notThrown Exception
