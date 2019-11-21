@@ -4,7 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [v1.0] - 22/10/2019
+## [v1.0.1] - 21/11/2019
+
+### Added
+- Features descriptions in README
+- Description of required configuration of the Mac in README
+- Contact section in README
+- Add recommendation in help files of plugin configuration
+
+### Fixed
+- Connection loss between 2 ssh commands
+
+### Changed
+- Default values for ssh in Mac host configuration
+- Rework ssh connection strategy to open a connection by ssh command
+- Remove synchronized from executeCommand method
+- Update tests impacted
+
+### Removed
+- unused imports
+- comments of old source code
+
+## [v1.0.0] - 22/10/2019
 
 ### Added
 - Jenkinsfile
