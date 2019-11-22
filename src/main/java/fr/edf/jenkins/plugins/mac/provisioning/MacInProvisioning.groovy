@@ -1,7 +1,5 @@
 package fr.edf.jenkins.plugins.mac.provisioning
 
-import java.util.logging.Logger
-
 import javax.annotation.CheckForNull
 
 import fr.edf.jenkins.plugins.mac.slave.MacSlave

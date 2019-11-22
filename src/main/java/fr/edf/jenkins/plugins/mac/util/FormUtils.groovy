@@ -11,7 +11,6 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel
-import com.trilead.ssh2.Connection
 
 import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
