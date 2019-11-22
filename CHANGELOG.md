@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Description of required configuration of the Mac in README
 - Contact section in README
 - Add recommendation in help files of plugin configuration
+- add the <url> field in pom.xml
 
 ### Fixed
 - Connection loss between 2 ssh commands
