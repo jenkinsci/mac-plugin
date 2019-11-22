@@ -54,6 +54,6 @@ f.block() {
             title: _(Messages.Host_TestConnection()),
             progress: _('Testing...'),
             method: 'verifyConnection',
-            with: 'host,port,credentialsId,connectionTimeout,readTimeout'
+            with: 'host,port,credentialsId'
             )
 }

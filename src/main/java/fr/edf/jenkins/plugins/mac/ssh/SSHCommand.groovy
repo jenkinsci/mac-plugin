@@ -28,8 +28,8 @@ class SSHCommand {
     static final Logger LOGGER = Logger.getLogger(SSHCommand.name)
 
     /**
-     * Check the given connection to ssh with the command whoami
-     * @param connection
+     * Check the connection to ssh with the given config and command whoami
+     * @param config
      * @return the user connected, or null if error
      */
     @Restricted(NoExternalUse)
@@ -40,10 +40,12 @@ class SSHCommand {
     /**
      * Create an user with the command sysadminctl
      * @param macHost
+     * @param user
      * @return a MacUser
+     * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static MacUser createUserOnMac(MacHost macHost, MacUser user) throws Exception {
+    static MacUser createUserOnMac(MacHost macHost, MacUser user) throws SSHCommandException, Exception {
         try {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
@@ -65,12 +67,12 @@ class SSHCommand {
 
     /**
      * Delete the given user in parameter
-     * @param cloudId
      * @param username
-     * @return true if user is deleted, false if an error occured
+     * @param macHost
+     * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static void deleteUserOnMac(String username, MacHost macHost) throws Exception {
+    static void deleteUserOnMac(String username, MacHost macHost) throws SSHCommandException, Exception {
         try {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
@@ -92,12 +94,13 @@ class SSHCommand {
      * Get the slave.jar on Jenkins and connect the slave to JNLP
      * @param macHost
      * @param user
-     * @param jnlpConnector
-     * @param slaveSecret
-     * @return true if connection succeed, false otherwise
+     * @param jenkinsUrl
+     * @param slaveSecret : secret to connect slave to JNLP
+     * @return true if connection succeed
+     * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException {
+    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException, Exception {
         jenkinsUrl = StringUtils.isNotEmpty(jenkinsUrl) ? jenkinsUrl : Jenkins.get().getRootUrl()
         if(!jenkinsUrl.endsWith("/")) {
             jenkinsUrl += "/"
@@ -119,6 +122,7 @@ class SSHCommand {
     /**
      * Generate a Mac user with the pattern in Constants
      * @return a MacUser
+     * @throws Exception
      */
     @Restricted(NoExternalUse)
     static MacUser generateUser() throws Exception {
@@ -130,8 +134,9 @@ class SSHCommand {
 
     /**
      * Verify if an user exist on the Mac
-     * @param connection
+     * @param connectionConfig
      * @param username
+     * @throws Exception
      * @return true if exist, false if not
      */
     @Restricted(NoExternalUse)
@@ -143,11 +148,11 @@ class SSHCommand {
     /**
      * List all users on a mac host for a label
      * @param macHost
-     * @param label
-     * @return true if exist, false if not
+     * @return a list of users wich match with Constants.USERNAME_PATTERN
+     * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static List<String> listUsers(MacHost macHost) throws SSHCommandException {
+    static List<String> listUsers(MacHost macHost) throws SSHCommandException, Exception {
         try {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,

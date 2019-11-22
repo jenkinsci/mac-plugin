@@ -15,7 +15,6 @@ import fr.edf.jenkins.plugins.mac.cause.MacOfflineCause
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import hudson.Extension
 import hudson.model.Computer
-import hudson.model.Slave
 import hudson.model.TaskListener
 import hudson.model.Node.Mode
 import hudson.model.Slave.SlaveDescriptor

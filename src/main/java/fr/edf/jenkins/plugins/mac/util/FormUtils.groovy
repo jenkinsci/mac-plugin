@@ -57,7 +57,7 @@ class FormUtils {
     static FormValidation validateHost(@NotNull final String host) {
         try {
             if(host) {
-                InetAddress inetAddress = InetAddress.getByName(host)
+                InetAddress.getByName(host)
             }
             return FormValidation.ok()
         } catch(UnknownHostException uhe) {
@@ -82,19 +82,19 @@ class FormUtils {
 
     /**
      * Return FormValidation to verify the connection to GitLab with the given url and credentialsId
-     * @param serverUrl
+     * @param host
+     * @param port
      * @param credentialsId
      * @param context
      * @return FormValidation
      */
     @Restricted(NoExternalUse)
     static FormValidation verifyCredential(final String host, final Integer port,
-            final String credentialsId, final Integer connectionTimeout,
-            final Integer readTimeout, final Integer kexTimeout, final ModelObject context) {
+            final String credentialsId, final ModelObject context) {
         try {
             String result = SSHCommand.checkConnection(new SSHGlobalConnectionConfiguration(credentialsId: credentialsId, port: port,
             context: context, host: host, connectionTimeout: 30,
-            readTimeout: readTimeout, kexTimeout: kexTimeout))
+            readTimeout: 30, kexTimeout: 0))
             return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {
             return FormValidation.error(Messages._Host_ConnectionFailed(e.getMessage()).toString())

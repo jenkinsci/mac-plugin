@@ -16,11 +16,21 @@ abstract class SSHConnectionConfiguration {
     Integer kexTimeout
 }
 
+/**
+ * Specific for global connection
+ * @author Mathieu Delrocq
+ *
+ */
 class SSHGlobalConnectionConfiguration extends SSHConnectionConfiguration {
     String credentialsId
     ModelObject context
 }
 
+/**
+ * Specific for user connection
+ * @author Mathieu Delrocq
+ *
+ */
 class SSHUserConnectionConfiguration extends SSHConnectionConfiguration {
     String username
     Secret password

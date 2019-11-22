@@ -12,7 +12,6 @@ import hudson.model.Node
 
 @Extension
 class MacInProvisioning extends InProvisioning {
-    private static final Logger LOGGER = Logger.getLogger(MacInProvisioning.name);
 
     private static boolean isNotAcceptingTasks(Node n) {
         Computer computer = n.toComputer()
