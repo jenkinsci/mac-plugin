@@ -9,13 +9,13 @@
     </parent>
     <groupId>fr.edf.jenkins.plugins</groupId>
     <artifactId>mac</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>hpi</packaging>
     <scm>
         <connection>scm:git:https://github.com/jenkinsci/mac-plugin.git</connection>
         <developerConnection>scm:git:https://github.com/jenkinsci/mac-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/mac-plugin</url>
-        <tag>${scmTag}</tag>
+        <tag>mac-1.0.2</tag>
     </scm>
     <properties>
         <findbugs.failOnError>false</findbugs.failOnError>
