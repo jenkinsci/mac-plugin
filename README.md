@@ -18,7 +18,7 @@ This plugin has been tested against macOS 10.14 Mojave and macOS 10.15 Catalina 
 
 ## Requirements
 
-**Redémarrer le Mac après la configuration**
+**Restart MacOs after configuration change**
 
 ### Enable SSH for all users
 Go to System Preferences -> Sharing, and enable Remote Login for All users :
