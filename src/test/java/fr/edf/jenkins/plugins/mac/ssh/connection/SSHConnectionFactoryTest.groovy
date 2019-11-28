@@ -3,7 +3,13 @@ package fr.edf.jenkins.plugins.mac.ssh.connection
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.CredentialsScope
 import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
+import com.cloudbees.plugins.credentials.domains.Domain
+import com.cloudbees.plugins.credentials.domains.HostnameSpecification
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import com.trilead.ssh2.Connection
 
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
@@ -26,17 +32,42 @@ class SSHConnectionFactoryTest extends Specification {
         result == null
     }
 
-    def "should inform non mandatory null parameters" () {
+    def "should return connection for user" () {
         setup:
         String host = "host"
         Connection conn = Mock(Connection)
         GroovySpy(SSHConnectionFactory, global:true)
-        SSHConnectionFactory.getConnection(_, host, 22, 0, 0, 0) >> conn
+        SSHConnectionFactory.getConnection(_, host, _, _, _, _) >> conn
 
         when:
         Connection result = SSHConnectionFactory.getSshConnection(new SSHUserConnectionConfiguration(
             username: "username", password: Secret.fromString("password"),
             host: host, port: null, connectionTimeout: null, readTimeout: null, kexTimeout: null))
+
+        then:
+        notThrown Exception
+        result == conn
+    }
+    
+    def "should return connection for global" () {
+        setup:
+        String host = "host"
+        StandardUsernamePasswordCredentials c = new UsernamePasswordCredentialsImpl(
+            CredentialsScope.SYSTEM,
+            null,
+            null,
+            "username",
+            "password"
+        )
+        Connection conn = Mock(Connection)
+        GroovySpy(SSHConnectionFactory, global:true)
+        SSHConnectionFactory.getConnection(c, host, _, _, _, _) >> conn
+        GroovyStub(CredentialsUtils, global:true)
+        CredentialsUtils.findCredentials(host, _, _) >> c
+        
+        when:
+        Connection result = SSHConnectionFactory.getSshConnection(new SSHGlobalConnectionConfiguration(
+            credentialsId: host, host: host, port: null, connectionTimeout: null, readTimeout: null, kexTimeout: null))
 
         then:
         notThrown Exception
