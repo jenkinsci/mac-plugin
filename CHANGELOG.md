@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.0.2] - 28/11/2019
+
+### Added
+- Instruction to restart MacOs after configuration
+- Possibility to change port value (was hardsetted before)
+
+### Fixed
+- SonarQube alerts
+
+### Changed
+- Update Javadocs with news values
+
+### Removed
+- unused imports
+- unused variables
+
 ## [v1.0.1] - 21/11/2019
 
 ### Added
