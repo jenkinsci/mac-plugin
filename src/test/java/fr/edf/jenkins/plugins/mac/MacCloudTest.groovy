@@ -3,11 +3,9 @@ package fr.edf.jenkins.plugins.mac
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
-import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.test.builders.MacPojoBuilder
 import hudson.model.FreeStyleProject
 import hudson.model.Label
-import hudson.slaves.Cloud
 import spock.lang.Specification
 
 class MacCloudTest extends Specification {

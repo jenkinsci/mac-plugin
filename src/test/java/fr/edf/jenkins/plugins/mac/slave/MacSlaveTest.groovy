@@ -1,17 +1,14 @@
 package fr.edf.jenkins.plugins.mac.slave
 
+import org.junit.Rule
+import org.jvnet.hudson.test.JenkinsRule
+
 import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.connector.MacComputerJNLPConnector
-import fr.edf.jenkins.plugins.mac.slave.MacSlave
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.test.builders.MacPojoBuilder
-import hudson.model.TaskListener
-
-import org.junit.Rule
-import org.jvnet.hudson.test.JenkinsRule
-
 import spock.lang.Specification
 
 class MacSlaveTest extends Specification {

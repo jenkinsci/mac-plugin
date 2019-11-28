@@ -7,10 +7,8 @@ import com.trilead.ssh2.ChannelCondition
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.Session
 
-import fr.edf.jenkins.plugins.mac.ssh.SSHCommandLauncher
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
-import hudson.plugins.sshslaves.SSHConnector
 import spock.lang.Specification
 
 class SSHCommandLauncherTest extends Specification {
