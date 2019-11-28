@@ -28,7 +28,7 @@ import jenkins.model.Jenkins;
  */
 @Extension
 public class FastNodeProvisionerStrategy extends Strategy {
-//    TODO : Provisionning strategy
+
     private static final Logger LOGGER = Logger.getLogger(FastNodeProvisionerStrategy.class.getName())
 
     @Nonnull

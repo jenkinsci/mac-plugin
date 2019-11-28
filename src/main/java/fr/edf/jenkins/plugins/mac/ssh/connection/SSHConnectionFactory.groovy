@@ -34,7 +34,7 @@ class SSHConnectionFactory {
         }
         return null
     }
-    
+
     /**
      * Get the SSH client to the Mac for global user
      * @param conf
@@ -55,13 +55,7 @@ class SSHConnectionFactory {
 
     /**
      * Generate a transient credential with the given user and password and return a connection
-     * @param username
-     * @param password
-     * @param host
-     * @param port
-     * @param connectionTimeout
-     * @param readTimeout
-     * @param kexTimeout
+     * @param conf
      * @return com.trilead.ssh2.Connection
      */
     private static Connection getUserSshConnection(SSHUserConnectionConfiguration conf) {
@@ -85,13 +79,16 @@ class SSHConnectionFactory {
      * @param credentials
      * @param host
      * @param port
+     * @param connectionTimeout
+     * @param readTimeout
+     * @param kexTimeout
      * @return com.trilead.ssh2.Connection
      */
     @Restricted(NoExternalUse)
     private static Connection getConnection(final StandardCredentials credentials, final String host, final Integer port,
             final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
         String adr = InetAddress.getByName(host).toString().split("/")[1]
-        Connection conn = new Connection(adr)
+        Connection conn = new Connection(adr, port.intValue())
         if(credentials instanceof StandardUsernamePasswordCredentials) {
             StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
             conn.connect(null, connectionTimeout.multiply(1000).intValue(), readTimeout.multiply(1000).intValue(), kexTimeout.multiply(1000).intValue())

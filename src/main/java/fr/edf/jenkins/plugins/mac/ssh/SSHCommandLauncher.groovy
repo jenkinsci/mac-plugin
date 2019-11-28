@@ -29,9 +29,9 @@ protected class SSHCommandLauncher {
 
     /**
      * Execute a command with the given connection
-     * @param conn
-     * @param ignoreError
-     * @param command
+     * @param connectionConfiguration
+     * @param ignoreError : if true don't throw exception if return status != 0
+     * @param command : ssh command to launch
      * @return
      * @throws Exception if cannot execute the command or if the command return an error
      */

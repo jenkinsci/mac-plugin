@@ -1,7 +1,5 @@
 package fr.edf.jenkins.plugins.mac.provisioning
 
-import java.util.logging.Logger
-
 import javax.annotation.CheckForNull
 
 import fr.edf.jenkins.plugins.mac.slave.MacSlave
@@ -12,7 +10,6 @@ import hudson.model.Node
 
 @Extension
 class MacInProvisioning extends InProvisioning {
-    private static final Logger LOGGER = Logger.getLogger(MacInProvisioning.name);
 
     private static boolean isNotAcceptingTasks(Node n) {
         Computer computer = n.toComputer()

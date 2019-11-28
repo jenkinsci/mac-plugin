@@ -16,7 +16,6 @@ import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.Label
 import hudson.slaves.Cloud
-import hudson.slaves.NodeProvisioner
 import hudson.slaves.NodeProvisioner.PlannedNode
 
 class MacCloud extends Cloud {
@@ -83,6 +82,7 @@ class MacCloud extends Cloud {
      * Return all MacHost available for the given label.<br>
      * Multiples MacHost can have the same label.
      *
+     * @param label
      * @return All MacHosts of this cloud not disabled and matched to the given label
      */
     public List<MacHost> getMacHosts(Label label) {
@@ -102,6 +102,7 @@ class MacCloud extends Cloud {
      * Return a Mac Host available <br/>
      * It must not be disabled and must have some users left to create <br/>
      * If this method cannot connect to the mac via SSH, it mark it as disabled after the max retry number
+     * @param labelMacHosts
      * @return MacHost
      * @throws Exception
      */
