@@ -1,5 +1,8 @@
 package fr.edf.jenkins.plugins.mac.strategy
 
+import org.junit.Rule
+import org.jvnet.hudson.test.JenkinsRule
+
 import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.test.builders.MacPojoBuilder
 import hudson.model.Computer
@@ -8,10 +11,6 @@ import hudson.model.LoadStatistics.LoadStatisticsSnapshot
 import hudson.slaves.NodeProvisioner.PlannedNode
 import hudson.slaves.NodeProvisioner.StrategyDecision
 import hudson.slaves.NodeProvisioner.StrategyState
-
-import org.junit.Rule
-import org.jvnet.hudson.test.JenkinsRule
-
 import spock.lang.Specification
 
 public class FastNodeProvisionerStrategyTest extends Specification {

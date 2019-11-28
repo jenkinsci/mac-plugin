@@ -3,16 +3,11 @@ package fr.edf.jenkins.plugins.mac.ssh.connection
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
-import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.CredentialsScope
-import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
-import com.cloudbees.plugins.credentials.domains.Domain
-import com.cloudbees.plugins.credentials.domains.HostnameSpecification
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import com.trilead.ssh2.Connection
 
-import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import hudson.util.Secret
 import spock.lang.Specification
