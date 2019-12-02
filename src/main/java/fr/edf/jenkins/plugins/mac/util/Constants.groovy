@@ -54,6 +54,9 @@ class Constants {
 
     //regex
     public static final String REGEX_NEW_LINE = "\\r?\\n|\\r"
+    
+    //Keychain
+    public static final String KEYCHAIN_FOLDER = "keychains/"
 
 //     Command for grouping users on a mac (not used but keep for potential evol)
 //    /** sudo dseditgroup -o create %s */

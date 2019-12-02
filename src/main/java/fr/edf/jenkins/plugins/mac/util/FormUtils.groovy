@@ -11,8 +11,10 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
 
 import fr.edf.jenkins.plugins.mac.Messages
+import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import hudson.model.Item
@@ -108,7 +110,7 @@ class FormUtils {
      * @return ListBoxModel
      */
     @Restricted(NoExternalUse)
-    static ListBoxModel newCredentialsItemsListBoxModel(final String host,
+    static ListBoxModel newMacHostCredentialsItemsListBoxModel(final String host,
             final String credentialsId,
             final Item ancestor) {
         // Ref: https://github.com/jenkinsci/credentials-plugin/blob/master/docs/consumer.adoc
@@ -126,6 +128,34 @@ class FormUtils {
                 ancestor ?: Jenkins.get(),
                 StandardCredentials,
                 fromUri(getUri(host).toString()).build(),
-                anyOf(instanceOf(StandardCredentials)))
+                anyOf(instanceOf(StandardUsernamePasswordCredentials)))
+    }
+
+    /**
+     * Return a ListBoxModel with credentials accesibles by ancestor
+     * @param host
+     * @param credentialsId
+     * @param item
+     * @return ListBoxModel
+     */
+    @Restricted(NoExternalUse)
+    static ListBoxModel newKeychainFileItemsListBoxModel(final String keychainFileId,
+            final Item ancestor) {
+        // Ref: https://github.com/jenkinsci/credentials-plugin/blob/master/docs/consumer.adoc
+        boolean noContextNotAdmin = ancestor == null && !Jenkins.get().hasPermission(Jenkins.ADMINISTER)
+        boolean contextNoPerm = ancestor != null && !ancestor.hasPermission(Item.EXTENDED_READ) &&
+                !ancestor.hasPermission(CredentialsProvider.USE_ITEM)
+
+        if (noContextNotAdmin || contextNoPerm) {
+            return new StandardListBoxModel().includeCurrentValue(keychainFileId)
+        }
+        //noinspection GroovyAssignabilityCheck
+        return new StandardListBoxModel()
+                .includeEmptyValue()
+                .includeMatchingAs(ACL.SYSTEM,
+                ancestor ?: Jenkins.get(),
+                KeychainFileCredentials,
+                fromUri(getUri(Jenkins.get().getRootUrl()).toString()).build(),
+                anyOf(instanceOf(KeychainFileCredentials)))
     }
 }
