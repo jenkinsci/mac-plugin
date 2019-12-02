@@ -16,27 +16,26 @@ import com.cloudbees.plugins.credentials.SecretBytes
 import com.cloudbees.plugins.credentials.impl.BaseStandardCredentials
 import com.cloudbees.plugins.credentials.impl.BaseStandardCredentials.BaseStandardCredentialsDescriptor
 
+import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.Extension
+import jenkins.model.Jenkins
 
-class KeychainFileCredentials extends BaseStandardCredentials implements FileCredentials {
+class KeychainFileCredentials extends BaseStandardCredentials {
 
     String fileName
-    SecretBytes secretBytes
+    String filePath
 
-    @Override
     public String getFileName() {
         return this.fileName
     }
-
-    @Restricted(DoNotUse)
-    @Override
-    public InputStream getContent() throws IOException {
-        return null
+    
+    public String getFilePath() {
+        return this.filePath
     }
 
     @Restricted(NoExternalUse)
-    public File getFile() throws IOException {
-        return FileUtils.writeByteArrayToFile(new File(), this.secretBytes.getPlainData())
+    void writeKeychain(File output) throws IOException {
+        FileUtils.writeByteArrayToFile(output, this.secretBytes.getPlainData())
     }
 
     @DataBoundConstructor
@@ -48,7 +47,13 @@ class KeychainFileCredentials extends BaseStandardCredentials implements FileCre
             throw new IllegalArgumentException("No file provided or resolved.")
         }
         this.fileName = name.replaceFirst("^.+[/\\\\]", "")
-        this.secretBytes = SecretBytes.fromBytes(file.get())
+        StringBuilder filePath = new StringBuilder(Jenkins.get().getRootDir())
+        filePath.append(Constants.KEYCHAIN_FOLDER)
+        filePath.append(this.id)
+        filePath.append("/")
+        this.filePath = filePath.toString()
+        file.write(new File(this.filePath + this.fileName))
+        
     }
 
     /**

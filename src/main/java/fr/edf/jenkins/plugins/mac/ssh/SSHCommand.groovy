@@ -11,6 +11,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
+import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHUserConnectionConfiguration
@@ -127,13 +128,13 @@ class SSHCommand {
      * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static boolean uploadKeychain(MacHost macHost, MacUser user) throws SSHCommandException, Exception {
+    static boolean uploadKeychain(MacHost macHost, MacUser user, KeychainFileCredentials keychainFile) throws SSHCommandException, Exception {
         try {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
                     port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
             return true
         } catch(Exception e) {
-            final String message = String.format(SSHCommandException.JNLP_CONNECTION_ERROR_MESSAGE, macHost.host, user.username)
+            final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, macHost.host, e.getMessage())
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
         }

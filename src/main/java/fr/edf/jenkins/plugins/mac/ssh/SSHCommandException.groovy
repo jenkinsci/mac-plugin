@@ -18,6 +18,9 @@ class SSHCommandException extends Exception {
     
     /** Cannot get existing users on mac %s */
     public static final String LIST_USERS_ERROR_MESSAGE = "Cannot get existing users on mac %s : %s"
+    
+    /** Cannot transfert keychain file %s on mac %s */
+    public static final String TRANSFERT_KEYCHAIN_ERROR_MESSAGE = "Cannot transfert keychain file on mac %s : %s"
 
     /**
      * Constructor with message and cause

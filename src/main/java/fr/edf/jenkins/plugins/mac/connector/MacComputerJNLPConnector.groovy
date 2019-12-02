@@ -80,6 +80,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             MacComputer macComputer = (MacComputer) computer
             try {
                 SSHCommand.createUserOnMac(host, user)
+                if(host.uploadKeychain) {
+                    
+                }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false
