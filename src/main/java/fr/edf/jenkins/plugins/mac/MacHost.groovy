@@ -44,7 +44,7 @@ class MacHost implements Describable<MacHost> {
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
     Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled,
-    Integer maxTries, String labelString, Boolean uploadKeychain, String keychainFileId) {
+    Integer maxTries, String labelString, Boolean uploadKeychain = Boolean.FALSE, String keychainFileId = null) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port

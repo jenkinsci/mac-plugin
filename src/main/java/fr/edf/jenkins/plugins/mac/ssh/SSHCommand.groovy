@@ -134,7 +134,7 @@ class SSHCommand {
             port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout)
             String outputDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_DIR, outputDir)))
-            SSHCommandLauncher.sendFile(keychainFile.content, keychainFile.fileName, outputDir, connectionConfig)
+            SSHCommandLauncher.sendFile(connectionConfig, keychainFile.content, keychainFile.fileName, outputDir)
             return true
         } catch(Exception e) {
             final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, host.host, e.getMessage())

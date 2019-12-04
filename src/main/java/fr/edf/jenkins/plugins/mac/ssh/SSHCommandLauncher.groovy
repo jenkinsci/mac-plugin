@@ -76,7 +76,7 @@ protected class SSHCommandLauncher {
      * @param connectionConfiguration : connection informations of the remote machine
      * @throws Exception
      */
-    protected static void sendFile(InputStream input, String fileName, String outputDir, SSHConnectionConfiguration connectionConfiguration) throws Exception {
+    protected static void sendFile(SSHConnectionConfiguration connectionConfiguration, InputStream input, String fileName, String outputDir) throws Exception {
         Connection connection = null
         SCPClient scpCli = null
         try {
