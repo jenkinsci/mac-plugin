@@ -11,6 +11,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import com.google.common.base.Objects
 
 import fr.edf.jenkins.plugins.mac.MacCloud
+import fr.edf.jenkins.plugins.mac.MacHost
 import hudson.EnvVars
 import hudson.model.Executor
 import hudson.model.Queue
@@ -52,7 +53,7 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
     }
 
     @CheckForNull
-    String getMacHost() {
+    MacHost getMacHost() {
         final MacSlave node = getNode()
         return node == null ? null : node.getMacHost()
     }
@@ -101,7 +102,7 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
         final MacCloud cloud = getCloud()
         if (cloud != null) {
             variables.put("JENKINS_CLOUD_ID", cloud.name);
-            String macHost = getMacHost()
+            String macHost = getMacHost().host
             variables.put("MAC_HOST", macHost)
         }
         return variables;
