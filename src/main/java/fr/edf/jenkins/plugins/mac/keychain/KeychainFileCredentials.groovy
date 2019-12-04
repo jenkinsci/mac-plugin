@@ -3,13 +3,8 @@ package fr.edf.jenkins.plugins.mac.keychain
 import javax.annotation.CheckForNull
 
 import org.apache.commons.fileupload.FileItem
-import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
 import org.jenkinsci.plugins.plaincredentials.FileCredentials
-import org.jenkinsci.plugins.plaincredentials.impl.Messages
-import org.kohsuke.accmod.Restricted
-import org.kohsuke.accmod.restrictions.DoNotUse
-import org.kohsuke.accmod.restrictions.NoExternalUse
 import org.kohsuke.stapler.DataBoundConstructor
 
 import com.cloudbees.plugins.credentials.CredentialsScope
@@ -17,9 +12,7 @@ import com.cloudbees.plugins.credentials.SecretBytes
 import com.cloudbees.plugins.credentials.impl.BaseStandardCredentials
 import com.cloudbees.plugins.credentials.impl.BaseStandardCredentials.BaseStandardCredentialsDescriptor
 
-import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.Extension
-import jenkins.model.Jenkins
 
 class KeychainFileCredentials extends BaseStandardCredentials implements FileCredentials {
 

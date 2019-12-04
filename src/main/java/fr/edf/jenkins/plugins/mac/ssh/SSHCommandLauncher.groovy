@@ -78,18 +78,15 @@ protected class SSHCommandLauncher {
      */
     protected static void sendFile(InputStream input, String fileName, String outputDir, SSHConnectionConfiguration connectionConfiguration) throws Exception {
         Connection connection = null
-        Session session = null
         SCPClient scpCli = null
         try {
             connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)
             scpCli = new SCPClient(connection)
             scpCli.put(input.getBytes(), fileName, outputDir)
             scpCli = null
-            session.close()
             connection.close()
         }catch(Exception e) {
             scpCli = null
-            session.close()
             connection.close()
             throw e
         }

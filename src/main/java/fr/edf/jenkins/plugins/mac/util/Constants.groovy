@@ -56,11 +56,11 @@ class Constants {
     public static final String REGEX_NEW_LINE = "\\r?\\n|\\r"
 
     //Keychain
-    /** temp/keychains/ */
+    /** keychains/ */
     public static final String KEYCHAIN_FOLDER = "keychains/"
 
-    /**  */
-    public static final String KEYCHAIN_DESTINATION_FOLDER = ""
+    /** ~/Library/Keychains/ */
+    public static final String KEYCHAIN_DESTINATION_FOLDER = "~/Library/Keychains/"
 
     //     Command for grouping users on a mac (not used but keep for potential evol)
     //    /** sudo dseditgroup -o create %s */
