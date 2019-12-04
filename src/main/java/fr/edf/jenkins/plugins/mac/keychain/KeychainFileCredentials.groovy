@@ -4,6 +4,7 @@ import javax.annotation.CheckForNull
 
 import org.apache.commons.fileupload.FileItem
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang.StringUtils
 import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.jenkinsci.plugins.plaincredentials.impl.Messages
 import org.kohsuke.accmod.Restricted
@@ -20,10 +21,11 @@ import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.Extension
 import jenkins.model.Jenkins
 
-class KeychainFileCredentials extends BaseStandardCredentials {
+class KeychainFileCredentials extends BaseStandardCredentials implements FileCredentials {
 
     String fileName
-    String filePath
+    SecretBytes secretBytes
+    //String filePath
 
     public String getFileName() {
         return this.fileName
@@ -32,10 +34,10 @@ class KeychainFileCredentials extends BaseStandardCredentials {
     public String getFilePath() {
         return this.filePath
     }
-
-    @Restricted(NoExternalUse)
-    void writeKeychain(File output) throws IOException {
-        FileUtils.writeByteArrayToFile(output, this.secretBytes.getPlainData())
+    
+    @Override
+    public InputStream getContent() throws IOException {
+        return new ByteArrayInputStream(secretBytes.getPlainData())
     }
 
     @DataBoundConstructor
@@ -43,17 +45,18 @@ class KeychainFileCredentials extends BaseStandardCredentials {
     @CheckForNull String description, @CheckForNull FileItem file) {
         super(scope, id, description)
         String name = file != null ? file.getName() : ""
-        if(!name) {
+        if(StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException("No file provided or resolved.")
         }
         this.fileName = name.replaceFirst("^.+[/\\\\]", "")
-        StringBuilder filePath = new StringBuilder(Jenkins.get().getRootDir())
-        filePath.append(Constants.KEYCHAIN_FOLDER)
-        filePath.append(this.id)
-        filePath.append("/")
-        this.filePath = filePath.toString()
-        file.write(new File(this.filePath + this.fileName))
-        
+        this.secretBytes = SecretBytes.fromBytes(file.get())
+//        StringBuilder filePath = new StringBuilder(Jenkins.get().getRootDir())
+//        filePath.append("/")
+//        filePath.append(Constants.KEYCHAIN_FOLDER)
+//        filePath.append(this.id)
+//        filePath.append("/")
+//        this.filePath = filePath.toString()
+//        file.write(new File(this.filePath + this.fileName))
     }
 
     /**
