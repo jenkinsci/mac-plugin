@@ -36,7 +36,7 @@ class MacHost implements Describable<MacHost> {
     Integer agentConnectionTimeout
     Integer maxTries
     Boolean disabled
-    Boolean uploadKeychain
+    Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String keychainFileId
     transient Set<LabelAtom> labelSet
