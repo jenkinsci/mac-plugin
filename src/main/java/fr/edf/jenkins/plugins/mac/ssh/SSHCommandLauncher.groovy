@@ -25,7 +25,7 @@ import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 protected class SSHCommandLauncher {
 
     private static final Logger LOGGER = Logger.getLogger(SSHCommandLauncher.name)
-    
+
     final static String UTF8 = "UTF-8"
 
     /**
@@ -67,15 +67,23 @@ protected class SSHCommandLauncher {
             throw e
         }
     }
-    
-    protected static void sendFile(InputStream input, String outputDir, SSHConnectionConfiguration connectionConfiguration) {
+
+    /**
+     * Create a file on the remote machine in the output directory with the given input content and the given file name.
+     * @param input : content of the file
+     * @param fileName : name of the file
+     * @param outputDir : directory where the file will be created
+     * @param connectionConfiguration : connection informations of the remote machine
+     * @throws Exception
+     */
+    protected static void sendFile(InputStream input, String fileName, String outputDir, SSHConnectionConfiguration connectionConfiguration) throws Exception {
         Connection connection = null
         Session session = null
         SCPClient scpCli = null
         try {
             connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)
             scpCli = new SCPClient(connection)
-            scpCli.put(input.getAbsolutePath(), "")
+            scpCli.put(input.getBytes(), fileName, outputDir)
             scpCli = null
             session.close()
             connection.close()

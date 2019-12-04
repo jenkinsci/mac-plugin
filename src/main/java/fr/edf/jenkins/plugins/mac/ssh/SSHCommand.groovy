@@ -128,14 +128,14 @@ class SSHCommand {
      * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static boolean uploadKeychain(MacHost macHost, MacUser user, KeychainFileCredentials keychainFile) throws SSHCommandException, Exception {
+    static boolean uploadKeychain(MacHost host, MacUser user, KeychainFileCredentials keychainFile) throws SSHCommandException, Exception {
         try {
-            SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
-                    port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
-            SSHCommandLauncher.sendFile(keychainFile.getContent(), Constants.KEYCHAIN_DESTINATION_FOLDER, connectionConfig)
+            SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: host.host,
+                    port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout)
+            SSHCommandLauncher.sendFile(keychainFile, Constants.KEYCHAIN_DESTINATION_FOLDER, connectionConfig)
             return true
         } catch(Exception e) {
-            final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, macHost.host, e.getMessage())
+            final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, host.host, e.getMessage())
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
         }
