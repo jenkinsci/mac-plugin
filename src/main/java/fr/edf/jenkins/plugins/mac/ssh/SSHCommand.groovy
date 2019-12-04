@@ -132,6 +132,7 @@ class SSHCommand {
         try {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
                     port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
+            SSHCommandLauncher.sendFile(keychainFile.getContent(), Constants.KEYCHAIN_DESTINATION_FOLDER, connectionConfig)
             return true
         } catch(Exception e) {
             final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, macHost.host, e.getMessage())

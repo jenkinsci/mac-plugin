@@ -11,6 +11,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import com.trilead.ssh2.ChannelCondition
 import com.trilead.ssh2.Connection
+import com.trilead.ssh2.SCPClient
 import com.trilead.ssh2.Session
 
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionConfiguration
@@ -36,7 +37,7 @@ protected class SSHCommandLauncher {
      * @throws Exception if cannot execute the command or if the command return an error
      */
     @Restricted(NoExternalUse)
-    static String executeCommand(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
+    protected static String executeCommand(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
         Connection connection = null
         Session session = null
         try {
@@ -63,6 +64,25 @@ protected class SSHCommandLauncher {
         } catch(Exception e) {
             if(session != null) session.close()
             if(connection != null) connection.close()
+            throw e
+        }
+    }
+    
+    protected static void sendFile(InputStream input, String outputDir, SSHConnectionConfiguration connectionConfiguration) {
+        Connection connection = null
+        Session session = null
+        SCPClient scpCli = null
+        try {
+            connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)
+            scpCli = new SCPClient(connection)
+            scpCli.put(input.getAbsolutePath(), "")
+            scpCli = null
+            session.close()
+            connection.close()
+        }catch(Exception e) {
+            scpCli = null
+            session.close()
+            connection.close()
             throw e
         }
     }

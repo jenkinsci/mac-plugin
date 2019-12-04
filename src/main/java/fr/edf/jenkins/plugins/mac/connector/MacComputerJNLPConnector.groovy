@@ -10,14 +10,17 @@ import org.kohsuke.stapler.DataBoundSetter
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
+import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.slave.MacComputer
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
+import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.TaskListener
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.JNLPLauncher
 import hudson.slaves.SlaveComputer
+import jenkins.model.Jenkins
 
 class MacComputerJNLPConnector extends MacComputerConnector {
 
@@ -80,8 +83,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             MacComputer macComputer = (MacComputer) computer
             try {
                 SSHCommand.createUserOnMac(host, user)
-                if(host.uploadKeychain) {
-                    
+                if(host.uploadKeychain && host.keychainFileId != null) {
+                    KeychainFileCredentials keychainCredentials = CredentialsUtils.findKeychain(host.keychainFileId, Jenkins.get())
+                    SSHCommand.uploadKeychain(host, user, keychainCredentials)
                 }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
