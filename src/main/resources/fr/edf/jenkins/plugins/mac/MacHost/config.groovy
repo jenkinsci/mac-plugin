@@ -46,7 +46,7 @@ f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectio
 }
 
 f.optionalBlock(title: _(Messages.Keychain_Title()), field: 'uploadKeychain',
-    checked: instance.uploadKeychain, inline: 'true') {
+    checked: null != instance ? instance.uploadKeychain : false, inline: 'true') {
     f.entry(title:_(Messages.Keychain_DisplayName()), field:"fileCredentialsId") {
         c.select(context: app, includeUser: false, expressionAllowed: false)
     }

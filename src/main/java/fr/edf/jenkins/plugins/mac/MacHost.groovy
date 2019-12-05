@@ -116,7 +116,7 @@ class MacHost implements Describable<MacHost> {
     }
 
     @DataBoundSetter
-    void setUploadKeychain(Boolean uploadKeychain) {
+    void setUploadKeychain(Boolean uploadKeychain= Boolean.FALSE) {
         this.uploadKeychain = uploadKeychain
     }
 
