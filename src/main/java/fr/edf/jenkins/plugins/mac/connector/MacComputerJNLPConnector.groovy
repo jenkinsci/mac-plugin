@@ -5,12 +5,12 @@ import java.time.Instant
 
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.jenkinsci.Symbol
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.slave.MacComputer
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
@@ -83,9 +83,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             MacComputer macComputer = (MacComputer) computer
             try {
                 SSHCommand.createUserOnMac(host, user)
-                if(host.uploadKeychain && host.keychainFileId != null) {
-                    KeychainFileCredentials keychainCredentials = CredentialsUtils.findKeychain(host.keychainFileId, Jenkins.get())
-                    SSHCommand.uploadKeychain(host, user, keychainCredentials)
+                if(host.uploadKeychain && host.fileCredentialsId != null) {
+                    FileCredentials fileCredentials = CredentialsUtils.findFileCredentials(host.fileCredentialsId, Jenkins.get())
+                    SSHCommand.uploadKeychain(host, user, fileCredentials)
                 }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {

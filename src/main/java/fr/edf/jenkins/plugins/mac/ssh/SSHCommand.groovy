@@ -6,12 +6,12 @@ import java.util.logging.Logger
 
 import org.apache.commons.lang.RandomStringUtils
 import org.apache.commons.lang.StringUtils
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHUserConnectionConfiguration
@@ -128,7 +128,7 @@ class SSHCommand {
      * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static boolean uploadKeychain(MacHost host, MacUser user, KeychainFileCredentials keychainFile) throws SSHCommandException, Exception {
+    static boolean uploadKeychain(MacHost host, MacUser user, FileCredentials keychainFile) throws SSHCommandException, Exception {
         try {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: host.host,
             port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout)

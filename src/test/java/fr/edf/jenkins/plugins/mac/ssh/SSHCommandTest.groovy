@@ -1,11 +1,11 @@
 package fr.edf.jenkins.plugins.mac.ssh
 
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.util.Secret
@@ -173,7 +173,7 @@ class SSHCommandTest extends Specification {
         String fileDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
         InputStream content = Mock(InputStream)
         String fileName = "keychain"
-        KeychainFileCredentials keychainFile = Stub(KeychainFileCredentials) {
+        FileCredentials keychainFile = Stub(FileCredentials) {
             getContent() >> content
             getFileName() >> fileName
         }
@@ -195,7 +195,7 @@ class SSHCommandTest extends Specification {
         String fileDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
         InputStream content = Mock(InputStream)
         String fileName = "keychain"
-        KeychainFileCredentials keychainFile = Stub(KeychainFileCredentials) {
+        FileCredentials keychainFile = Stub(FileCredentials) {
             getContent() >> content
             getFileName() >> fileName
         }

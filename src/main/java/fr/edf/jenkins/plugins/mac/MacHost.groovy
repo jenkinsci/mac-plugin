@@ -6,7 +6,6 @@ import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 import org.kohsuke.stapler.QueryParameter
 
-import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
@@ -38,13 +37,13 @@ class MacHost implements Describable<MacHost> {
     Boolean disabled
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
-    String keychainFileId
+    String fileCredentialsId
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
     Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled,
-    Integer maxTries, String labelString, Boolean uploadKeychain = Boolean.FALSE, String keychainFileId = null) {
+    Integer maxTries, String labelString, Boolean uploadKeychain = Boolean.FALSE, String fileCredentialsId) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -57,7 +56,7 @@ class MacHost implements Describable<MacHost> {
         this.maxTries = maxTries
         this.labelString = labelString
         this.uploadKeychain = uploadKeychain
-        this.keychainFileId = keychainFileId
+        this.fileCredentialsId = fileCredentialsId
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -122,8 +121,8 @@ class MacHost implements Describable<MacHost> {
     }
 
     @DataBoundSetter
-    void setKeychainFileId(String keychainFileId) {
-        this.keychainFileId = keychainFileId
+    void setFileCredentialsId(String fileCredentialsId) {
+        this.fileCredentialsId = fileCredentialsId
     }
 
     @Override
@@ -183,8 +182,8 @@ class MacHost implements Describable<MacHost> {
          * @param context
          * @return ListBoxModel
          */
-        ListBoxModel doFillKeychainFileIdItems(@QueryParameter String keychainFileId, @AncestorInPath Item ancestor) {
-            return FormUtils.newKeychainFileItemsListBoxModel(keychainFileId, ancestor)
+        ListBoxModel doFillFileCredentialsIdItems(@QueryParameter String fileCredentialsId, @AncestorInPath Item ancestor) {
+            return FormUtils.newFileCredentialsItemsListBoxModel(fileCredentialsId, ancestor)
         }
 
         /**

@@ -5,6 +5,7 @@ import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf
 import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fromUri
 
 import org.antlr.v4.runtime.misc.NotNull
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
@@ -14,7 +15,6 @@ import com.cloudbees.plugins.credentials.common.StandardListBoxModel
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
 
 import fr.edf.jenkins.plugins.mac.Messages
-import fr.edf.jenkins.plugins.mac.keychain.KeychainFileCredentials
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import hudson.model.Item
@@ -139,7 +139,7 @@ class FormUtils {
      * @return ListBoxModel
      */
     @Restricted(NoExternalUse)
-    static ListBoxModel newKeychainFileItemsListBoxModel(final String keychainFileId,
+    static ListBoxModel newFileCredentialsItemsListBoxModel(final String keychainFileId,
             final Item ancestor) {
         // Ref: https://github.com/jenkinsci/credentials-plugin/blob/master/docs/consumer.adoc
         boolean noContextNotAdmin = ancestor == null && !Jenkins.get().hasPermission(Jenkins.ADMINISTER)
@@ -154,8 +154,8 @@ class FormUtils {
                 .includeEmptyValue()
                 .includeMatchingAs(ACL.SYSTEM,
                 ancestor ?: Jenkins.get(),
-                KeychainFileCredentials,
+                FileCredentials,
                 fromUri(getUri(Jenkins.get().getRootUrl()).toString()).build(),
-                anyOf(instanceOf(KeychainFileCredentials)))
+                anyOf(instanceOf(FileCredentials)))
     }
 }

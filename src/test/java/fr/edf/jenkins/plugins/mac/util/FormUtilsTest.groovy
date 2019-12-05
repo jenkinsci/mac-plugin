@@ -98,7 +98,7 @@ class FormUtilsTest extends Specification {
         String keychainFileId = "credentials"
 
         when:
-        ListBoxModel list = FormUtils.newKeychainFileItemsListBoxModel(keychainFileId, null)
+        ListBoxModel list = FormUtils.newFileCredentialsItemsListBoxModel(keychainFileId, null)
 
         then:
         notThrown Exception
