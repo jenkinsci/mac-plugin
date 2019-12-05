@@ -79,7 +79,7 @@ For this check "Upload a keychain file" :
 
 <img src="https://zupimages.net/up/19/49/93el.png" width="400"/>
 
-Add a new Keychain file credentials. **Prefers to store it as System Credential to not allow any project to use it directly** :
+Add a new Secret file credentials. **Prefers to store it as System Credentials to not allow any project to use it directly** :
 
 <img src="https://zupimages.net/up/19/49/xw7u.png" width="750"/>
 
