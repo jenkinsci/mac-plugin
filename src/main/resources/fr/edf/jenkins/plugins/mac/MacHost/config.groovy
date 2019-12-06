@@ -57,3 +57,13 @@ f.block() {
             with: 'host,port,credentialsId'
             )
 }
+
+f.entry(title: _(Messages.Host_EnvVars())) {
+    f.repeatableHeteroProperty(
+            field:"envVars",
+            hasHeader: "true",
+            addCaption: "Add environment variable",
+            oneEach:"false",
+            repeatableDeleteButton:'true'
+            )
+}

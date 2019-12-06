@@ -11,6 +11,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import com.google.common.base.Objects
 
 import fr.edf.jenkins.plugins.mac.MacCloud
+import fr.edf.jenkins.plugins.mac.MacEnvVar
 import fr.edf.jenkins.plugins.mac.MacHost
 import hudson.EnvVars
 import hudson.model.Executor
@@ -20,7 +21,7 @@ import hudson.slaves.AbstractCloudComputer
 class MacComputer extends AbstractCloudComputer<MacSlave> {
 
     private static final Logger LOGGER = Logger.getLogger(MacComputer.name)
-    
+
     MacComputer(MacSlave node) {
         super(node)
     }
@@ -98,14 +99,13 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
     @Restricted(NoExternalUse.class)
     public EnvVars getEnvironment() throws IOException, InterruptedException {
         EnvVars variables = super.getEnvironment()
-        variables.put("MAC_USER_ID", getUserId())
-        final MacCloud cloud = getCloud()
-        if (cloud != null) {
-            variables.put("JENKINS_CLOUD_ID", cloud.name);
-            String macHost = getMacHost().host
-            variables.put("MAC_HOST", macHost)
+        MacHost macHost = getMacHost()
+        if (macHost && macHost.envVars) {
+            for(MacEnvVar envVar : macHost.envVars) {
+                variables.put(envVar.key, envVar.value)
+            }
         }
-        return variables;
+        return variables
     }
 
     @Override

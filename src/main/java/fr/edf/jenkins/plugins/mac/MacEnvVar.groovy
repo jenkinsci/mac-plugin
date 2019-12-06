@@ -10,6 +10,7 @@ import hudson.model.Descriptor
 import jenkins.model.Jenkins
 
 class MacEnvVar implements Describable<MacEnvVar> {
+
     String key
     String value
 
@@ -41,7 +42,7 @@ class MacEnvVar implements Describable<MacEnvVar> {
          */
         @Override
         String getDisplayName() {
-            return Messages.Host_DisplayName()
+            return Messages.EnvVar_DisplayName()
         }
     }
 }

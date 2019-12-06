@@ -36,11 +36,12 @@ class MacHost implements Describable<MacHost> {
     Integer maxTries
     Boolean disabled
     String labelString
+    List<MacEnvVar> envVars = new ArrayList()
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
-    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled, Integer maxTries, String labelString) {
+    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled, Integer maxTries, String labelString, Integer agentConnectionTimeout, List<MacEnvVar> envVars) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -52,6 +53,7 @@ class MacHost implements Describable<MacHost> {
         this.disabled = disabled
         this.maxTries = maxTries
         this.labelString = labelString
+        this.envVars = envVars
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -108,6 +110,11 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setLabelString(String labelString) {
         this.labelString = labelString
+    }
+
+    @DataBoundSetter
+    void setEnvVars(List<MacEnvVar> envVars) {
+        this.envVars = envVars
     }
 
     @Override
