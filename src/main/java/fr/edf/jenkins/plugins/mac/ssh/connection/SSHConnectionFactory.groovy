@@ -58,6 +58,7 @@ class SSHConnectionFactory {
      * @param conf
      * @return com.trilead.ssh2.Connection
      */
+    @Restricted(NoExternalUse)
     private static Connection getUserSshConnection(SSHUserConnectionConfiguration conf) {
         String host = conf.host
         Integer port = conf.port ?: new Integer(22)

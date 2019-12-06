@@ -5,15 +5,10 @@ import java.util.logging.Logger
 
 import javax.annotation.CheckForNull
 
-import org.kohsuke.accmod.Restricted
-import org.kohsuke.accmod.restrictions.NoExternalUse
-
 import com.google.common.base.Objects
 
 import fr.edf.jenkins.plugins.mac.MacCloud
-import fr.edf.jenkins.plugins.mac.MacEnvVar
 import fr.edf.jenkins.plugins.mac.MacHost
-import hudson.EnvVars
 import hudson.model.Executor
 import hudson.model.Queue
 import hudson.slaves.AbstractCloudComputer
@@ -90,22 +85,6 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
         Queue.Executable exec = executor.getCurrentExecutable()
         LOGGER.log(Level.FINE, "Computer {0} completed task {1} with problems", this, exec)
         super.taskCompletedWithProblems(executor, task, durationMS, problems)
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Restricted(NoExternalUse.class)
-    public EnvVars getEnvironment() throws IOException, InterruptedException {
-        EnvVars variables = super.getEnvironment()
-        MacHost macHost = getMacHost()
-        if (macHost && macHost.envVars) {
-            for(MacEnvVar envVar : macHost.envVars) {
-                variables.put(envVar.key, envVar.value)
-            }
-        }
-        return variables
     }
 
     @Override
