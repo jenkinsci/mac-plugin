@@ -35,13 +35,15 @@ class MacHost implements Describable<MacHost> {
     Integer agentConnectionTimeout
     Integer maxTries
     Boolean disabled
+    Boolean uploadKeychain = Boolean.FALSE
     String labelString
+    String fileCredentialsId
     List<MacEnvVar> envVars = new ArrayList()
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
-    MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
-    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled, Integer maxTries, String labelString, Integer agentConnectionTimeout, List<MacEnvVar> envVars) {
+    MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain = Boolean.FALSE, String fileCredentialsId, List<MacEnvVar> envVars) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -54,6 +56,8 @@ class MacHost implements Describable<MacHost> {
         this.maxTries = maxTries
         this.labelString = labelString
         this.envVars = envVars
+        this.uploadKeychain = uploadKeychain
+        this.fileCredentialsId = fileCredentialsId
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -117,6 +121,16 @@ class MacHost implements Describable<MacHost> {
         this.envVars = envVars
     }
 
+    @DataBoundSetter
+    void setUploadKeychain(Boolean uploadKeychain= Boolean.FALSE) {
+        this.uploadKeychain = uploadKeychain
+    }
+
+    @DataBoundSetter
+    void setFileCredentialsId(String fileCredentialsId) {
+        this.fileCredentialsId = fileCredentialsId
+    }
+
     @Override
     Descriptor<MacHost> getDescriptor() {
         return Jenkins.get().getDescriptorOrDie(this.getClass())
@@ -165,7 +179,17 @@ class MacHost implements Describable<MacHost> {
          */
         ListBoxModel doFillCredentialsIdItems(@QueryParameter String host,
                 @QueryParameter String credentialsId, @AncestorInPath Item ancestor) {
-            return FormUtils.newCredentialsItemsListBoxModel(host, credentialsId, ancestor)
+            return FormUtils.newMacHostCredentialsItemsListBoxModel(host, credentialsId, ancestor)
+        }
+
+        /**
+         * Return ListBoxModel of existing keychains
+         * @param credentialsId
+         * @param context
+         * @return ListBoxModel
+         */
+        ListBoxModel doFillFileCredentialsIdItems(@QueryParameter String fileCredentialsId, @AncestorInPath Item ancestor) {
+            return FormUtils.newFileCredentialsItemsListBoxModel(fileCredentialsId, ancestor)
         }
 
         /**

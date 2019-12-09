@@ -3,6 +3,8 @@ package fr.edf.jenkins.plugins.mac.util
 import static com.google.common.base.Preconditions.checkArgument
 import static com.google.common.base.Preconditions.checkNotNull
 
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
+
 import com.cloudbees.plugins.credentials.CredentialsMatchers
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardCredentials
@@ -37,6 +39,28 @@ class CredentialsUtils {
                 context,
                 ACL.SYSTEM,
                 URIRequirementBuilder.fromUri(domain.toString()).build())
+
+        def credentials = CredentialsMatchers.firstOrNull(lookupCredentials, CredentialsMatchers.withId(credentialsId))
+        checkArgument(credentials != null)
+        return credentials
+    }
+    
+    /**
+     * Retrieve keychain credentials with id
+     * @param credentialsId
+     * @param context
+     * @return StandardCredentials
+     */
+    static FileCredentials findFileCredentials(String credentialsId, ModelObject context) {
+        checkNotNull(credentialsId)
+        checkNotNull(context)
+        checkArgument(!credentialsId.isEmpty())
+
+        List<FileCredentials> lookupCredentials = CredentialsProvider.lookupCredentials(
+                FileCredentials,
+                context,
+                ACL.SYSTEM,
+                null)
 
         def credentials = CredentialsMatchers.firstOrNull(lookupCredentials, CredentialsMatchers.withId(credentialsId))
         checkArgument(credentials != null)

@@ -5,6 +5,7 @@ import java.time.Instant
 
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.jenkinsci.Symbol
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 
@@ -12,12 +13,14 @@ import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.slave.MacComputer
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
+import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import hudson.Extension
 import hudson.model.Descriptor
 import hudson.model.TaskListener
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.JNLPLauncher
 import hudson.slaves.SlaveComputer
+import jenkins.model.Jenkins
 
 class MacComputerJNLPConnector extends MacComputerConnector {
 
@@ -80,6 +83,10 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             MacComputer macComputer = (MacComputer) computer
             try {
                 SSHCommand.createUserOnMac(host, user)
+                if(host.uploadKeychain && host.fileCredentialsId != null) {
+                    FileCredentials fileCredentials = CredentialsUtils.findFileCredentials(host.fileCredentialsId, Jenkins.get())
+                    SSHCommand.uploadKeychain(host, user, fileCredentials)
+                }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false

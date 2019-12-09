@@ -18,7 +18,7 @@ This plugin has been tested against macOS 10.14 Mojave and macOS 10.15 Catalina 
 
 ## Requirements
 
-**Redémarrer le Mac après la configuration**
+**Restart MacOs after configuration change**
 
 ### Enable SSH for all users
 Go to System Preferences -> Sharing, and enable Remote Login for All users :
@@ -73,6 +73,18 @@ In a project configuration, refers the label :
 
 <img src="https://zupimages.net/up/19/47/xyw2.png" width="750"/>
 
+### Keychain Managment
+Since v1.1.0, you have the possibility to stock keychain files into Jenkins to inject it in the Jenkins Mac agent.
+For this check "Upload a keychain file" :
+
+<img src="https://zupimages.net/up/19/49/93el.png" width="400"/>
+
+Add a new Secret file credentials. **Prefers to store it as System Credentials to not allow any project to use it directly** :
+
+<img src="https://zupimages.net/up/19/49/xw7u.png" width="750"/>
+
+The Keychain is stored as SecretByte on Jenkins and cannot be read directly as a file. It will be send to the Mac agent with SCP in ~/Library/Keychains/ directory before the JNLP connection.
+
 ## Logs configuration
 You can define a custom LOGGER to log every output of the plugin on the same place.
 To do it, go to System logs in the Jenkins configuration :
@@ -80,6 +92,7 @@ To do it, go to System logs in the Jenkins configuration :
 <img src="https://zupimages.net/up/19/47/m7i5.png" width="400"/>
 
 Configure the Logger of the plugin :
+
 <img src="https://zupimages.net/up/19/47/3mkc.png" width="750"/>
 
 Save your configuration.

@@ -51,29 +51,39 @@ class Constants {
 
     /** dscl . list /Users | grep -v ^_ | grep %s */
     public static final String LIST_USERS = "dscl . list /Users | grep -v ^_ | grep %s"
+    
+    /** mkdir %s */
+    public static final String CREATE_DIR = "mkdir %s"
 
     //regex
     public static final String REGEX_NEW_LINE = "\\r?\\n|\\r"
 
-//     Command for grouping users on a mac (not used but keep for potential evol)
-//    /** sudo dseditgroup -o create %s */
-//    public static final String CREATE_GROUP = "sudo dseditgroup -o create %s"
-//
-//    /** sudo dseditgroup -o delete %s */
-//    public static final String DELETE_GROUP = "sudo dseditgroup -o delete %s"
-//
-//    /** sudo dseditgroup -o edit -a %s %s */
-//    public static final String ADD_USER_TO_GROUP = "sudo dseditgroup -o edit -a %s %s"
-//
-//    /** sudo dseditgroup -o edit -d %s %s */
-//    public static final String REMOVE_USER_FROM_GROUP = "sudo dseditgroup -o edit -d %s %s"
-//
-//    /** dseditgroup -o checkmember -m %s %s */
-//    public static final String CHECK_USER_ADDED_TO_GROUP = "sudo dseditgroup -o checkmember -m %s %s"
-//
-//    /** chown -R %s:%s /Users/%s/ */
-//    public static final String ASSIGN_USER_FOLDER_TO_GROUP = "sudo chown -R %s:%s /Users/%s/"
-//
-//    /** sudo dseditgroup -o read %s */
-//    public static final String CHECK_GROUP_EXIST = "sudo dseditgroup -o read %s"
+    //Keychain
+    /** keychains/ */
+    public static final String KEYCHAIN_FOLDER = "keychains/"
+
+    /** /Users/%s/Library/Keychains/ */
+    public static final String KEYCHAIN_DESTINATION_FOLDER = "/Users/%s/Library/Keychains/"
+
+    //     Command for grouping users on a mac (not used but keep for potential evol)
+    //    /** sudo dseditgroup -o create %s */
+    //    public static final String CREATE_GROUP = "sudo dseditgroup -o create %s"
+    //
+    //    /** sudo dseditgroup -o delete %s */
+    //    public static final String DELETE_GROUP = "sudo dseditgroup -o delete %s"
+    //
+    //    /** sudo dseditgroup -o edit -a %s %s */
+    //    public static final String ADD_USER_TO_GROUP = "sudo dseditgroup -o edit -a %s %s"
+    //
+    //    /** sudo dseditgroup -o edit -d %s %s */
+    //    public static final String REMOVE_USER_FROM_GROUP = "sudo dseditgroup -o edit -d %s %s"
+    //
+    //    /** dseditgroup -o checkmember -m %s %s */
+    //    public static final String CHECK_USER_ADDED_TO_GROUP = "sudo dseditgroup -o checkmember -m %s %s"
+    //
+    //    /** chown -R %s:%s /Users/%s/ */
+    //    public static final String ASSIGN_USER_FOLDER_TO_GROUP = "sudo chown -R %s:%s /Users/%s/"
+    //
+    //    /** sudo dseditgroup -o read %s */
+    //    public static final String CHECK_GROUP_EXIST = "sudo dseditgroup -o read %s"
 }
