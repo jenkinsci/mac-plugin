@@ -9,6 +9,7 @@ import com.trilead.ssh2.Session
 
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHUserConnectionConfiguration
 import spock.lang.Specification
 
 class SSHCommandLauncherTest extends Specification {
@@ -94,5 +95,24 @@ class SSHCommandLauncherTest extends Specification {
         then:
         notThrown Exception
         result == "err"
+    }
+    
+    def "sendFile should throw Exception because SCPClient cannot find host" () {
+        setup:
+        SSHUserConnectionConfiguration connectionConfig = Mock(SSHUserConnectionConfiguration)
+        Connection conn = Stub(Connection) {
+            close() >> {}
+        }
+        GroovySpy(SSHConnectionFactory, global:true)
+        1 * SSHConnectionFactory.getSshConnection(*_) >> conn
+        InputStream content = new ByteArrayInputStream(new String().getBytes())
+        String fileName = "fileName"
+        String outputDir = "outputDir"
+        
+        when:
+        SSHCommandLauncher.sendFile(connectionConfig, content, fileName, outputDir)
+        
+        then:
+        Exception e = thrown()
     }
 }

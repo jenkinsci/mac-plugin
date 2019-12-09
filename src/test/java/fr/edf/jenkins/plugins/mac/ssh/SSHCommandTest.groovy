@@ -1,5 +1,6 @@
 package fr.edf.jenkins.plugins.mac.ssh
 
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
@@ -100,7 +101,7 @@ class SSHCommandTest extends Specification {
     def "jnlpConnect should throw exception"() {
         setup:
         MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
+        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel", false, null)
         String slaveSecret = "secret"
 
         when:
@@ -113,7 +114,7 @@ class SSHCommandTest extends Specification {
 
     def "listLabelUsers should works and return empty list"() {
         setup:
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
+        MacHost macHost = Mock(MacHost)
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> ""
 
@@ -127,7 +128,7 @@ class SSHCommandTest extends Specification {
 
     def "listLabelUsers should works and return list of user"() {
         setup:
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
+        MacHost macHost = Mock(MacHost)
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> "user1\ruser2"
 
@@ -141,7 +142,7 @@ class SSHCommandTest extends Specification {
     
     def "listLabelUsers should throw SSHCommandException"() {
         setup:
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel")
+        MacHost macHost = Mock(MacHost)
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> { throw new Exception("Error") }
 
@@ -163,5 +164,50 @@ class SSHCommandTest extends Specification {
 
         then:
         notThrown Exception
+    }
+    
+    def "uploadKeychain should work without exception"() {
+        setup:
+        MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
+        MacHost host = Mock(MacHost)
+        String fileDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
+        InputStream content = Mock(InputStream)
+        String fileName = "keychain"
+        FileCredentials keychainFile = Stub(FileCredentials) {
+            getContent() >> content
+            getFileName() >> fileName
+        }
+        GroovySpy(SSHCommandLauncher, global:true)
+        1* SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CREATE_DIR, fileDir)) >> "ok"
+        1* SSHCommandLauncher.sendFile(_, content, fileName, fileDir) >> {}
+
+        when:
+        SSHCommand.uploadKeychain(host, user, keychainFile)
+
+        then:
+        notThrown Exception
+    }
+    
+    def "uploadKeychain should throw SSHCommandException"() {
+        setup:
+        MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
+        MacHost host = Mock(MacHost)
+        String fileDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
+        InputStream content = Mock(InputStream)
+        String fileName = "keychain"
+        FileCredentials keychainFile = Stub(FileCredentials) {
+            getContent() >> content
+            getFileName() >> fileName
+        }
+        GroovySpy(SSHCommandLauncher, global:true)
+        1* SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CREATE_DIR, fileDir)) >> "ok"
+        1* SSHCommandLauncher.sendFile(_, content, fileName, fileDir) >> new Exception("failed to send file")
+
+        when:
+        SSHCommand.uploadKeychain(host, user, keychainFile)
+
+        then:
+        SSHCommandException sshe = thrown()
+        sshe.getMessage().contains("Cannot transfert keychain file")
     }
 }

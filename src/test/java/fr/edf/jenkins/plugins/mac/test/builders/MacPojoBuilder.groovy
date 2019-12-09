@@ -21,7 +21,9 @@ class MacPojoBuilder {
                 5,//kexTimeout
                 false, //disabled
                 5, //maxTries
-                "testLabel" //label
+                "testLabel", //label
+                Boolean.FALSE, //
+                null 
                 )
         List<MacHost> hostList = new ArrayList()
         hostList.add(host)

@@ -41,12 +41,15 @@ f.entry(title: _(Messages.Host_ReadTimeout()), field: 'readTimeout') {
     f.number(clazz: 'required', default: 60, min: 30)
 }
 
-//f.entry(title: _(Messages.Host_KexTimeout()), field: 'kexTimeout') {
-//    f.number(clazz: 'required', default: 0, min: 0)
-//}
-
 f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectionTimeout') {
     f.number(clazz: 'required', default: 15, min: 15)
+}
+
+f.optionalBlock(title: _(Messages.Keychain_Title()), field: 'uploadKeychain',
+    checked: null != instance ? instance.uploadKeychain : false, inline: 'true') {
+    f.entry(title:_(Messages.Keychain_DisplayName()), field:"fileCredentialsId") {
+        c.select(context: app, includeUser: false, expressionAllowed: false)
+    }
 }
 
 f.block() {

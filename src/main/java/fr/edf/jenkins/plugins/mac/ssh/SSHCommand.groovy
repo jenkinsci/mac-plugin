@@ -6,6 +6,7 @@ import java.util.logging.Logger
 
 import org.apache.commons.lang.RandomStringUtils
 import org.apache.commons.lang.StringUtils
+import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
@@ -108,12 +109,35 @@ class SSHCommand {
         String remotingUrl = jenkinsUrl + Constants.REMOTING_JAR_PATH
         try {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
-                    port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
+            port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret)))
             return true
         } catch(Exception e) {
             final String message = String.format(SSHCommandException.JNLP_CONNECTION_ERROR_MESSAGE, macHost.host, user.username)
+            LOGGER.log(Level.SEVERE, message, e)
+            throw new SSHCommandException(message, e)
+        }
+    }
+
+    /**
+     * Upload keychain file on the slave
+     * @param macHost
+     * @param user
+     * @return true if file uploaded
+     * @throws SSHCommandException, Exception
+     */
+    @Restricted(NoExternalUse)
+    static boolean uploadKeychain(MacHost host, MacUser user, FileCredentials keychainFile) throws SSHCommandException, Exception {
+        try {
+            SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: host.host,
+            port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout)
+            String outputDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_DIR, outputDir)))
+            SSHCommandLauncher.sendFile(connectionConfig, keychainFile.content, keychainFile.fileName, outputDir)
+            return true
+        } catch(Exception e) {
+            final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, host.host, e.getMessage())
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
         }
