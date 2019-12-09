@@ -60,11 +60,11 @@ f.block() {
 
 f.entry(title: _(Messages.EnvVar_Title())) {
     f.repeatableHeteroProperty(
-            field:"envVars",
-            hasHeader: "true",
+            field:'envVars',
+            hasHeader: 'true',
             addCaption: Messages.EnvVar_Add(),
             deleteCaption:Messages.EnvVar_Delete(),
-            oneEach:"false",
+            oneEach:'false',
             repeatableDeleteButton:'true'
             )
 }
