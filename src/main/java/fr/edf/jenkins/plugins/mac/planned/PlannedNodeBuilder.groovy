@@ -39,13 +39,11 @@ public abstract class PlannedNodeBuilder {
         if(!host.envVars) {
             this.nodeProperties = Collections.EMPTY_LIST
         }
-        else { // TODO : refacto to unique closure
-            List<? extends NodeProperty<?>> nodeProperties = new ArrayList()
-            List<EnvironmentVariablesNodeProperty.Entry> entryList = new ArrayList()
-            host.envVars.each { entryList.add(new EnvironmentVariablesNodeProperty.Entry(it.key, it.value)) }
-            EnvironmentVariablesNodeProperty envVarsNodeProps = new EnvironmentVariablesNodeProperty(entryList)
-            nodeProperties.add(envVarsNodeProps)
-            this.nodeProperties = nodeProperties
+        else {
+            this.nodeProperties = new ArrayList()
+            nodeProperties.add(new EnvironmentVariablesNodeProperty(host.envVars.collect {
+                new EnvironmentVariablesNodeProperty.Entry(it.key, it.value)
+            }))
         }
         return this
     }
