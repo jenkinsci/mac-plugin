@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.1.0] - 10/12/2019
+
+### Added
+- Upload of a keychain file on Mac
+- Environment variables for Nodes
+
+### Fixed
+- Bug on Agent connection timeout property
+- Configuration page of Nodes
+
+### Changed
+- Dependencies management with jenkinsci bom
+
+### Removed
+- unused UI file
+
 ## [v1.0.2] - 28/11/2019
 
 ### Added

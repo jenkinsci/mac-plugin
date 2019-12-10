@@ -12,6 +12,9 @@ Like docker and kubernetes plugins does, you can configure your builds to run on
 - [x] Allow to configure a Mac as Jenkins slave
 - [x] Run multiples builds on a single Mac
 - [x] Run builds on a cloud of Mac
+- [x] Configure environment variables
+- [x] Stock keychain file as credentials on Jenkins
+- [x] Inject keychain on Node filesystem
 - [x] Clean all files created after each build
 
 This plugin has been tested against macOS 10.14 Mojave and macOS 10.15 Catalina , although theoretically it should work with older version as long as it supports sysadminctl command.
