@@ -45,13 +45,6 @@ f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectio
     f.number(clazz: 'required', default: 15, min: 15)
 }
 
-f.optionalBlock(title: _(Messages.Keychain_Title()), field: 'uploadKeychain',
-    checked: null != instance ? instance.uploadKeychain : false, inline: 'true') {
-    f.entry(title:_(Messages.Keychain_DisplayName()), field:"fileCredentialsId") {
-        c.select(context: app, includeUser: false, expressionAllowed: false)
-    }
-}
-
 f.block() {
     f.validateButton(
             title: _(Messages.Host_TestConnection()),
@@ -59,6 +52,13 @@ f.block() {
             method: 'verifyConnection',
             with: 'host,port,credentialsId'
             )
+}
+
+f.optionalBlock(title: _(Messages.Keychain_Title()), field: 'uploadKeychain',
+    checked: null != instance ? instance.uploadKeychain : false, inline: 'true') {
+    f.entry(title:_(Messages.Keychain_DisplayName()), field:"fileCredentialsId") {
+        c.select(context: app, includeUser: false, expressionAllowed: false)
+    }
 }
 
 f.entry(title: _(Messages.EnvVar_Title())) {
