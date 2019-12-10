@@ -21,6 +21,7 @@ import hudson.model.Slave.SlaveDescriptor
 import hudson.slaves.AbstractCloudSlave
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
+import hudson.slaves.NodeProperty
 import hudson.slaves.RetentionStrategy
 import jenkins.model.Jenkins
 
@@ -32,7 +33,7 @@ class MacSlave extends AbstractCloudSlave {
     final MacHost macHost
     AtomicBoolean acceptingTasks = new AtomicBoolean(true)
 
-    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher, Integer idleMinutes) {
+    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher, Integer idleMinutes, List<? extends NodeProperty<?>> nodeProperties) {
         super(
         user.username,
         "Agent Mac for the user " + user.username,
@@ -42,7 +43,7 @@ class MacSlave extends AbstractCloudSlave {
         labels,
         launcher,
         buildRetentionStrategy(idleMinutes),
-        Collections.EMPTY_LIST
+        nodeProperties
         )
         this.cloudId = cloudId
         this.macHost = macHost

@@ -38,12 +38,12 @@ class MacHost implements Describable<MacHost> {
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
+    List<MacEnvVar> envVars = new ArrayList()
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
-    MacHost(String host, String credentialsId, Integer port, Integer maxUsers,
-    Integer connectionTimeout, Integer readTimeout, Integer kexTimeout, Boolean disabled,
-    Integer maxTries, String labelString, Boolean uploadKeychain = Boolean.FALSE, String fileCredentialsId) {
+    MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain = Boolean.FALSE, String fileCredentialsId, List<MacEnvVar> envVars) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -55,6 +55,7 @@ class MacHost implements Describable<MacHost> {
         this.disabled = disabled
         this.maxTries = maxTries
         this.labelString = labelString
+        this.envVars = envVars
         this.uploadKeychain = uploadKeychain
         this.fileCredentialsId = fileCredentialsId
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
@@ -113,6 +114,11 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setLabelString(String labelString) {
         this.labelString = labelString
+    }
+
+    @DataBoundSetter
+    void setEnvVars(List<MacEnvVar> envVars) {
+        this.envVars = envVars
     }
 
     @DataBoundSetter

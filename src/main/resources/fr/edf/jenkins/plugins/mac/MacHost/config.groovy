@@ -45,6 +45,15 @@ f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectio
     f.number(clazz: 'required', default: 15, min: 15)
 }
 
+f.block() {
+    f.validateButton(
+            title: _(Messages.Host_TestConnection()),
+            progress: _('Testing...'),
+            method: 'verifyConnection',
+            with: 'host,port,credentialsId'
+            )
+}
+
 f.optionalBlock(title: _(Messages.Keychain_Title()), field: 'uploadKeychain',
     checked: null != instance ? instance.uploadKeychain : false, inline: 'true') {
     f.entry(title:_(Messages.Keychain_DisplayName()), field:"fileCredentialsId") {
@@ -52,11 +61,13 @@ f.optionalBlock(title: _(Messages.Keychain_Title()), field: 'uploadKeychain',
     }
 }
 
-f.block() {
-    f.validateButton(
-            title: _(Messages.Host_TestConnection()),
-            progress: _('Testing...'),
-            method: 'verifyConnection',
-            with: 'host,port,credentialsId'
+f.entry(title: _(Messages.EnvVar_Title())) {
+    f.repeatableHeteroProperty(
+            field:'envVars',
+            hasHeader: 'true',
+            addCaption: Messages.EnvVar_Add(),
+            deleteCaption:Messages.EnvVar_Delete(),
+            oneEach:'false',
+            repeatableDeleteButton:'true'
             )
 }

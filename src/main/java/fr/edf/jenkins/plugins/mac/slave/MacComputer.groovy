@@ -5,13 +5,10 @@ import java.util.logging.Logger
 
 import javax.annotation.CheckForNull
 
-import org.kohsuke.accmod.Restricted
-import org.kohsuke.accmod.restrictions.NoExternalUse
-
 import com.google.common.base.Objects
 
 import fr.edf.jenkins.plugins.mac.MacCloud
-import hudson.EnvVars
+import fr.edf.jenkins.plugins.mac.MacHost
 import hudson.model.Executor
 import hudson.model.Queue
 import hudson.slaves.AbstractCloudComputer
@@ -19,7 +16,7 @@ import hudson.slaves.AbstractCloudComputer
 class MacComputer extends AbstractCloudComputer<MacSlave> {
 
     private static final Logger LOGGER = Logger.getLogger(MacComputer.name)
-    
+
     MacComputer(MacSlave node) {
         super(node)
     }
@@ -52,7 +49,7 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
     }
 
     @CheckForNull
-    String getMacHost() {
+    MacHost getMacHost() {
         final MacSlave node = getNode()
         return node == null ? null : node.getMacHost()
     }
@@ -88,23 +85,6 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
         Queue.Executable exec = executor.getCurrentExecutable()
         LOGGER.log(Level.FINE, "Computer {0} completed task {1} with problems", this, exec)
         super.taskCompletedWithProblems(executor, task, durationMS, problems)
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Restricted(NoExternalUse.class)
-    public EnvVars getEnvironment() throws IOException, InterruptedException {
-        EnvVars variables = super.getEnvironment()
-        variables.put("MAC_USER_ID", getUserId())
-        final MacCloud cloud = getCloud()
-        if (cloud != null) {
-            variables.put("JENKINS_CLOUD_ID", cloud.name);
-            String macHost = getMacHost()
-            variables.put("MAC_HOST", macHost)
-        }
-        return variables;
     }
 
     @Override

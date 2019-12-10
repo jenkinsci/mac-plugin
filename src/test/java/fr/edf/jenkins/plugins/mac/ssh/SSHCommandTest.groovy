@@ -7,6 +7,7 @@ import org.jvnet.hudson.test.JenkinsRule
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
+import fr.edf.jenkins.plugins.mac.test.builders.MacPojoBuilder
 import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.util.Secret
 import spock.lang.Specification
@@ -100,8 +101,8 @@ class SSHCommandTest extends Specification {
 
     def "jnlpConnect should throw exception"() {
         setup:
-        MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
-        MacHost macHost = new MacHost("host", "credentialsId", 0, 1, 5, 5, 5, false, 5, "testLabel", false, null)
+        MacUser user = MacPojoBuilder.buildUser()
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
         String slaveSecret = "secret"
 
         when:
@@ -114,7 +115,7 @@ class SSHCommandTest extends Specification {
 
     def "listLabelUsers should works and return empty list"() {
         setup:
-        MacHost macHost = Mock(MacHost)
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> ""
 
@@ -128,7 +129,7 @@ class SSHCommandTest extends Specification {
 
     def "listLabelUsers should works and return list of user"() {
         setup:
-        MacHost macHost = Mock(MacHost)
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> "user1\ruser2"
 
@@ -142,7 +143,7 @@ class SSHCommandTest extends Specification {
     
     def "listLabelUsers should throw SSHCommandException"() {
         setup:
-        MacHost macHost = Mock(MacHost)
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%")))) >> { throw new Exception("Error") }
 
