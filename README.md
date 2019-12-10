@@ -85,6 +85,11 @@ Add a new Secret file credentials. **Prefers to store it as System Credentials t
 
 The Keychain is stored as SecretByte on Jenkins and cannot be read directly as a file. It will be send to the Mac agent with SCP in ~/Library/Keychains/ directory before the JNLP connection.
 
+### Environment variables
+Since 1.1.0, you can set environments variables on Mac host. Theses variables will be set on the Node and will be accessible in the build.
+
+<img src="https://zupimages.net/up/19/50/i14g.png" width="650"/>
+
 ## Logs configuration
 You can define a custom LOGGER to log every output of the plugin on the same place.
 To do it, go to System logs in the Jenkins configuration :
