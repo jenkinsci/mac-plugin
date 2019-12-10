@@ -12,7 +12,7 @@ f.entry(title:Messages.MacSlave_Executors(), field:'numExecutors') {
     f.textbox()
 }
 
-f.entry(title: Messages.MacSlave_RemoteFSRoot(), field: 'remoteFs') {
+f.entry(title: Messages.MacSlave_RemoteFSRoot(), field: 'remoteFS') {
     f.textbox()
 }
 
