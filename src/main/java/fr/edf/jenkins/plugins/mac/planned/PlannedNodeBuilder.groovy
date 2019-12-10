@@ -1,7 +1,6 @@
-package fr.edf.jenkins.plugins.mac.planned;
+package fr.edf.jenkins.plugins.mac.planned
 
 import fr.edf.jenkins.plugins.mac.MacCloud
-import fr.edf.jenkins.plugins.mac.MacEnvVar
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import hudson.model.Label;
@@ -36,14 +35,14 @@ public abstract class PlannedNodeBuilder {
      */
     PlannedNodeBuilder host(MacHost host) {
         this.macHost = host
-        if(!host.envVars) {
-            this.nodeProperties = Collections.EMPTY_LIST
-        }
-        else {
+        if(host.envVars) {
             this.nodeProperties = new ArrayList()
             nodeProperties.add(new EnvironmentVariablesNodeProperty(host.envVars.collect {
                 new EnvironmentVariablesNodeProperty.Entry(it.key, it.value)
             }))
+        }
+        else {
+            this.nodeProperties = Collections.EMPTY_LIST
         }
         return this
     }
@@ -64,13 +63,6 @@ public abstract class PlannedNodeBuilder {
     PlannedNodeBuilder numExecutors(int numExecutors) {
         this.numExecutors = numExecutors
         return this
-    }
-
-    /**
-     * @param nodeProperties properties to set in node at creation
-     * @return the current builder.
-     */
-    PlannedNodeBuilder nodeProperties(List<MacEnvVar> envVars) {
     }
 
     /**
