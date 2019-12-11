@@ -13,12 +13,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Bug on Agent connection timeout property
 - Configuration page of Nodes
+- Node label
 
 ### Changed
 - Dependencies management with jenkinsci bom
 
 ### Removed
-- unused UI file
+- Unused UI file
+- Unneeded dependencies
 
 ## [v1.0.2] - 28/11/2019
 
