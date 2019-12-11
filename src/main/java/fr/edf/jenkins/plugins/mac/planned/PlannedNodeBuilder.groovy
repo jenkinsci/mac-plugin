@@ -3,7 +3,6 @@ package fr.edf.jenkins.plugins.mac.planned
 import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
-import hudson.model.Label;
 import hudson.slaves.EnvironmentVariablesNodeProperty
 import hudson.slaves.NodeProperty
 import hudson.slaves.NodeProvisioner;
@@ -16,7 +15,6 @@ public abstract class PlannedNodeBuilder {
     protected MacCloud cloud
     protected MacUser user
     protected MacHost macHost
-    protected Label label
     protected int numExecutors = 1
     protected List<? extends NodeProperty<?>> nodeProperties
 
@@ -44,15 +42,6 @@ public abstract class PlannedNodeBuilder {
         else {
             this.nodeProperties = Collections.EMPTY_LIST
         }
-        return this
-    }
-
-    /**
-     * @param label the {@link Label} to use.
-     * @return the current builder.
-     */
-    PlannedNodeBuilder label(Label label) {
-        this.label = label
         return this
     }
 

@@ -56,7 +56,7 @@ class MacCloud extends Cloud {
             LOGGER.log(Level.INFO, "Excess workload after pending Mac agents: {0}", toBeProvisioned)
             if(toBeProvisioned > 0) {
                 MacHost macHost = chooseMacHost(labelMacHosts)
-                r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).label(label).build())
+                r.add(PlannedNodeBuilderFactory.createInstance().cloud(this).host(macHost).build())
             }
             return r
         } catch (Exception e) {
