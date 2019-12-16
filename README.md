@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/jenkinsci/mac-plugin/badge.svg?branch=master)](https://coveralls.io/github/jenkinsci/mac-plugin?branch=master)
 [![DepShield Badge](https://depshield.sonatype.org/badges/jenkinsci/mac-plugin/depshield.svg)](https://depshield.github.io)
 
-A good utility to build your IOS application, this plugin create MacOs agents for your builds.
+A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.
 
 ## Features
 
