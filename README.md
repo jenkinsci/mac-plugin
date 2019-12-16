@@ -3,9 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/jenkinsci/mac-plugin/badge.svg?branch=master)](https://coveralls.io/github/jenkinsci/mac-plugin?branch=master)
 [![DepShield Badge](https://depshield.sonatype.org/badges/jenkinsci/mac-plugin/depshield.svg)](https://depshield.github.io)
 
-This plugin allows to configure a cloud of Mac in Jenkins configuration.
-
-Like docker and kubernetes plugins does, you can configure your builds to run on it.
+A good utility to build your IOS application, this plugin create MacOs agents for your builds.
 
 ## Features
 
