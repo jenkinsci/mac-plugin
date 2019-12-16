@@ -23,7 +23,7 @@
         <java.level>8</java.level>
     </properties>
     <name>Mac Plugin</name>
-    <description>A plugin to configure Mac as a Jenkins slaves</description>
+    <description>A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.</description>
     <url>https://github.com/jenkinsci/mac-plugin/</url>
     <licenses>
         <license>
