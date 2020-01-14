@@ -8,7 +8,7 @@ f.entry(title: Messages.Cloud_Name(), field:'name') {
     f.textbox(default:'mac')
 }
 
-f.advanced(title:Messages.Host_Title()) {
+f.advanced(title:Messages.Cloud_Details()) {
     f.entry(title:Messages.Host_Title()) {
         f.repeatableHeteroProperty(
                 field:'macHosts',
@@ -19,9 +19,7 @@ f.advanced(title:Messages.Host_Title()) {
                 repeatableDeleteButton:'true'
                 )
     }
-}
 
-f.advanced(title:Messages.Cloud_AgentsProperties()) {
     f.section(title:Messages.Cloud_AgentsProperties()) {
         f.entry(title:Messages.Cloud_IdleMinutes(), field:'idleMinutes') {
             f.number(clazz: 'required', min: 1, default: 1)
@@ -29,3 +27,4 @@ f.advanced(title:Messages.Cloud_AgentsProperties()) {
         f.dropdownDescriptorSelector(title:'Connect method', field:'connector')
     }
 }
+
