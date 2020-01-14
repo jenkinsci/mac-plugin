@@ -47,9 +47,9 @@ Create an user on the Mac with administrator privileges. It will be your connect
 Add sudo NOPASSWD to this user in /etc/sudoers :
 [see how to configure sudo without password](https://www.robertshell.com/blog/2016/12/3/use-sudo-command-osx-without-password)
 
-You can configure it only for "chmod" and "sysadminctl" command like :
+To maximize security, you can configure it only for "chmod" and "sysadminctl" command used by the plugin :
 
-`[USERNAME] ALL=(ALL) NOPASSWD: /bin/chmod, /usr/sbin/sysadminctl`
+`[USERNAME] ALL = NOPASSWD: /usr/sbin/sysadminctl -addUser mac-?????????? -password ??????????, /usr/sbin/sysadminctl -deleteUser mac-??????????, /bin/chmod -R 700 /Users/mac-??????????/`
 
 ## Plugin configuration
 In jenkins global configuration, add a new Mac Cloud :
