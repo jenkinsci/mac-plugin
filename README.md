@@ -10,7 +10,8 @@ It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 
 - [x] Allow to configure a Mac as Jenkins slave
 - [x] Run multiples builds on a single Mac
-- [x] Run builds on a cloud of Mac
+- [x] Isolates each construction from each other
+- [x] Run builds on a cloud of Macs
 - [x] Configure environment variables
 - [x] Stock keychain file as credentials on Jenkins
 - [x] Inject keychain on Node filesystem
