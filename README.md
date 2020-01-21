@@ -5,11 +5,13 @@
 
 A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.
 
+It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 ## Features
 
 - [x] Allow to configure a Mac as Jenkins slave
 - [x] Run multiples builds on a single Mac
-- [x] Run builds on a cloud of Mac
+- [x] Isolates each construction from each other
+- [x] Run builds on a cloud of Macs
 - [x] Configure environment variables
 - [x] Stock keychain file as credentials on Jenkins
 - [x] Inject keychain on Node filesystem
@@ -45,6 +47,10 @@ Create an user on the Mac with administrator privileges. It will be your connect
 Add sudo NOPASSWD to this user in /etc/sudoers :
 [see how to configure sudo without password](https://www.robertshell.com/blog/2016/12/3/use-sudo-command-osx-without-password)
 
+To maximize security, you can configure it only for "chmod" and "sysadminctl" command used by the plugin :
+
+`[USERNAME] ALL = NOPASSWD: /usr/sbin/sysadminctl -addUser mac-?????????? -password ??????????, /usr/sbin/sysadminctl -deleteUser mac-??????????, /bin/chmod -R 700 /Users/mac-??????????/`
+
 ## Plugin configuration
 In jenkins global configuration, add a new Mac Cloud :
 
@@ -62,12 +68,12 @@ Add a new Mac Host and fill the properties in the fields :
 
 The number of simultaneous builds on the same Mac Host depends of the property "Max users".
 More you have Mac Hosts configured, more you can build simultaneous on many machines.
-**For best usage I recommend a limit of 3.**
+**The plugin was tested with a limit of 7 users per Mac hosts.**
 
 The supported credentials for now is User and Password.
-Put an account of your mac with **sudo NOPASSWORD configured**.
+Put an account of your mac with **sudo NOPASSWORD configured** (see Configure a Jenkins User).
 
-After it refers the label of your agent.
+Refer the label of your agent.
 Select JNLP for the connector and refer your Jenkins URL. This URL must be accessible by outside, localhost is not working.
 
 In a project configuration, refers the label :
@@ -76,7 +82,7 @@ In a project configuration, refers the label :
 
 ### Keychain Managment
 Since v1.1.0, you have the possibility to stock keychain files into Jenkins to inject it in the Jenkins Mac agent.
-For this check "Upload a keychain file" :
+For this, check "Upload a keychain file" :
 
 <img src="https://zupimages.net/up/19/49/93el.png" width="400"/>
 
@@ -84,7 +90,7 @@ Add a new Secret file credentials. **Prefers to store it as System Credentials t
 
 <img src="https://zupimages.net/up/19/49/xw7u.png" width="750"/>
 
-The Keychain is stored as SecretByte on Jenkins and cannot be read directly as a file. It will be send to the Mac agent with SCP in ~/Library/Keychains/ directory before the JNLP connection.
+The Keychain will be send to the Mac agent with SCP in ~/Library/Keychains/ directory before the JNLP connection.
 
 ### Environment variables
 Since 1.1.0, you can set environment variables on Mac host. Theses variables will be set on the Node and will be accessible in the build.

@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.4</version>
+        <version>3.54</version>
         <relativePath />
     </parent>
     <groupId>fr.edf.jenkins.plugins</groupId>
@@ -92,7 +92,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.26</version>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
@@ -104,7 +103,6 @@
         <dependency>
             <groupId>org.objenesis</groupId>
             <artifactId>objenesis</artifactId>
-            <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
