@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.MacHost
+package fr.edf.jenkins.plugins.mac.MacHost
 
 import fr.edf.jenkins.plugins.mac.Messages
 

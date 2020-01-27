@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.slave.MacSlave
+package fr.edf.jenkins.plugins.mac.slave.MacSlave
 
 import fr.edf.jenkins.plugins.mac.Messages
 

@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.MacEnvVar
+package fr.edf.jenkins.plugins.mac.MacEnvVar
 
 import fr.edf.jenkins.plugins.mac.Messages
 
