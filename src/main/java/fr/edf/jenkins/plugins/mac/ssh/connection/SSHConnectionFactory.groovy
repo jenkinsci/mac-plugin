@@ -9,6 +9,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import com.trilead.ssh2.Connection
+import com.trilead.ssh2.ServerHostKeyVerifier
 
 import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import jenkins.model.Jenkins
@@ -96,5 +97,19 @@ class SSHConnectionFactory {
             conn.authenticateWithPassword(usernamePasswordCredentials.getUsername(), usernamePasswordCredentials.getPassword().getPlainText())
         }
         return conn
+    }
+
+    private class ServerHostKeyVerifierImpl implements ServerHostKeyVerifier {
+
+        private final String adr
+
+        public ServerHostKeyVerifierImpl(final String adr) {
+            this.adr = adr
+        }
+
+        @Override
+        public boolean verifyServerHostKey(String hostname, int port, String serverHostKeyAlgorithm, byte[] serverHostKey) throws Exception {
+            return
+        }
     }
 }
