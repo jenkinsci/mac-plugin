@@ -9,8 +9,9 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import com.trilead.ssh2.Connection
-import com.trilead.ssh2.ServerHostKeyVerifier
 
+import fr.edf.jenkins.plugins.mac.ssh.verifiers.MacHostKeyVerifier
+import fr.edf.jenkins.plugins.mac.ssh.verifiers.NonVerifyingHostKeyVerifier
 import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import jenkins.model.Jenkins
 
@@ -50,8 +51,9 @@ class SSHConnectionFactory {
         Integer kexTimeout = conf.kexTimeout ?: new Integer(0)
         def context = conf.context ?: Jenkins.get()
         def credentialsId = conf.credentialsId ?: null
+        MacHostKeyVerifier hostKeyVerifier = conf.hostKeyVerifier ?: new NonVerifyingHostKeyVerifier()
         def credentials = CredentialsUtils.findCredentials(host, credentialsId, context)
-        return getConnection(credentials, host, port, connectionTimeout, readTimeout, kexTimeout)
+        return getConnection(credentials, host, port, connectionTimeout, readTimeout, kexTimeout, hostKeyVerifier)
     }
 
     /**
@@ -66,6 +68,7 @@ class SSHConnectionFactory {
         Integer connectionTimeout = conf.connectionTimeout ?: new Integer(0)
         Integer readTimeout = conf.readTimeout ?: new Integer(0)
         Integer kexTimeout = conf.kexTimeout ?: new Integer(0)
+        MacHostKeyVerifier hostKeyVerifier = conf.hostKeyVerifier ?: new NonVerifyingHostKeyVerifier()
         UsernamePasswordCredentials credentials =  new UsernamePasswordCredentialsImpl(
                 CredentialsScope.SYSTEM,
                 "global",
@@ -73,7 +76,7 @@ class SSHConnectionFactory {
                 conf.username,
                 conf.password.getPlainText()
                 );
-        return getConnection(credentials, host, port, connectionTimeout, readTimeout, kexTimeout)
+        return getConnection(credentials, host, port, connectionTimeout, readTimeout, kexTimeout, hostKeyVerifier)
     }
 
     /**
@@ -88,28 +91,14 @@ class SSHConnectionFactory {
      */
     @Restricted(NoExternalUse)
     private static Connection getConnection(final StandardCredentials credentials, final String host, final Integer port,
-            final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout) {
+            final Integer connectionTimeout, final Integer readTimeout, final Integer kexTimeout, MacHostKeyVerifier hostKeyVerifier) {
         String adr = InetAddress.getByName(host).toString().split("/")[1]
         Connection conn = new Connection(adr, port.intValue())
         if(credentials instanceof StandardUsernamePasswordCredentials) {
             StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
-            conn.connect(null, connectionTimeout.multiply(1000).intValue(), readTimeout.multiply(1000).intValue(), kexTimeout.multiply(1000).intValue())
+            conn.connect(hostKeyVerifier, connectionTimeout.multiply(1000).intValue(), readTimeout.multiply(1000).intValue(), kexTimeout.multiply(1000).intValue())
             conn.authenticateWithPassword(usernamePasswordCredentials.getUsername(), usernamePasswordCredentials.getPassword().getPlainText())
         }
         return conn
-    }
-
-    private class ServerHostKeyVerifierImpl implements ServerHostKeyVerifier {
-
-        private final String adr
-
-        public ServerHostKeyVerifierImpl(final String adr) {
-            this.adr = adr
-        }
-
-        @Override
-        public boolean verifyServerHostKey(String hostname, int port, String serverHostKeyAlgorithm, byte[] serverHostKey) throws Exception {
-            return
-        }
     }
 }
