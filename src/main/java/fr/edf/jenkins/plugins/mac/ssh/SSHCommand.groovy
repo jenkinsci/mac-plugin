@@ -50,7 +50,7 @@ class SSHCommand {
         try {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
-            readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
+            readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())))
             TimeUnit.SECONDS.sleep(5)
             if(!isUserExist(connectionConfig, user.username)) {
@@ -77,7 +77,7 @@ class SSHCommand {
         try {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
-            readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
+            readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
             TimeUnit.SECONDS.sleep(5)
             if(isUserExist(connectionConfig, username)) {
@@ -109,7 +109,7 @@ class SSHCommand {
         String remotingUrl = jenkinsUrl + Constants.REMOTING_JAR_PATH
         try {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
-            port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
+            port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret)))
             return true
@@ -131,7 +131,7 @@ class SSHCommand {
     static boolean uploadKeychain(MacHost host, MacUser user, FileCredentials keychainFile) throws SSHCommandException, Exception {
         try {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: host.host,
-            port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout)
+            port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout, macHostKeyVerifier: host.macHostKeyVerifier)
             String outputDir = String.format(Constants.KEYCHAIN_DESTINATION_FOLDER, user.username)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_DIR, outputDir)))
             SSHCommandLauncher.sendFile(connectionConfig, keychainFile.content, keychainFile.fileName, outputDir)
@@ -180,7 +180,7 @@ class SSHCommand {
         try {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
-            readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout)
+            readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             String result = SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%"))))
             LOGGER.log(Level.FINE, result)
             if(StringUtils.isEmpty(result)) return new ArrayList()

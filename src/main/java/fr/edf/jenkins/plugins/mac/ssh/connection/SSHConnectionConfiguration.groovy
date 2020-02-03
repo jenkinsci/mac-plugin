@@ -1,6 +1,6 @@
 package fr.edf.jenkins.plugins.mac.ssh.connection
 
-import fr.edf.jenkins.plugins.mac.ssh.verifiers.MacHostKeyVerifier
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
 import hudson.model.ModelObject
 import hudson.util.Secret
 
@@ -15,7 +15,7 @@ abstract class SSHConnectionConfiguration {
     Integer connectionTimeout
     Integer readTimeout
     Integer kexTimeout
-    MacHostKeyVerifier hostKeyVerifier
+    MacHostKeyVerifier macHostKeyVerifier
 }
 
 /**

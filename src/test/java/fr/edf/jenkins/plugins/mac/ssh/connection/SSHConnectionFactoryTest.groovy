@@ -8,6 +8,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import com.trilead.ssh2.Connection
 
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.NonVerifyingMacHostKeyVerifier
 import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import hudson.util.Secret
 import spock.lang.Specification
@@ -32,7 +33,7 @@ class SSHConnectionFactoryTest extends Specification {
         String host = "host"
         Connection conn = Mock(Connection)
         GroovySpy(SSHConnectionFactory, global:true)
-        SSHConnectionFactory.getConnection(_, host, _, _, _, _) >> conn
+        SSHConnectionFactory.getConnection(_, host, _, _, _, _, _) >> conn
 
         when:
         Connection result = SSHConnectionFactory.getSshConnection(new SSHUserConnectionConfiguration(
@@ -56,7 +57,7 @@ class SSHConnectionFactoryTest extends Specification {
         )
         Connection conn = Mock(Connection)
         GroovySpy(SSHConnectionFactory, global:true)
-        SSHConnectionFactory.getConnection(c, host, _, _, _, _) >> conn
+        SSHConnectionFactory.getConnection(c, host, _, _, _, _, _) >> conn
         GroovyStub(CredentialsUtils, global:true)
         CredentialsUtils.findCredentials(host, _, _) >> c
         

@@ -25,6 +25,8 @@ f.entry(title: _(Messages.Host_Port()), field: 'port') {
     f.number(clazz: 'required', default: 22, min: 1)
 }
 
+f.dropdownDescriptorSelector(title:'Host Key verifier', field:'macHostKeyVerifier')
+
 f.entry(title: _(Messages.Host_MaxUsers()), field: 'maxUsers') {
     f.number(clazz: 'required', min: 1)
 }

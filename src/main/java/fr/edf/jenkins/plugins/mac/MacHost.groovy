@@ -6,6 +6,7 @@ import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 import org.kohsuke.stapler.QueryParameter
 
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
@@ -39,11 +40,12 @@ class MacHost implements Describable<MacHost> {
     String labelString
     String fileCredentialsId
     List<MacEnvVar> envVars = new ArrayList()
+    MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars) {
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, MacHostKeyVerifier macHostKeyVerifier) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -58,6 +60,7 @@ class MacHost implements Describable<MacHost> {
         this.envVars = envVars
         this.uploadKeychain = uploadKeychain ?: Boolean.FALSE
         this.fileCredentialsId = fileCredentialsId
+        this.macHostKeyVerifier = macHostKeyVerifier
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 

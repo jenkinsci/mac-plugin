@@ -9,6 +9,7 @@ import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.connector.MacComputerConnector
 import fr.edf.jenkins.plugins.mac.connector.MacComputerJNLPConnector
 import fr.edf.jenkins.plugins.mac.slave.MacSlave
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.NonVerifyingMacHostKeyVerifier
 import hudson.util.Secret
 
 class MacPojoBuilder {
@@ -28,6 +29,7 @@ class MacPojoBuilder {
                 Boolean.FALSE, //
                 null ,
                 buildEnvVars(), //envVars
+                new NonVerifyingMacHostKeyVerifier() //macHostKeyVerifier
                 )
         List<MacHost> hostList = new ArrayList()
         hostList.add(host)
