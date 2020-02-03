@@ -3,6 +3,7 @@ package fr.edf.jenkins.plugins.mac.ssh.key.verifiers
 import java.util.logging.Level
 import java.util.logging.Logger
 
+import org.apache.commons.lang.StringUtils
 import org.jenkinsci.Symbol
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.QueryParameter
@@ -45,11 +46,12 @@ class ManuallyProvidedMacHostKeyVerifier extends MacHostKeyVerifier implements S
      */
     @Override
     boolean verifyServerHostKey(String hostname, int port, String serverHostKeyAlgorithm, byte[] serverHostKey) throws Exception {
-        if (parsedKey.equals(serverHostKey)) {
-            LOGGER.log(Level.FINE, Messages.ManualKeyProvidedHostKeyVerifier_KeyTrusted())
+        final MacHostKey serverParsedKey = new MacHostKey(serverHostKeyAlgorithm, serverHostKey)
+        if (parsedKey.equals(serverParsedKey)) {
+            LOGGER.log(Level.FINE, Messages.ManualKeyProvidedHostKeyVerifier_KeyTrusted(hostname))
             return true
         } else {
-            LOGGER.log(Level.WARNING, Messages.ManualKeyProvidedHostKeyVerifier_KeyNotTrusted())
+            LOGGER.log(Level.WARNING, Messages.ManualKeyProvidedHostKeyVerifier_KeyNotTrusted(hostname))
             return false
         }
     }
@@ -61,7 +63,7 @@ class ManuallyProvidedMacHostKeyVerifier extends MacHostKeyVerifier implements S
      * @throws MacHostKeyVerifierException
      */
     private static MacHostKey parseKey(String key) throws MacHostKeyVerifierException {
-        if (!key.contains(" ")) {
+        if (StringUtils.isEmpty(key) || !key.contains(" ")) {
             throw new IllegalArgumentException(Messages.ManualKeyProvidedHostKeyVerifier_TwoPartKey())
         }
         StringTokenizer tokenizer = new StringTokenizer(key, " ")
