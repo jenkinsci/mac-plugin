@@ -1,4 +1,4 @@
-package fr.edf.jenkins.plugins.mac.ssh.verifiers
+package fr.edf.jenkins.plugins.mac.ssh.key.verifiers
 
 import hudson.model.AbstractDescribableImpl
 
