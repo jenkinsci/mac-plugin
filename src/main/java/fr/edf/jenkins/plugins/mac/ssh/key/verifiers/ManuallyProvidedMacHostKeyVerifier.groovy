@@ -40,6 +40,12 @@ class ManuallyProvidedMacHostKeyVerifier extends MacHostKeyVerifier implements S
     public String getKey() {
         return null != parsedKey ? parsedKey.algorithm + " " + Base64.getEncoder().encodeToString(parsedKey.key) : ""
     }
+    
+    @Override
+    String[] getAlgorithms() {
+        String[] algorithms = [parsedKey.getAlgorithm()]
+        return algorithms
+    }
 
     /**
      * {@inheritDoc}

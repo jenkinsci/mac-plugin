@@ -16,6 +16,11 @@ class NonVerifyingMacHostKeyVerifier extends MacHostKeyVerifier implements Serve
     }
 
     @Override
+    public String[] getAlgorithms() {
+        return null;
+    }
+
+    @Override
     boolean verifyServerHostKey(String hostname, int port, String serverHostKeyAlgorithm, byte[] serverHostKey) throws Exception {
         return true
     }

@@ -96,6 +96,7 @@ class SSHConnectionFactory {
         Connection conn = new Connection(adr, port.intValue())
         if(credentials instanceof StandardUsernamePasswordCredentials) {
             StandardUsernamePasswordCredentials usernamePasswordCredentials = credentials
+            if(null != macHostKeyVerifier.getAlgorithms()) { conn.setServerHostKeyAlgorithms(macHostKeyVerifier.getAlgorithms()) }
             conn.connect(macHostKeyVerifier, connectionTimeout.multiply(1000).intValue(), readTimeout.multiply(1000).intValue(), kexTimeout.multiply(1000).intValue())
             conn.authenticateWithPassword(usernamePasswordCredentials.getUsername(), usernamePasswordCredentials.getPassword().getPlainText())
         }
