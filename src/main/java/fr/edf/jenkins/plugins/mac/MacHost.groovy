@@ -5,8 +5,10 @@ import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 import org.kohsuke.stapler.QueryParameter
+import org.kohsuke.stapler.verb.POST
 
 import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifierException
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
@@ -45,7 +47,7 @@ class MacHost implements Describable<MacHost> {
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, MacHostKeyVerifier macHostKeyVerifier) {
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -60,8 +62,12 @@ class MacHost implements Describable<MacHost> {
         this.envVars = envVars
         this.uploadKeychain = uploadKeychain ?: Boolean.FALSE
         this.fileCredentialsId = fileCredentialsId
-        this.macHostKeyVerifier = macHostKeyVerifier
+        this.macHostKeyVerifier = new MacHostKeyVerifier(key)
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
+    }
+    
+    String getKey() {
+        null != this.macHostKeyVerifier ? macHostKeyVerifier.getKey() : ""
     }
 
     @DataBoundSetter
@@ -180,6 +186,7 @@ class MacHost implements Describable<MacHost> {
          * @param context
          * @return ListBoxModel
          */
+        @POST
         ListBoxModel doFillCredentialsIdItems(@QueryParameter String host,
                 @QueryParameter String credentialsId, @AncestorInPath Item ancestor) {
             return FormUtils.newMacHostCredentialsItemsListBoxModel(host, credentialsId, ancestor)
@@ -191,6 +198,7 @@ class MacHost implements Describable<MacHost> {
          * @param context
          * @return ListBoxModel
          */
+        @POST
         ListBoxModel doFillFileCredentialsIdItems(@QueryParameter String fileCredentialsId, @AncestorInPath Item ancestor) {
             return FormUtils.newFileCredentialsItemsListBoxModel(fileCredentialsId, ancestor)
         }
@@ -203,9 +211,25 @@ class MacHost implements Describable<MacHost> {
          * @param context
          * @return ok if connection, ko if error
          */
+        @POST
         FormValidation doVerifyConnection(@QueryParameter String host, @QueryParameter Integer port,
-                @QueryParameter String credentialsId, @AncestorInPath Item context) {
-            return FormUtils.verifyCredential(host, port, credentialsId, context)
+                @QueryParameter String credentialsId, @QueryParameter String key, @AncestorInPath Item context) {
+            return FormUtils.verifyConnection(host, port, credentialsId, key, context)
+        }
+        
+        /**
+         * Check the validity of the given key
+         * @param key
+         * @return ok if valid, error with exception message if not
+         */
+        @POST
+        public FormValidation doCheckKey(@QueryParameter String key) {
+            try {
+                MacHostKeyVerifier.parseKey(key)
+                return FormValidation.ok()
+            } catch (MacHostKeyVerifierException|IllegalArgumentException ex) {
+                return FormValidation.error(ex.getMessage())
+            }
         }
     }
 }

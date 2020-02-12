@@ -11,7 +11,6 @@ import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import com.trilead.ssh2.Connection
 
 import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
-import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.NonVerifyingMacHostKeyVerifier
 import fr.edf.jenkins.plugins.mac.util.CredentialsUtils
 import jenkins.model.Jenkins
 
@@ -51,7 +50,8 @@ class SSHConnectionFactory {
         Integer kexTimeout = conf.kexTimeout ?: new Integer(0)
         def context = conf.context ?: Jenkins.get()
         def credentialsId = conf.credentialsId ?: null
-        MacHostKeyVerifier macHostKeyVerifier = conf.macHostKeyVerifier ?: new NonVerifyingMacHostKeyVerifier()
+        if(!credentialsId) {throw new Exception("No credentials found for the host " + host)}
+        MacHostKeyVerifier macHostKeyVerifier = conf.macHostKeyVerifier ?: new MacHostKeyVerifier()
         def credentials = CredentialsUtils.findCredentials(host, credentialsId, context)
         return getConnection(credentials, host, port, connectionTimeout, readTimeout, kexTimeout, macHostKeyVerifier)
     }
@@ -68,7 +68,7 @@ class SSHConnectionFactory {
         Integer connectionTimeout = conf.connectionTimeout ?: new Integer(0)
         Integer readTimeout = conf.readTimeout ?: new Integer(0)
         Integer kexTimeout = conf.kexTimeout ?: new Integer(0)
-        MacHostKeyVerifier macHostKeyVerifier = conf.macHostKeyVerifier ?: new NonVerifyingMacHostKeyVerifier()
+        MacHostKeyVerifier macHostKeyVerifier = conf.macHostKeyVerifier ?: new MacHostKeyVerifier()
         UsernamePasswordCredentials credentials =  new UsernamePasswordCredentialsImpl(
                 CredentialsScope.SYSTEM,
                 "global",

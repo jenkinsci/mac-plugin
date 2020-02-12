@@ -17,6 +17,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -90,12 +91,13 @@ class FormUtils {
      * @return FormValidation
      */
     @Restricted(NoExternalUse)
-    static FormValidation verifyCredential(final String host, final Integer port,
-            final String credentialsId, final ModelObject context) {
+    static FormValidation verifyConnection(final String host, final Integer port,
+            final String credentialsId, final String key, final ModelObject context) {
         try {
+            MacHostKeyVerifier verifier = new MacHostKeyVerifier(key)
             String result = SSHCommand.checkConnection(new SSHGlobalConnectionConfiguration(credentialsId: credentialsId, port: port,
             context: context, host: host, connectionTimeout: 30,
-            readTimeout: 30, kexTimeout: 0))
+            readTimeout: 30, kexTimeout: 0, macHostKeyVerifier: verifier))
             return FormValidation.ok(Messages._Host_ConnectionSucceeded(result).toString())
         } catch(Exception e) {
             return FormValidation.error(Messages._Host_ConnectionFailed(e.getMessage()).toString())
