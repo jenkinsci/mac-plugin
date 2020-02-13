@@ -4,6 +4,7 @@ import static com.cloudbees.plugins.credentials.CredentialsMatchers.anyOf
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf
 import static com.cloudbees.plugins.credentials.domains.URIRequirementBuilder.fromUri
 
+import org.acegisecurity.AccessDeniedException
 import org.antlr.v4.runtime.misc.NotNull
 import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.accmod.Restricted
@@ -18,6 +19,7 @@ import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.ssh.SSHCommand
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
+import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifierException
 import hudson.model.Item
 import hudson.model.ModelObject
 import hudson.security.ACL
@@ -94,6 +96,7 @@ class FormUtils {
     static FormValidation verifyConnection(final String host, final Integer port,
             final String credentialsId, final String key, final ModelObject context) {
         try {
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER)
             MacHostKeyVerifier verifier = new MacHostKeyVerifier(key)
             String result = SSHCommand.checkConnection(new SSHGlobalConnectionConfiguration(credentialsId: credentialsId, port: port,
             context: context, host: host, connectionTimeout: 30,
@@ -159,5 +162,21 @@ class FormUtils {
                 FileCredentials,
                 fromUri(getUri(Jenkins.get().getRootUrl()).toString()).build(),
                 anyOf(instanceOf(FileCredentials)))
+    }
+
+    /**
+     * Check the validity of the given key
+     * @param key
+     * @return ok if valid, error with exception message if not
+     */
+    @Restricted(NoExternalUse)
+    static FormValidation verifyHostKey(String key) {
+        try {
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER)
+            MacHostKeyVerifier.parseKey(key)
+            return FormValidation.ok()
+        } catch (MacHostKeyVerifierException|IllegalArgumentException|AccessDeniedException ex) {
+            return FormValidation.error(ex.getMessage())
+        }
     }
 }

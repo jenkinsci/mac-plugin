@@ -1,5 +1,6 @@
 package fr.edf.jenkins.plugins.mac
 
+import org.acegisecurity.AccessDeniedException
 import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
@@ -224,12 +225,7 @@ class MacHost implements Describable<MacHost> {
          */
         @POST
         public FormValidation doCheckKey(@QueryParameter String key) {
-            try {
-                MacHostKeyVerifier.parseKey(key)
-                return FormValidation.ok()
-            } catch (MacHostKeyVerifierException|IllegalArgumentException ex) {
-                return FormValidation.error(ex.getMessage())
-            }
+            return FormUtils.verifyHostKey(key)
         }
     }
 }
