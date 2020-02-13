@@ -25,7 +25,7 @@ f.entry(title: _(Messages.Host_Port()), field: 'port') {
     f.number(clazz: 'required', default: 22, min: 1)
 }
 
-f.entry(title: _(Messages.ManualKeyProvidedHostKeyVerifier_HostKey()), field:'key') {
+f.entry(title: _(Messages.MacHostKeyVerifier_HostKey()), field:'key') {
     f.textarea(clazz: 'required', checkMethod: 'doCheckKey')
 }
 

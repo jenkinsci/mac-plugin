@@ -1,5 +1,8 @@
 package fr.edf.jenkins.plugins.mac.ssh.key.verifiers
 
+import org.junit.Rule
+import org.jvnet.hudson.test.JenkinsRule
+
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacHost.DescriptorImpl
 import fr.edf.jenkins.plugins.mac.ssh.key.MacHostKey
@@ -8,11 +11,14 @@ import spock.lang.Specification
 
 class MacHostKeyVerifierTest extends Specification {
 
+    @Rule
+    JenkinsRule jenkinsRule
+
     def "doCheckKey with empty parameter should return Key should be 2 parts: algorithm and Base 64 encoded key value."() {
         given:
         String key = ""
         DescriptorImpl desc = new MacHost.DescriptorImpl()
-        
+
         when:
         FormValidation result = desc.doCheckKey(key)
 
@@ -24,7 +30,7 @@ class MacHostKeyVerifierTest extends Specification {
         given:
         String key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZw=="
         DescriptorImpl desc = new MacHost.DescriptorImpl()
-        
+
         when:
         FormValidation result = desc.doCheckKey(key)
 
@@ -36,7 +42,7 @@ class MacHostKeyVerifierTest extends Specification {
         given:
         String key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZw="
         DescriptorImpl desc = new MacHost.DescriptorImpl()
-        
+
         when:
         FormValidation result = desc.doCheckKey(key)
 
@@ -48,7 +54,7 @@ class MacHostKeyVerifierTest extends Specification {
         given:
         String key = "ss-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZw=="
         DescriptorImpl desc = new MacHost.DescriptorImpl()
-        
+
         when:
         FormValidation result = desc.doCheckKey(key)
 
@@ -87,14 +93,14 @@ class MacHostKeyVerifierTest extends Specification {
         int port = 22
         MacHostKey macHostKey = MacHostKeyVerifier.parseKey(key)
         MacHostKeyVerifier verifier = new MacHostKeyVerifier(key)
-        
+
         when:
         boolean result = verifier.verifyServerHostKey(hostname, port, macHostKey.algorithm, macHostKey.key)
-        
+
         then:
         result == true
     }
-    
+
     def "verifyServerHostKey should return false"() {
         given:
         String key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZw=="
@@ -103,10 +109,10 @@ class MacHostKeyVerifierTest extends Specification {
         int port = 22
         MacHostKey macHostKey = MacHostKeyVerifier.parseKey(serverKey)
         MacHostKeyVerifier verifier = new MacHostKeyVerifier(key)
-        
+
         when:
         boolean result = verifier.verifyServerHostKey(hostname, port, macHostKey.algorithm, macHostKey.key)
-        
+
         then:
         result == false
     }

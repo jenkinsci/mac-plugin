@@ -53,10 +53,10 @@ class MacHostKeyVerifier implements ServerHostKeyVerifier {
     boolean verifyServerHostKey(String hostname, int port, String serverHostKeyAlgorithm, byte[] serverHostKey) throws Exception {
         final MacHostKey serverParsedKey = new MacHostKey(serverHostKeyAlgorithm, serverHostKey)
         if (parsedKey.equals(serverParsedKey)) {
-            LOGGER.log(Level.FINE, Messages.ManualKeyProvidedHostKeyVerifier_KeyTrusted(hostname))
+            LOGGER.log(Level.FINE, Messages.MacHostKeyVerifier_KeyTrusted(hostname))
             return true
         } else {
-            LOGGER.log(Level.WARNING, Messages.ManualKeyProvidedHostKeyVerifier_KeyNotTrusted(hostname))
+            LOGGER.log(Level.WARNING, Messages.MacHostKeyVerifier_KeyNotTrusted(hostname))
             return false
         }
     }
@@ -69,13 +69,13 @@ class MacHostKeyVerifier implements ServerHostKeyVerifier {
      */
     private static MacHostKey parseKey(String key) throws MacHostKeyVerifierException {
         if (StringUtils.isEmpty(key) || !key.contains(" ")) {
-            throw new IllegalArgumentException(Messages.ManualKeyProvidedHostKeyVerifier_TwoPartKey())
+            throw new IllegalArgumentException(Messages.MacHostKeyVerifier_TwoPartKey())
         }
         StringTokenizer tokenizer = new StringTokenizer(key, " ")
         String algorithm = tokenizer.nextToken()
         byte[] keyValue = Base64.getDecoder().decode(tokenizer.nextToken())
         if (null == keyValue) {
-            throw new MacHostKeyVerifierException(Messages.ManualKeyProvidedHostKeyVerifier_Base64EncodedKeyValueRequired())
+            throw new MacHostKeyVerifierException(Messages.MacHostKeyVerifier_Base64EncodedKeyValueRequired())
         }
         KeyAlgorithm keyAlgorithm = KeyAlgorithmManager.getSupportedAlgorithms().find { it.getKeyFormat().equals(algorithm) }
         if (null == keyAlgorithm) {
@@ -84,7 +84,7 @@ class MacHostKeyVerifier implements ServerHostKeyVerifier {
         try {
             keyAlgorithm.decodePublicKey(keyValue)
         } catch (IOException ex) {
-            throw new MacHostKeyVerifierException(Messages.ManualKeyProvidedHostKeyVerifier_KeyValueDoesNotParse(algorithm), ex)
+            throw new MacHostKeyVerifierException(Messages.MacHostKeyVerifier_KeyValueDoesNotParse(algorithm), ex)
         }
         return new MacHostKey(algorithm, keyValue)
     }
