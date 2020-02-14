@@ -4,9 +4,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 import org.apache.commons.lang.StringUtils
-import org.jenkinsci.Symbol
 import org.kohsuke.stapler.DataBoundConstructor
-import org.kohsuke.stapler.QueryParameter
 
 import com.trilead.ssh2.ServerHostKeyVerifier
 import com.trilead.ssh2.signature.KeyAlgorithm
@@ -14,9 +12,6 @@ import com.trilead.ssh2.signature.KeyAlgorithmManager
 
 import fr.edf.jenkins.plugins.mac.Messages
 import fr.edf.jenkins.plugins.mac.ssh.key.MacHostKey
-import hudson.Extension
-import hudson.model.Descriptor
-import hudson.util.FormValidation
 
 class MacHostKeyVerifier implements ServerHostKeyVerifier {
 
@@ -69,7 +64,7 @@ class MacHostKeyVerifier implements ServerHostKeyVerifier {
      */
     private static MacHostKey parseKey(String key) throws MacHostKeyVerifierException {
         if (StringUtils.isEmpty(key) || !key.contains(" ")) {
-            throw new IllegalArgumentException(Messages.MacHostKeyVerifier_TwoPartKey())
+            throw new MacHostKeyVerifierException(Messages.MacHostKeyVerifier_TwoPartKey())
         }
         StringTokenizer tokenizer = new StringTokenizer(key, " ")
         String algorithm = tokenizer.nextToken()
@@ -79,7 +74,7 @@ class MacHostKeyVerifier implements ServerHostKeyVerifier {
         }
         KeyAlgorithm keyAlgorithm = KeyAlgorithmManager.getSupportedAlgorithms().find { it.getKeyFormat().equals(algorithm) }
         if (null == keyAlgorithm) {
-            throw new MacHostKeyVerifierException("Unexpected key algorithm: " + algorithm)
+            throw new MacHostKeyVerifierException(Messages.MacHostKeyVerifier_UnexpectedKeyAlgorithm(algorithm))
         }
         try {
             keyAlgorithm.decodePublicKey(keyValue)

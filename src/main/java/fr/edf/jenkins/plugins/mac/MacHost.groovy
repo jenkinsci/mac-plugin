@@ -1,6 +1,5 @@
 package fr.edf.jenkins.plugins.mac
 
-import org.acegisecurity.AccessDeniedException
 import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
@@ -9,7 +8,6 @@ import org.kohsuke.stapler.QueryParameter
 import org.kohsuke.stapler.verb.POST
 
 import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
-import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifierException
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
