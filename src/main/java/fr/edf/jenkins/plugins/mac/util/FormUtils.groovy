@@ -58,8 +58,10 @@ class FormUtils {
      * @param host
      * @return FormValidation
      */
+    @Restricted(NoExternalUse)
     static FormValidation validateHost(@NotNull final String host) {
         try {
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER)
             if(host) {
                 InetAddress.getByName(host)
             }
@@ -68,6 +70,8 @@ class FormUtils {
             return FormValidation.error(Messages._Host_HostInvalid().toString())
         } catch(SecurityException se) {
             return FormValidation.error(Messages._Host_SecurityRestriction().toString())
+        } catch(AccessDeniedException ex) {
+            return FormValidation.error(ex.getMessage())
         }
     }
 

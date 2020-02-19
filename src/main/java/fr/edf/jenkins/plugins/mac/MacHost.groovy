@@ -170,6 +170,7 @@ class MacHost implements Describable<MacHost> {
          * @param value
          * @return FormValidation
          */
+        @POST
         FormValidation doCheckHost(@QueryParameter String value) {
             def validation = FormUtils.validateHost(value)
             if (validation.kind == Kind.OK) {
