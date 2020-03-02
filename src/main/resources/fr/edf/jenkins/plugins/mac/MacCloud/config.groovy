@@ -1,4 +1,4 @@
-package fr.jenkins.plugins.mac.MacCloud
+package fr.edf.jenkins.plugins.mac.MacCloud
 
 import fr.edf.jenkins.plugins.mac.Messages
 
