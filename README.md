@@ -117,4 +117,4 @@ You can see it on the home page of Jenkins :
 <img src="https://zupimages.net/up/19/47/fkmf.png" width="300"/>
 
 ## Contact
-Any question ? You can ask it on the [Gitter room](https://gitter.im/jenkinsci/mac-plugin) or open an issue.
+Any question ? You can ask it on the [Gitter room](https://gitter.im/jenkinsci/mac-plugin) or open an issue on the [Jira of Jenkins](https://issues.jenkins-ci.org/secure/Dashboard.jspa).
