@@ -1,5 +1,5 @@
 # Mac Plugin
-[![Build Status](https://ci.jenkins.io/job/Plugins/job/mac-plugin/job/master/65/badge/icon)](https://ci.jenkins.io/job/Plugins/job/mac-plugin/job/master/65/)
+[![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins%2Fmac-plugin%2Fmaster)](https://ci.jenkins.io/job/Plugins/job/mac-plugin/job/master/)
 [![Coverage Status](https://coveralls.io/repos/github/jenkinsci/mac-plugin/badge.svg?branch=master)](https://coveralls.io/github/jenkinsci/mac-plugin?branch=master)
 [![DepShield Badge](https://depshield.sonatype.org/badges/jenkinsci/mac-plugin/depshield.svg)](https://depshield.github.io)
 
