@@ -7,7 +7,7 @@ def c = namespace(lib.CredentialsTagLib)
 
 
 f.entry(title: _(Messages.Host_Host()), field: 'host') {
-    f.textbox(clazz: 'required', checkMethod: 'doCheckHost')
+    f.textbox(clazz: 'required', checkMethod: 'post')
 }
 
 f.entry(title: Messages.Host_Disabled(), field:'disabled') {
@@ -29,7 +29,7 @@ f.advanced(title:Messages.Host_Details()) {
     }
 
     f.entry(title: _(Messages.MacHostKeyVerifier_HostKey()), field:'key') {
-        f.textarea(clazz: 'required', checkMethod: 'doCheckKey')
+        f.textarea(clazz: 'required', checkMethod: 'post')
     }
 
     f.entry(title: _(Messages.Host_MaxUsers()), field: 'maxUsers') {
