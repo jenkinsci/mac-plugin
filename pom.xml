@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.56</version>
+        <version>4.7</version>
         <relativePath />
     </parent>
     <groupId>fr.edf.jenkins.plugins</groupId>
@@ -18,8 +20,8 @@
         <tag>${scmTag}</tag>
     </scm>
     <properties>
-        <findbugs.failOnError>false</findbugs.failOnError>
-        <jenkins.version>2.176.3</jenkins.version>
+        <spotbugs.failOnError>false</spotbugs.failOnError>
+        <jenkins.version>2.235.1</jenkins.version>
         <java.level>8</java.level>
     </properties>
     <name>Mac Plugin</name>
@@ -59,8 +61,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom</artifactId>
-                <version>2.176.3</version>
+                <artifactId>bom-2.235.x</artifactId>
+                <version>11</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -87,11 +89,14 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>trilead-api</artifactId>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
@@ -164,14 +169,6 @@
                         <version>2.5.7-01</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.jvnet.localizer</groupId>
-                <artifactId>maven-localizer-plugin</artifactId>
-                <configuration>
-                    <fileMask>Messages.properties</fileMask>
-                    <outputDirectory>target/generated-sources/localizer</outputDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>
