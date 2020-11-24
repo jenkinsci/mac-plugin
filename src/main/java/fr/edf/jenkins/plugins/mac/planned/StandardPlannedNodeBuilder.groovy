@@ -39,7 +39,7 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
             LOGGER.log(Level.FINEST, "Exception : ", e)
             f = Futures.immediateFailedFuture(e)
             if (user != null ) {
-                SSHCommand.deleteUserOnMac(user.username)
+                SSHCommand.deleteUserOnMac(user.username, macHost)
             }
         }
         return new NodeProvisioner.PlannedNode(macHost.host, f, numExecutors)
