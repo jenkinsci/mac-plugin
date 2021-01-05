@@ -37,6 +37,7 @@ class MacHost implements Describable<MacHost> {
     Integer agentConnectionTimeout
     Integer maxTries
     Boolean disabled
+    Boolean copySSHEnvFile
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
@@ -46,7 +47,8 @@ class MacHost implements Describable<MacHost> {
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key) {
+            Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
+            Boolean copySSHEnvFile) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -62,6 +64,7 @@ class MacHost implements Describable<MacHost> {
         this.uploadKeychain = uploadKeychain ?: Boolean.FALSE
         this.fileCredentialsId = fileCredentialsId
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
+        this.copySSHEnvFile = copySSHEnvFile
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
     

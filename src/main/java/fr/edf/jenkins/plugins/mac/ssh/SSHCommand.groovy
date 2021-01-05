@@ -152,7 +152,7 @@ class SSHCommand {
                     readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, MessageFormat.format(Constants.COPY_SSH_ENVIRONMENT, user.username)))
         } catch(Exception e) {
-            final String message = String.format(SSHCommandException.CREATE_MAC_USER_ERROR_MESSAGE, macHost.host)
+            final String message = String.format(SSHCommandException.COPY_SSH_ENVIRONMENT_ERROR_MESSAGE, macHost.host)
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
         }

@@ -87,7 +87,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     FileCredentials fileCredentials = CredentialsUtils.findFileCredentials(host.fileCredentialsId, Jenkins.get())
                     SSHCommand.uploadKeychain(host, user, fileCredentials)
                 }
-                SSHCommand.copySSHEnvironmentVarsFile(host, user)
+                if (host.copySSHEnvFile) {
+                    SSHCommand.copySSHEnvironmentVarsFile(host, user)
+                }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false
