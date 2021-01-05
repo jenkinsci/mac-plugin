@@ -3,6 +3,7 @@ package fr.edf.jenkins.plugins.mac.ssh
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 import java.util.logging.Logger
+import java.text.MessageFormat;
 
 import org.apache.commons.lang.RandomStringUtils
 import org.apache.commons.lang.StringUtils
@@ -138,6 +139,20 @@ class SSHCommand {
             return true
         } catch(Exception e) {
             final String message = String.format(SSHCommandException.TRANSFERT_KEYCHAIN_ERROR_MESSAGE, host.host, e.getMessage())
+            LOGGER.log(Level.SEVERE, message, e)
+            throw new SSHCommandException(message, e)
+        }
+    }
+
+    @Restricted(NoExternalUse)
+    static boolean copySSHEnvironmentVarsFile(MacHost macHost, MacUser user) throws SSHCommandException, Exception {
+        try {
+            SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
+                    context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
+                    readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, MessageFormat.format(Constants.COPY_SSH_ENVIRONMENT, user.username)))
+        } catch(Exception e) {
+            final String message = String.format(SSHCommandException.CREATE_MAC_USER_ERROR_MESSAGE, macHost.host)
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
         }
