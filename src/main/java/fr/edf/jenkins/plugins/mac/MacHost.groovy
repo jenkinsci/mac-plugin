@@ -40,20 +40,21 @@ class MacHost implements Describable<MacHost> {
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
+    String[] entryPointCmd
     List<MacEnvVar> envVars = new ArrayList()
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key) {
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String entryPointCmd) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
         this.maxUsers = maxUsers
         this.connectionTimeout = connectionTimeout
         this.readTimeout = readTimeout
-        this.kexTimeout = new Integer(0)
+        this.kexTimeout = Integer.valueOf(0)
         this.agentConnectionTimeout = agentConnectionTimeout
         this.disabled = disabled
         this.maxTries = maxTries
@@ -62,9 +63,10 @@ class MacHost implements Describable<MacHost> {
         this.uploadKeychain = uploadKeychain ?: Boolean.FALSE
         this.fileCredentialsId = fileCredentialsId
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
+        this.entryPointCmd = buildEntryPointCmd(entryPointCmd)
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
-    
+
     String getKey() {
         null != this.macHostKeyVerifier ? macHostKeyVerifier.getKey() : ""
     }
@@ -137,6 +139,35 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setFileCredentialsId(String fileCredentialsId) {
         this.fileCredentialsId = fileCredentialsId
+    }
+
+    String getEntryPointCmd() {
+        return entryPointCmd.join("\n")
+    }
+
+    @DataBoundSetter
+    void setEntryPointCmd(String entryPointCmdString) {
+        this.entryPointCmd = buildEntryPointCmd(entryPointCmdString)
+    }
+
+    /**
+     * Check null or empty and build an array with '\n' separator
+     * 
+     * @param entryPointCmdString
+     * @return An array of command
+     */
+    String[] buildEntryPointCmd(String entryPointCmdString) {
+        if(entryPointCmdString == null && entryPointCmdString.isBlank()) {
+            return new String[0]
+        }
+        String[] cmdArray = entryPointCmdString.split("\\r?\\n|\\r")
+        List<String> entryPointCmdList = new ArrayList<String>()
+        for(int i=0;i<cmdArray.length;i++) {
+            if (!cmdArray[i].isBlank()) {
+                entryPointCmdList.add(cmdArray[i])
+            }
+        }
+        return entryPointCmdList.toArray(new String[entryPointCmdList.size()]);
     }
 
     @Override
@@ -216,7 +247,7 @@ class MacHost implements Describable<MacHost> {
                 @QueryParameter String credentialsId, @QueryParameter String key, @AncestorInPath Item context) {
             return FormUtils.verifyConnection(host, port, credentialsId, key, context)
         }
-        
+
         /**
          * Check the validity of the given key
          * @param key

@@ -68,6 +68,10 @@ f.advanced(title:Messages.Host_Details()) {
         }
     }
 
+    f.entry(title:Messages.Host_EntryPoint(), field:'entryPointCmd') {
+        f.expandableTextbox()
+    }
+
     f.entry(title: _(Messages.EnvVar_Title())) {
         f.repeatableHeteroProperty(
                 field:'envVars',
