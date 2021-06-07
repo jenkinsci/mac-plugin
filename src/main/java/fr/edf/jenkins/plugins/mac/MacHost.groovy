@@ -40,7 +40,7 @@ class MacHost implements Describable<MacHost> {
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
-    String[] entryPointCmd
+    String entryPointCmd
     List<MacEnvVar> envVars = new ArrayList()
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
@@ -63,7 +63,7 @@ class MacHost implements Describable<MacHost> {
         this.uploadKeychain = uploadKeychain ?: Boolean.FALSE
         this.fileCredentialsId = fileCredentialsId
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
-        this.entryPointCmd = buildEntryPointCmd(entryPointCmd)
+        this.entryPointCmd = entryPointCmd
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -141,33 +141,9 @@ class MacHost implements Describable<MacHost> {
         this.fileCredentialsId = fileCredentialsId
     }
 
-    String getEntryPointCmd() {
-        return entryPointCmd.join("\n")
-    }
-
     @DataBoundSetter
     void setEntryPointCmd(String entryPointCmdString) {
-        this.entryPointCmd = buildEntryPointCmd(entryPointCmdString)
-    }
-
-    /**
-     * Check null or empty and build an array with '\n' separator
-     * 
-     * @param entryPointCmdString
-     * @return An array of command
-     */
-    String[] buildEntryPointCmd(String entryPointCmdString) {
-        if(entryPointCmdString == null && entryPointCmdString.isBlank()) {
-            return new String[0]
-        }
-        String[] cmdArray = entryPointCmdString.split("\\r?\\n|\\r")
-        List<String> entryPointCmdList = new ArrayList<String>()
-        for(int i=0;i<cmdArray.length;i++) {
-            if (!cmdArray[i].isBlank()) {
-                entryPointCmdList.add(cmdArray[i])
-            }
-        }
-        return entryPointCmdList.toArray(new String[entryPointCmdList.size()]);
+        this.entryPointCmd = entryPointCmdString
     }
 
     @Override

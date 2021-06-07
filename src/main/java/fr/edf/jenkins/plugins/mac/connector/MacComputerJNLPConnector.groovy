@@ -87,11 +87,15 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     FileCredentials fileCredentials = CredentialsUtils.findFileCredentials(host.fileCredentialsId, Jenkins.get())
                     SSHCommand.uploadKeychain(host, user, fileCredentials)
                 }
+                if(!host.entryPointCmd.isBlank()) {
+                    listener.logger.print("Launching entry point cmd")
+                    SSHCommand.launchEntryPointCmd(host, user)
+                }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false
                 String message = String.format("Error while connecting computer %s due to error %s ",
-                    computer.name, ExceptionUtils.getStackTrace(e))
+                        computer.name, ExceptionUtils.getStackTrace(e))
                 listener.error(message)
                 throw new InterruptedException(message)
             }
