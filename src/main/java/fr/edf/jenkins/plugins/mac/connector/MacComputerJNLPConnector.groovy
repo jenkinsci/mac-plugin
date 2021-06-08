@@ -87,7 +87,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     FileCredentials fileCredentials = CredentialsUtils.findFileCredentials(host.fileCredentialsId, Jenkins.get())
                     SSHCommand.uploadKeychain(host, user, fileCredentials)
                 }
-                if(!host.entryPointCmd.isBlank()) {
+                if(host.preLaunchCommandsList) {
                     listener.logger.print("Launching entry point cmd")
                     SSHCommand.launchEntryPointCmd(host, user)
                 }

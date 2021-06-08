@@ -39,18 +39,21 @@ class SSHCommand {
     }
 
     /**
-     * Launch Shell command set as entry point in the MacHost configuration
+     * Execute the pre-launch shell command set in the MacHost configuration
      * @param macHost
      * @param user
      */
     static void launchEntryPointCmd(MacHost macHost, MacUser user) {
-        try {
-            SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
-            port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
-            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, macHost.entryPointCmd))
-        } catch(Exception e) {
-            final String message = String.format(SSHCommandException.ENTRYPOINT_ERROR_MESSAGE, macHost.entryPointCmd, macHost.host, user.username)
-            LOGGER.log(Level.WARNING, message, e)
+
+        SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
+        port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
+        for(String command : macHost.preLaunchCommandsList) {
+            try {
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, command))
+            } catch(Exception e) {
+                final String message = String.format(SSHCommandException.PRELAUNCHCOMMAND_ERROR_MESSAGE, command, macHost.host, user.username)
+                LOGGER.log(Level.WARNING, message, e)
+            }
         }
     }
 

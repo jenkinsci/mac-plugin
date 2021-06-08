@@ -68,7 +68,7 @@ f.advanced(title:Messages.Host_Details()) {
         }
     }
 
-    f.entry(title:Messages.Host_EntryPoint(), field:'entryPointCmd') {
+    f.entry(title:Messages.Host_PreLaunchCommand(), field:'preLaunchCommands') {
         f.expandableTextbox()
     }
 

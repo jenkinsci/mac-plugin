@@ -40,14 +40,14 @@ class MacHost implements Describable<MacHost> {
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
-    String entryPointCmd
+    List<String> preLaunchCommandsList = new ArrayList()
     List<MacEnvVar> envVars = new ArrayList()
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String entryPointCmd) {
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String preLaunchCommands) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -63,7 +63,7 @@ class MacHost implements Describable<MacHost> {
         this.uploadKeychain = uploadKeychain ?: Boolean.FALSE
         this.fileCredentialsId = fileCredentialsId
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
-        this.entryPointCmd = entryPointCmd
+        this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -141,9 +141,33 @@ class MacHost implements Describable<MacHost> {
         this.fileCredentialsId = fileCredentialsId
     }
 
+    String getPreLaunchCommands() {
+        return String.join("\n", preLaunchCommandsList)
+    }
+
     @DataBoundSetter
-    void setEntryPointCmd(String entryPointCmdString) {
-        this.entryPointCmd = entryPointCmdString
+    void setPreLaunchCommands(String preLaunchCommandsString) {
+        this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommandsString)
+    }
+
+    /**
+     * Check null or empty and build an array with '\n' separator
+     *
+     * @param entryPointCmdString
+     * @return An array of command
+     */
+    private String[] buildPreLaunchCommands(String preLaunchCommandsString) {
+        if(preLaunchCommandsString == null && preLaunchCommandsString.isBlank()) {
+            return new ArrayList<>()
+        }
+        String[] cmdArray = preLaunchCommandsString.split("\\r?\\n|\\r")
+        List<String> preLaunchCommandList = new ArrayList<>()
+        for(int i=0;i<cmdArray.length;i++) {
+            if (!cmdArray[i].isBlank()) {
+                preLaunchCommandList.add(cmdArray[i])
+            }
+        }
+        return preLaunchCommandList;
     }
 
     @Override
