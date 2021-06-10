@@ -43,7 +43,7 @@ class SSHCommand {
      * @param macHost
      * @param user
      */
-    static void launchEntryPointCmd(MacHost macHost, MacUser user) {
+    static void launchPreLaunchCommand(MacHost macHost, MacUser user) {
 
         SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
         port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)

@@ -89,7 +89,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                 }
                 if(host.preLaunchCommandsList) {
                     listener.logger.print("Launching entry point cmd")
-                    SSHCommand.launchEntryPointCmd(host, user)
+                    SSHCommand.launchPreLaunchCommand(host, user)
                 }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
