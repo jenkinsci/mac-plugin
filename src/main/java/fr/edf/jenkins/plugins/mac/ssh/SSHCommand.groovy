@@ -44,16 +44,12 @@ class SSHCommand {
      * @param user
      */
     static void launchPreLaunchCommand(MacHost macHost, MacUser user) {
-
-        SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
-        port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
-        for(String command : macHost.preLaunchCommandsList) {
-            try {
-                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, command))
-            } catch(Exception e) {
-                final String message = String.format(SSHCommandException.PRELAUNCHCOMMAND_ERROR_MESSAGE, command, macHost.host, user.username)
-                LOGGER.log(Level.WARNING, message, e)
-            }
+        try {
+            SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
+            port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
+            SSHCommandLauncher.executeMultipleCommands(connectionConfig, true, macHost.preLaunchCommandsList)
+        } catch(Exception e) {
+            LOGGER.log(Level.WARNING, "Unable to launch Pre launch commands", e)
         }
     }
 
@@ -114,7 +110,7 @@ class SSHCommand {
      * Get the slave.jar on Jenkins and connect the slave to JNLP
      * @param macHost
      * @param user
-     * @param jenkinsUrl
+     * @param jenkinsUrl : URL of jenkins. If blank, get the value setted in jenkins global configuration
      * @param slaveSecret : secret to connect slave to JNLP
      * @return true if connection succeed
      * @throws SSHCommandException, Exception

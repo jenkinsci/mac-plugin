@@ -29,19 +29,70 @@ protected class SSHCommandLauncher {
     final static String UTF8 = "UTF-8"
 
     /**
-     * Execute a command with the given connection
+     * Execute a command with the given connection configuration
      * @param connectionConfiguration
      * @param ignoreError : if true don't throw exception if return status != 0
      * @param command : ssh command to launch
-     * @return
+     * @return the output of the command as String
      * @throws Exception if cannot execute the command or if the command return an error
      */
     @Restricted(NoExternalUse)
     protected static String executeCommand(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
         Connection connection = null
-        Session session = null
         try {
             connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)
+            String result = executeCommandWithConnection(connection, ignoreError, command)
+            connection.close()
+            return result
+        } catch(Exception e) {
+            if(connection != null) connection.close()
+            throw e
+        }
+    }
+
+    /**
+     * Execute the List of commands with the given connection configuration
+     * @param connectionConfiguration : the connection configuration to connect to SSH
+     * @param ignoreError : if true, the execution continue even if a command fails
+     * @param commands : List of commands
+     * @throws Exception
+     */
+    @Restricted(NoExternalUse)
+    private static void executeMultipleCommands(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull List<String> commands) throws Exception {
+        Connection connection = null
+        try {
+            connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)
+            for(String command : commands) {
+                try {
+                    LOGGER.log(Level.FINE, executeCommandWithConnection(connection, false, command))
+                } catch(Exception e) {
+                    final String message = String.format("Error when executing command %s on Mac Host %s", command, connectionConfiguration.host)
+                    if(!ignoreError) {
+                        LOGGER.log(Level.SEVERE, message)
+                        throw new Exception(message, e)
+                    }
+                    LOGGER.log(Level.WARNING, message)
+                }
+            }
+            connection.close()
+        } catch(Exception e) {
+            if(connection != null) connection.close()
+            throw e
+        }
+    }
+
+    /**
+     * <p>Execute the command on the given connection. The connection must be open before call this method.</p>
+     * <p>Don't forget to call this close() method of the connection when you don't need it anymore - otherwise the receiver thread may run forever.</p>
+     * @param connection : SSH connection
+     * @param ignoreError : if true, it will not throw exception even if the command status != 0
+     * @param command : command to execute
+     * @return the output of the command as String
+     * @throws Exception
+     */
+    protected static String executeCommandWithConnection(@NotNull Connection connection, @NotNull boolean ignoreError, @NotNull String command) throws Exception {
+        Session session = null
+        try {
             session = connection.openSession()
             LOGGER.log(Level.FINE, "Executing command {0}", command)
             session.execCommand(command)
@@ -49,7 +100,6 @@ protected class SSHCommandLauncher {
             LOGGER.log(Level.FINEST, "Exit SIGNAL : {0}", session.getExitSignal())
             LOGGER.log(Level.FINEST,"Exit STATUS : {0}", null != session.getExitStatus() ? session.getExitStatus().intValue() : null)
             session.close()
-            connection.close()
             String out = convertInputStream(session.getStdout())
             String err = convertInputStream(session.getStderr())
             LOGGER.log(Level.FINEST, out)
@@ -63,7 +113,6 @@ protected class SSHCommandLauncher {
             return StringUtils.isNotEmpty(out) ? out : StringUtils.isNotEmpty(err) ? err : ""
         } catch(Exception e) {
             if(session != null) session.close()
-            if(connection != null) connection.close()
             throw e
         }
     }

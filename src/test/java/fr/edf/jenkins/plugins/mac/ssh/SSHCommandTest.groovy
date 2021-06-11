@@ -6,7 +6,9 @@ import org.jvnet.hudson.test.JenkinsRule
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHGlobalConnectionConfiguration
+import fr.edf.jenkins.plugins.mac.ssh.connection.SSHUserConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.test.builders.MacPojoBuilder
 import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.util.Secret
@@ -140,7 +142,7 @@ class SSHCommandTest extends Specification {
         notThrown Exception
         result.size() == 2
     }
-    
+
     def "listLabelUsers should throw SSHCommandException"() {
         setup:
         MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
@@ -166,7 +168,23 @@ class SSHCommandTest extends Specification {
         then:
         notThrown Exception
     }
-    
+
+    def "preLaunchCommand should works without exception"() {
+        setup:
+        MacUser user = MacPojoBuilder.buildUser()
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+        List<String> prelaunchCommands = Arrays.asList("ls", Constants.WHOAMI)
+        macHost.setPreLaunchCommandsList(prelaunchCommands)
+        GroovySpy(SSHCommandLauncher, global:true)
+        1* SSHCommandLauncher.executeMultipleCommands(_, true, prelaunchCommands) >> "ok"
+
+        when:
+        SSHCommand.launchPreLaunchCommand(macHost, user)
+
+        then:
+        notThrown Exception
+    }
+
     def "uploadKeychain should work without exception"() {
         setup:
         MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
@@ -188,7 +206,7 @@ class SSHCommandTest extends Specification {
         then:
         notThrown Exception
     }
-    
+
     def "uploadKeychain should throw SSHCommandException"() {
         setup:
         MacUser user = new MacUser("test", Secret.fromString("password"), "workdir")
