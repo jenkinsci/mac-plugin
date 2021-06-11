@@ -58,7 +58,7 @@ protected class SSHCommandLauncher {
      * @throws Exception
      */
     @Restricted(NoExternalUse)
-    private static void executeMultipleCommands(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull List<String> commands) throws Exception {
+    protected static void executeMultipleCommands(@NotNull SSHConnectionConfiguration connectionConfiguration, @NotNull boolean ignoreError, @NotNull List<String> commands) throws Exception {
         Connection connection = null
         try {
             connection = SSHConnectionFactory.getSshConnection(connectionConfiguration)

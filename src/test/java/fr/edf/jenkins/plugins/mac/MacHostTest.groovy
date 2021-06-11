@@ -46,4 +46,65 @@ class MacHostTest extends Specification {
         host.preLaunchCommandsList.get(1).contentEquals("whoami")
         host.preLaunchCommandsList.get(2).contentEquals("ifconfig")
     }
+
+    def "preLaunch commands should not be null if string is empty"() {
+        setup:
+        MacHost host = MacPojoBuilder.buildMacHost().get(0)
+        final String newLine = "\n"
+        String preLaunchCommandsString = "";
+
+        when:
+        host.setPreLaunchCommands(preLaunchCommandsString)
+
+        then:
+        notThrown Exception
+        host.getPreLaunchCommands().isEmpty()
+        host.preLaunchCommandsList != null
+        host.preLaunchCommandsList.isEmpty()
+    }
+
+    def "preLaunch commands should not be null if string is null"() {
+        setup:
+        MacHost host = MacPojoBuilder.buildMacHost().get(0)
+        final String newLine = "\n"
+        String preLaunchCommandsString = "";
+
+        when:
+        host.setPreLaunchCommands(preLaunchCommandsString)
+
+        then:
+        notThrown Exception
+        host.getPreLaunchCommands().isEmpty()
+        host.preLaunchCommandsList != null
+        host.preLaunchCommandsList.isEmpty()
+    }
+
+    def "preLaunch commands should not be null if string is blank"() {
+        setup:
+        MacHost host = MacPojoBuilder.buildMacHost().get(0)
+        final String newLine = "\n"
+        String preLaunchCommandsString = "                   \n                 ";
+
+        when:
+        host.setPreLaunchCommands(preLaunchCommandsString)
+
+        then:
+        notThrown Exception
+        host.getPreLaunchCommands().isEmpty()
+        host.preLaunchCommandsList != null
+        host.preLaunchCommandsList.isEmpty()
+    }
+
+    def "get preLaunchCommand should not return null"() {
+        setup:
+        MacHost host = MacPojoBuilder.buildMacHost().get(0)
+        String preLaunchCommandsString = "";
+
+        when:
+        host.setPreLaunchCommands(preLaunchCommandsString)
+
+        then:
+        notThrown Exception
+        host.getPreLaunchCommands().isEmpty()
+    }
 }

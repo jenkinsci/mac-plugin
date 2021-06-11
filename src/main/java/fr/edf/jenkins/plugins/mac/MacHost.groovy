@@ -156,9 +156,9 @@ class MacHost implements Describable<MacHost> {
      * @param entryPointCmdString
      * @return An array of command
      */
-    private String[] buildPreLaunchCommands(String preLaunchCommandsString) {
+    private List<String> buildPreLaunchCommands(String preLaunchCommandsString) {
         if(preLaunchCommandsString == null && preLaunchCommandsString.isBlank()) {
-            return new ArrayList<>()
+            return new ArrayList<String>()
         }
         String[] cmdArray = preLaunchCommandsString.split("\\r?\\n|\\r")
         List<String> preLaunchCommandList = new ArrayList<>()
