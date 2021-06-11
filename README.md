@@ -99,6 +99,13 @@ Since 1.1.0, you can set environment variables on Mac host. Theses variables wil
 
 <img src="https://zupimages.net/up/19/50/i14g.png" width="650"/>
 
+### Pre-launch commands
+Since 1.3.0, you can set commands passed to the user before the agent starts.
+The field is a multi-line string, and each line match to a command execution.
+It is possible to run a script on the Mac with this field.
+
+<img src="https://zupimages.net/up/21/23/05ub.png" width="750"/>
+
 ## Logs configuration
 You can define a custom LOGGER to log every output of the plugin on the same place.
 To do it, go to System logs in the Jenkins configuration :
