@@ -18,7 +18,7 @@
         <tag>${scmTag}</tag>
     </scm>
     <properties>
-        <spotbugs.failOnError>false</spotbugs.failOnError>
+        <findbugs.failOnError>false</findbugs.failOnError>
         <jenkins.version>2.235.1</jenkins.version>
         <java.level>8</java.level>
     </properties>
