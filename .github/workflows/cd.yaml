@@ -3,9 +3,9 @@
 name: cd
 on:
   workflow_dispatch:
-  check_run:
-    types:
-      - completed
+#  check_run:
+#    types:
+#      - completed
 
 jobs:
   validate:
