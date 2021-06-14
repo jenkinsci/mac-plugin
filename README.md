@@ -8,6 +8,7 @@
 A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.
 
 It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
+
 ## Features
 
 - [x] Allow to configure a Mac as Jenkins slave
@@ -17,6 +18,7 @@ It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 - [x] Configure environment variables
 - [x] Stock keychain file as credentials on Jenkins
 - [x] Inject keychain on Node filesystem
+- [x] Prepare build environment
 - [x] Clean all files created after each build
 
 This plugin has been tested against macOS 10.14 Mojave and macOS 10.15 Catalina , although theoretically it should work with older version as long as it supports sysadminctl command.
