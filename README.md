@@ -11,6 +11,22 @@ A good utility to build yours IOS apps, this plugin create MacOs agents for your
 
 It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 
+## Table of Contents
+- [Features](#features)
+- [Requirements](#requirements)
+    - [Enable SSH for all users](enable-ssh-for-all-users)
+    - [SSH configuration](ssh-configuration)
+    - [Configure a Jenkins User](configure-a-jenkins-user)
+- [Plugin configuration](#plugin-configuration)
+    - [Global Configuration](global-configuration)
+    - [Keychain Managment](keychain-managment)
+    - [Environment variables](environment-variables)
+    - [Pre-launch commands](pre-launch-commands)
+- [Logs configuration](#logs-configuration)
+- [Execution](#execution)
+- [Team](#team)
+- [Contact](#contact)
+
 ## Features
 
 - [x] Allow to configure a Mac as Jenkins slave
@@ -58,6 +74,7 @@ To maximize security, you can configure it only for "chmod" and "sysadminctl" co
 `[USERNAME] ALL = NOPASSWD: /usr/sbin/sysadminctl -addUser mac-?????????? -password ??????????, /usr/sbin/sysadminctl -deleteUser mac-??????????, /bin/chmod -R 700 /Users/mac-??????????/`
 
 ## Plugin configuration
+### Global Configuration
 In jenkins global configuration, add a new Mac Cloud :
 
 <img src="https://www.zupimages.net/up/19/47/e599.png" width="200"/>
