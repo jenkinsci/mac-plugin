@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
@@ -25,6 +27,10 @@
     <name>Mac Plugin</name>
     <description>A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.</description>
     <url>https://github.com/jenkinsci/mac-plugin/</url>
+    <organization>
+        <name>EDF</name>
+        <url>https://github.com/groupe-edf</url>
+    </organization>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -36,9 +42,20 @@
         <developer>
             <id>mat1e</id>
             <name>Mathieu Delrocq</name>
-            <email>delrocq.mathieu@gmail.com</email>
+            <url>https://github.com/mat1e</url>
         </developer>
     </developers>
+    <contributors>
+        <contributor>
+            <name>Olivier Routier</name>
+            <url>https://github.com/Cloudehard</url>
+            <organization>EDF</organization>
+            <organizationUrl>https://github.com/groupe-edf</organizationUrl>
+            <roles>
+                <role>Product Owner</role>
+            </roles>
+        </contributor>
+    </contributors>
     <!-- Assuming you want to host on @jenkinsci: <url>https://wiki.jenkins.io/display/JENKINS/TODO+Plugin</url> 
         <scm> <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection> 
         <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection> 
