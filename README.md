@@ -131,11 +131,9 @@ You can see it on the home page of Jenkins :
 
 ## Team
 
-Product Owner :
-- [Cloudehard](https://github.com/Cloudehard)
+Product Owner : [Cloudehard](https://github.com/Cloudehard)
 
-Developer :
-- [mat1e](https://github.com/mat1e)
+Developer : [mat1e](https://github.com/mat1e)
 
 ## Contact
 Any question ? You can ask it on the [Gitter room](https://gitter.im/jenkinsci/mac-plugin) or open an issue on the [Jira of Jenkins](https://issues.jenkins-ci.org/secure/Dashboard.jspa).
