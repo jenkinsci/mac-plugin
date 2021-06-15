@@ -1,3 +1,5 @@
+[<img src="https://i.pinimg.com/originals/bc/00/a8/bc00a8bd0a4be6cd29680d02c70f0539.png" width="100" align="right"/>](https://github.com/groupe-edf)
+
 # Mac Plugin
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins%2Fmac-plugin%2Fmaster)](https://ci.jenkins.io/job/Plugins/job/mac-plugin/job/master/)
 [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/mac.svg?color=blue)](https://plugins.jenkins.io/mac)
