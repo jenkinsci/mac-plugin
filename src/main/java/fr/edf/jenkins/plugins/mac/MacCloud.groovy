@@ -25,13 +25,15 @@ class MacCloud extends Cloud {
     List<MacHost> macHosts = new ArrayList()
     MacComputerConnector connector
     Integer idleMinutes
+    Boolean debugMode
 
     @DataBoundConstructor
-    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, Integer idleMinutes) {
+    MacCloud(String name, List<MacHost> macHosts, MacComputerConnector connector, Integer idleMinutes, Boolean debugMode = false) {
         super(name)
         this.macHosts = macHosts
         this.connector = connector
         this.idleMinutes = idleMinutes
+        this.debugMode = debugMode
     }
 
     static @Nullable getMacClouds() {

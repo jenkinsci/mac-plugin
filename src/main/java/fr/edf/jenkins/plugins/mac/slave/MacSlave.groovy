@@ -32,8 +32,9 @@ class MacSlave extends AbstractCloudSlave {
     final String cloudId
     final MacHost macHost
     AtomicBoolean acceptingTasks = new AtomicBoolean(true)
+    Boolean debugMode
 
-    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher, Integer idleMinutes, List<? extends NodeProperty<?>> nodeProperties) {
+    MacSlave(String cloudId, String labels, MacUser user, MacHost macHost, ComputerLauncher launcher, Integer idleMinutes, List<? extends NodeProperty<?>> nodeProperties, Boolean debugMode = false) {
         super(
         user.username,
         "Agent Mac for the user " + user.username,
@@ -47,6 +48,7 @@ class MacSlave extends AbstractCloudSlave {
         )
         this.cloudId = cloudId
         this.macHost = macHost
+        this.debugMode = debugMode
         setUserId(user.username)
     }
 
@@ -103,12 +105,15 @@ class MacSlave extends AbstractCloudSlave {
             LOGGER.log(Level.SEVERE, message, e)
             listener.error(message)
         }
-        try {
-            SSHCommand.deleteUserOnMac(this.name, this.macHost)
-        } catch (Exception e) {
-            String message = String.format("Failed to remove user %s on mac %s due to exception : %s", this.name, this.macHost.host, e.message)
-            LOGGER.log(Level.SEVERE, message, e)
-            listener.fatalError(message)
+
+        if (this.debugMode != true) {
+            try {
+                SSHCommand.deleteUserOnMac(this.name, this.macHost)
+            } catch (Exception e) {
+                String message = String.format("Failed to remove user %s on mac %s due to exception : %s", this.name, this.macHost.host, e.message)
+                LOGGER.log(Level.SEVERE, message, e)
+                listener.fatalError(message)
+            }
         }
     }
 

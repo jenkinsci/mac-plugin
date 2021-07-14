@@ -32,7 +32,7 @@ public class StandardPlannedNodeBuilder extends PlannedNodeBuilder {
         try {
             user = SSHCommand.generateUser()
             ComputerLauncher launcher = cloud.connector.createLauncher(macHost, user)
-            MacSlave agent = new MacSlave(cloud.name, macHost.labelString, user, macHost, launcher, cloud.idleMinutes, nodeProperties)
+            MacSlave agent = new MacSlave(cloud.name, macHost.labelString, user, macHost, launcher, cloud.idleMinutes, nodeProperties, cloud.debugMode)
             f = Futures.immediateFuture(agent)
         } catch (IOException | Descriptor.FormException | SSHCommandException e) {
             LOGGER.log(Level.SEVERE, e.getMessage())
