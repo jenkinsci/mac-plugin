@@ -91,6 +91,12 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     listener.logger.print("Launching entry point cmd")
                     SSHCommand.launchPreLaunchCommand(host, user)
                 }
+                if (host.hostFiles) {
+                    host.hostFiles.each { hostFile ->
+                        FileCredentials fileCredentials = CredentialsUtils.findFileCredentials(hostFile.hostFileCredentialsId, Jenkins.get())
+                        SSHCommand.uploadHostFile(host, user, fileCredentials, hostFile.hostPath)
+                    }
+                }
                 SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false

@@ -42,12 +42,14 @@ class MacHost implements Describable<MacHost> {
     String fileCredentialsId
     List<String> preLaunchCommandsList = new ArrayList()
     List<MacEnvVar> envVars = new ArrayList()
+    List<MacHostFile> hostFiles = new ArrayList()
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String preLaunchCommands) {
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String preLaunchCommands,
+    List<MacHostFile> hostFiles) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -64,6 +66,7 @@ class MacHost implements Describable<MacHost> {
         this.fileCredentialsId = fileCredentialsId
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
+        this.hostFiles = hostFiles
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -129,6 +132,11 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setEnvVars(List<MacEnvVar> envVars) {
         this.envVars = envVars
+    }
+
+    @DataBoundSetter
+    void setHostFiles(List<MacHostFile> hostFiles) {
+        this.hostFiles = hostFiles
     }
 
     @DataBoundSetter

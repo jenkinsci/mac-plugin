@@ -65,6 +65,9 @@ class Constants {
     /** /Users/%s/Library/Keychains/ */
     public static final String KEYCHAIN_DESTINATION_FOLDER = "/Users/%s/Library/Keychains/"
 
+	/** /Users/%s/ */
+    public static final String HOST_FILE_DESTINATION_BASE_FOLDER = "/Users/%s/"
+
     //     Command for grouping users on a mac (not used but keep for potential evol)
     //    /** sudo dseditgroup -o create %s */
     //    public static final String CREATE_GROUP = "sudo dseditgroup -o create %s"
