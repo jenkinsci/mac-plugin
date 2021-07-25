@@ -34,6 +34,7 @@ class MacHost implements Describable<MacHost> {
     Integer connectionTimeout
     Integer readTimeout
     Integer kexTimeout
+    Integer userDeleteTimeout
     Integer agentConnectionTimeout
     Integer maxTries
     Boolean disabled
@@ -49,7 +50,7 @@ class MacHost implements Describable<MacHost> {
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
     Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String preLaunchCommands,
-    List<MacHostFile> hostFiles) {
+    List<MacHostFile> hostFiles, Integer userDeleteTimeout) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -67,6 +68,7 @@ class MacHost implements Describable<MacHost> {
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
         this.hostFiles = hostFiles
+        this.userDeleteTimeout = userDeleteTimeout
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -157,6 +159,11 @@ class MacHost implements Describable<MacHost> {
     void setPreLaunchCommands(String preLaunchCommandsString) {
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommandsString)
     }
+
+	@DataBoundSetter
+	void setUserDeleteTimeout(Integer userDeleteTimeout) {
+		this.userDeleteTimeout = userDeleteTimeout
+	}
 
     /**
      * Check null or empty and build an array with '\n' separator
