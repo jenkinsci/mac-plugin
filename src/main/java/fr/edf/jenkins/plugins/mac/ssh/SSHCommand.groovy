@@ -175,7 +175,7 @@ class SSHCommand {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: host.host,
             port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout, macHostKeyVerifier: host.macHostKeyVerifier)
             String outputDir = Paths.get(String.format(Constants.HOST_FILE_DESTINATION_BASE_FOLDER, user.username), hostPath).toAbsolutePath()
-            .log(Level.FINE, "Uploading host file {0} to {1}", hostFile.fileName, outputDir)
+            LOGGER.log(Level.FINE, "Uploading host file {0} to {1}", hostFile.fileName, outputDir)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_DIR, outputDir)))
             SSHCommandLauncher.sendFile(connectionConfig, hostFile.content, hostFile.fileName, outputDir)
             return true

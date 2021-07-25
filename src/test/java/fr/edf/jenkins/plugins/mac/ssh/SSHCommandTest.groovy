@@ -227,6 +227,6 @@ class SSHCommandTest extends Specification {
 
         then:
         SSHCommandException sshe = thrown()
-        sshe.getMessage().contains("Cannot transfert keychain file")
+        sshe.getMessage().contains("Cannot transfer keychain file")
     }
 }
