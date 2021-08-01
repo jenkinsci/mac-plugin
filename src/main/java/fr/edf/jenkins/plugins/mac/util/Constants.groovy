@@ -43,8 +43,8 @@ class Constants {
     /** curl --retry 10 --verbose %s > remoting.jar */
     public static final String GET_REMOTING_JAR = "curl --retry 5 --retry-delay 10 --verbose %s > remoting.jar"
 
-    /** java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s */
-    public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
+    /** java -classpath remoting.jar hudson.remoting.jnlp.Main -headless -url %s %s %s */
+	public static final String LAUNCH_JNLP = "java -classpath remoting.jar hudson.remoting.jnlp.Main -headless -url %s %s %s"
 
     /** dscl . list /Users | grep -v ^_ | grep %s */
     public static final String CHECK_USER_EXIST = "dscl . list /Users | grep -v ^_ | grep %s"
