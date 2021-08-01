@@ -60,6 +60,7 @@ class SSHCommandTest extends Specification {
         MacHost macHost = Mock(MacHost)
         GroovySpy(SSHCommandLauncher, global:true)
         2 * SSHCommandLauncher.executeCommand(_, true, _) >> "OK"
+        1 * macHost.userDeleteTimeout >> 15
 
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
@@ -75,6 +76,7 @@ class SSHCommandTest extends Specification {
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.DELETE_USER, username)) >> "OK"
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, username)) >> username
+        1 * macHost.userDeleteTimeout >> 15
 
         when:
         SSHCommand.deleteUserOnMac(username, macHost)

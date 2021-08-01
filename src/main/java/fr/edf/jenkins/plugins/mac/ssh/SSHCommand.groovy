@@ -95,7 +95,7 @@ class SSHCommand {
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
-            TimeUnit.SECONDS.sleep(5)
+            TimeUnit.SECONDS.sleep(macHost.userDeleteTimeout)
             if(isUserExist(connectionConfig, username)) {
                 throw new Exception(String.format("The user %s still exist after verification", username))
             }
