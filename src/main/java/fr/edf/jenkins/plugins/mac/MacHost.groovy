@@ -165,7 +165,7 @@ class MacHost implements Describable<MacHost> {
         String cmd = null
         for(int i=0;i<cmdArray.length;i++) {
             cmd = cmdArray[i]
-            if (cmd != null && !cmd.isBlank()) {
+            if (cmd?.trim()) {
                 preLaunchCommandList.add(cmd)
             }
         }
