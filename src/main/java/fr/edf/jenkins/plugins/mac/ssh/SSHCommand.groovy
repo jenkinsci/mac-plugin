@@ -116,7 +116,7 @@ class SSHCommand {
      * @throws SSHCommandException, Exception
      */
     @Restricted(NoExternalUse)
-    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException, Exception {
+    static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret, boolean webSocket) throws SSHCommandException, Exception {
         jenkinsUrl = StringUtils.isNotEmpty(jenkinsUrl) ? jenkinsUrl : Jenkins.get().getRootUrl()
         if(!jenkinsUrl.endsWith("/")) {
             jenkinsUrl += "/"
@@ -126,7 +126,7 @@ class SSHCommand {
             SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: macHost.host,
             port: macHost.port, connectionTimeout: macHost.connectionTimeout, readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.GET_REMOTING_JAR, remotingUrl)))
-            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret)))
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.LAUNCH_JNLP, jenkinsUrl, user.username, slaveSecret, webSocket ? "-webSocket" : "")))
             return true
         } catch(Exception e) {
             final String message = String.format(SSHCommandException.JNLP_CONNECTION_ERROR_MESSAGE, macHost.host, user.username)
