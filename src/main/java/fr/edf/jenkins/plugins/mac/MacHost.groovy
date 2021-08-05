@@ -157,16 +157,15 @@ class MacHost implements Describable<MacHost> {
      * @return An array of command
      */
     private List<String> buildPreLaunchCommands(String preLaunchCommandsString) {
-        if(preLaunchCommandsString == null && preLaunchCommandsString.isBlank()) {
-            return new ArrayList<String>()
-        }
-        String[] cmdArray = preLaunchCommandsString.split("\\r?\\n|\\r")
         List<String> preLaunchCommandList = new ArrayList<>()
-        String cmd = null
-        for(int i=0;i<cmdArray.length;i++) {
-            cmd = cmdArray[i]
-            if (cmd?.trim()) {
-                preLaunchCommandList.add(cmd)
+        if(preLaunchCommandsString != null && !preLaunchCommandsString.isBlank()) {
+            String[] cmdArray = preLaunchCommandsString.split("\\r?\\n|\\r")
+            String cmd = null
+            for(int i=0;i<cmdArray.length;i++) {
+                cmd = cmdArray[i]
+                if (cmd?.trim()) {
+                    preLaunchCommandList.add(cmd)
+                }
             }
         }
         return preLaunchCommandList;
