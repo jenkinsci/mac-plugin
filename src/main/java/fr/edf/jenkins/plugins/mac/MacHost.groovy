@@ -40,8 +40,8 @@ class MacHost implements Describable<MacHost> {
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
-    List<String> preLaunchCommandsList = new ArrayList()
-    List<MacEnvVar> envVars = new ArrayList()
+    List<String> preLaunchCommandsList = new ArrayList<>()
+    List<MacEnvVar> envVars = new ArrayList<>()
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
 
@@ -162,9 +162,11 @@ class MacHost implements Describable<MacHost> {
         }
         String[] cmdArray = preLaunchCommandsString.split("\\r?\\n|\\r")
         List<String> preLaunchCommandList = new ArrayList<>()
+        String cmd = null
         for(int i=0;i<cmdArray.length;i++) {
-            if (!cmdArray[i].isBlank()) {
-                preLaunchCommandList.add(cmdArray[i])
+            cmd = cmdArray[i]
+            if (cmd != null && !cmd.isBlank()) {
+                preLaunchCommandList.add(cmd)
             }
         }
         return preLaunchCommandList;
