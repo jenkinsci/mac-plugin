@@ -16,11 +16,11 @@ class Constants {
     public static final String EMPTY_LIST_BOX_VALUE = ""
 
     //Username pattern
-    /**"mac-%s"*/
+    /**"mac-[random_string]"*/
     public static final String USERNAME_PATTERN = "mac-%s"
 
     //Workdir pattern
-    /** /Users/%s/ */
+    /** /Users/[username]/ */
     public static final String WORKDIR_PATTERN = "/Users/%s/"
 
     //Path of remoting.jar
@@ -31,28 +31,28 @@ class Constants {
     /** "whoami" */
     public static final String WHOAMI = "whoami"
 
-    /** "sudo sysadminctl -addUser %s -password %s" */
+    /** "sudo sysadminctl -addUser [username] -password [password]" */
     public static final String CREATE_USER = "sudo sysadminctl -addUser %s -password %s"
 
-    /** "sudo sysadminctl -deleteUser %s" */
+    /** "sudo sysadminctl -deleteUser [username]" */
     public static final String DELETE_USER = "sudo sysadminctl -deleteUser %s"
 
-    /** chmod -R u=rwx,g=rx,o=r /Users/%s/ */
+    /** chmod -R u=rwx,g=rx,o=r /Users/[username]/ */
     public static final String CHANGE_RIGHTS_ON_USER = "sudo chmod -R 700 /Users/%s/"
 
-    /** curl --retry 10 --verbose %s > remoting.jar */
+    /** curl --retry 10 --verbose [remoting.jar_url] > remoting.jar */
     public static final String GET_REMOTING_JAR = "curl --retry 5 --retry-delay 10 --verbose %s > remoting.jar"
 
-    /** java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s */
+    /** java -jar remoting.jar -jnlpUrl [jenkins_url]computer/[computer_name]/slave-agent.jnlp -secret [secret]*/
     public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
 
-    /** dscl . list /Users | grep -v ^_ | grep %s */
+    /** dscl . list /Users | grep -v ^_ | grep [username] */
     public static final String CHECK_USER_EXIST = "dscl . list /Users | grep -v ^_ | grep %s"
 
-    /** dscl . list /Users | grep -v ^_ | grep %s */
+    /** dscl . list /Users | grep -v ^_ | grep [username_pattern] */
     public static final String LIST_USERS = "dscl . list /Users | grep -v ^_ | grep %s"
     
-    /** mkdir %s */
+    /** mkdir [dir_name] */
     public static final String CREATE_DIR = "mkdir %s"
 
     //regex
