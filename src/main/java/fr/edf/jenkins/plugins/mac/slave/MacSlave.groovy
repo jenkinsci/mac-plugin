@@ -18,6 +18,7 @@ import hudson.model.Computer
 import hudson.model.TaskListener
 import hudson.model.Node.Mode
 import hudson.model.Slave.SlaveDescriptor
+import hudson.slaves.AbstractCloudComputer
 import hudson.slaves.AbstractCloudSlave
 import hudson.slaves.Cloud
 import hudson.slaves.ComputerLauncher
@@ -82,7 +83,7 @@ class MacSlave extends AbstractCloudSlave {
      * {@inheritDoc}
      */
     @Override
-    MacComputer createComputer() {
+    AbstractCloudComputer createComputer() {
         return MacComputerFactory.createInstance(this)
     }
 
