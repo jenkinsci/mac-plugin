@@ -14,14 +14,17 @@ It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 ## Table of Contents
 - [Features](#features)
 - [Requirements](#requirements)
-    - [Enable SSH for all users](#enable-ssh-for-all-users)
-    - [SSH configuration](#ssh-configuration)
-    - [Configure a Jenkins User](#configure-a-jenkins-user)
+    - [Jenkins](#jenkins)
+    - [MacOs](#macos)
+       - [Enable SSH for all users](#enable-ssh-for-all-users)
+       - [SSH configuration](#ssh-configuration)
+       - [Configure a Jenkins User](#configure-a-jenkins-user)
 - [Plugin configuration](#plugin-configuration)
     - [Global Configuration](#global-configuration)
     - [Keychain Managment](#keychain-managment)
     - [Environment variables](#environment-variables)
     - [Pre-launch commands](#pre-launch-commands)
+    - [Web Socket](#web-socket)
 - [Logs configuration](#logs-configuration)
 - [Execution](#execution)
 - [Team](#team)
@@ -43,14 +46,20 @@ This plugin has been tested against macOS 10.14 Mojave and macOS 10.15 Catalina 
 
 ## Requirements
 
+### Jenkins
+
+'TCP port for inbound agents' must be enabled in Global Security settings or WebSocket must be supported by Jenkins (see [Web Socket](#web-socket))
+
+### MacOS
+
 **Restart MacOs after configuration change**
 
-### Enable SSH for all users
+#### Enable SSH for all users
 Go to System Preferences -> Sharing, and enable Remote Login for All users :
 
 <img src="https://zupimages.net/up/19/47/q7yq.png" width="500"/>
 
-### SSH configuration
+#### SSH configuration
 In /etc/ssh/sshd_config file, uncomment and update values of parameters MaxAuthTries, MaxSessions, ClientAliveInterval and ClientAliveCountMax to your need.
 
 example of configuration for 10 Jenkins and 1 Mac with 10 users allowed :
@@ -63,7 +72,7 @@ example of configuration for 10 Jenkins and 1 Mac with 10 users allowed :
 For more informations about sshd_config consult the
 [Official Documentation](https://man.openbsd.org/sshd_config)
 
-### Configure a Jenkins User
+#### Configure a Jenkins User
 Create an user on the Mac with administrator privileges. It will be your connection user for Mac Plugin Global configuration.
 
 Add sudo NOPASSWD to this user in /etc/sudoers :
@@ -116,16 +125,23 @@ Add a new Secret file credentials. **Prefers to store it as System Credentials t
 The Keychain will be send to the Mac agent with SCP in ~/Library/Keychains/ directory before the JNLP connection.
 
 ### Environment variables
-Since 1.1.0, you can set environment variables on Mac host. Theses variables will be set on the Node and will be accessible in the build.
+Since v1.1.0, you can set environment variables on Mac host. Theses variables will be set on the Node and will be accessible in the build.
 
 <img src="https://zupimages.net/up/19/50/i14g.png" width="650"/>
 
 ### Pre-launch commands
-Since 1.3.0, you can set commands passed to the user before the agent starts.
+Since v1.3.0, you can set commands passed to the user before the agent starts.
 The field is a multi-line string, and each line match to a command execution.
 It is possible to run a script on the Mac with this field.
 
 <img src="https://zupimages.net/up/21/23/05ub.png" width="750"/>
+
+### Web Socket
+Since v1.3.1, a mac cloud can be set to connect agents with [WebSocket](https://www.jenkins.io/blog/2020/02/02/web-socket/).
+
+The option is available in Mac Cloud settings :
+
+<img src="https://zupimages.net/up/21/31/nn4a.png" width="800"/>
 
 ## Logs configuration
 You can define a custom LOGGER to log every output of the plugin on the same place.
