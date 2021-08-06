@@ -95,7 +95,7 @@ class SSHCommandTest extends Specification {
         2 * SSHCommandLauncher.executeCommand(_, false, _) >> "OK"
 
         when:
-        SSHCommand.jnlpConnect(macHost, user, null, slaveSecret, true)
+        SSHCommand.jnlpConnect(macHost, user, null, slaveSecret)
 
         then:
         notThrown Exception
@@ -108,7 +108,7 @@ class SSHCommandTest extends Specification {
         String slaveSecret = "secret"
 
         when:
-        SSHCommand.jnlpConnect(macHost, user, null, slaveSecret, false)
+        SSHCommand.jnlpConnect(macHost, user, null, slaveSecret)
 
         then:
         SSHCommandException e = thrown()
