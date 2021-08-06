@@ -8,8 +8,6 @@ import org.jenkinsci.Symbol
 import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
-import org.kohsuke.stapler.QueryParameter
-import org.kohsuke.stapler.verb.POST
 
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
@@ -22,29 +20,35 @@ import hudson.model.TaskListener
 import hudson.slaves.ComputerLauncher
 import hudson.slaves.JNLPLauncher
 import hudson.slaves.SlaveComputer
-import hudson.util.FormValidation
 import jenkins.model.Jenkins
-import jenkins.websocket.WebSockets
 
 class MacComputerJNLPConnector extends MacComputerConnector {
 
+    private Boolean webSocket = Boolean.FALSE
     private String jenkinsUrl
-    private boolean webSocket
 
     @DataBoundConstructor
-    public MacComputerJNLPConnector(String jenkinsUrl, boolean webSocket) {
+    public MacComputerJNLPConnector(Boolean webSocket, String jenkinsUrl) {
+        this.webSocket = webSocket
         this.jenkinsUrl = jenkinsUrl
-        this.webSocket = webSocket ?: false
+    }
+
+    public Boolean getWebSocket() {
+        return webSocket
+    }
+
+    @DataBoundSetter
+    public void setWebSocket(Boolean webSocket) {
+        this.webSocket = webSocket
+    }
+
+    public String getJenkinsUrl() {
+        return jenkinsUrl
     }
 
     @DataBoundSetter
     public void setJenkinsUrl(String jenkinsUrl){
         this.jenkinsUrl = jenkinsUrl
-    }
-
-    @DataBoundSetter
-    public void setWebSocket(boolean webSocket) {
-        this.webSocket = webSocket
     }
 
     @Extension @Symbol("jnlp")
@@ -59,31 +63,31 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         }
     }
 
-    /**
-     * Descriptor of MacComputerJNLPConnector
-     * @see src/main/resources/fr/edf/jenkins/plugins/mac/connector/MacComputerJNLPConnector/config.groovy
-     * @author Mathieu Delrocq
-     *
-     */
-    @Extension
-    public static final class JNLPDescriptorImpl extends Descriptor<MacComputerJNLPConnector> {
-
-        /**
-         * Check if Jenkins support webSocket
-         * 
-         * @param webSocket
-         * @return FormValidation
-         */
-        @POST
-        public FormValidation doCheckWebSocket(@QueryParameter boolean webSocket) {
-            if (webSocket) {
-                if (!WebSockets.isSupported()) {
-                    return FormValidation.error("WebSocket support is not enabled in this Jenkins installation");
-                }
-            }
-            return FormValidation.ok();
-        }
-    }
+    //    /**
+    //     * Descriptor of MacComputerJNLPConnector
+    //     * @see src/main/resources/fr/edf/jenkins/plugins/mac/connector/MacComputerJNLPConnector/config.groovy
+    //     * @author Mathieu Delrocq
+    //     *
+    //     */
+    //    @Extension
+    //    public static final class DescriptorImplJNLP extends Descriptor<MacComputerJNLPConnector> {
+    //
+    //        /**
+    //         * Check if Jenkins support webSocket
+    //         *
+    //         * @param webSocket
+    //         * @return FormValidation
+    //         */
+    //        @POST
+    //        public FormValidation doCheckWebSocket(@QueryParameter boolean webSocket) {
+    //            if (webSocket) {
+    //                if (!WebSockets.isSupported()) {
+    //                    return FormValidation.error("WebSocket support is not enabled in this Jenkins installation");
+    //                }
+    //            }
+    //            return FormValidation.ok();
+    //        }
+    //    }
 
     /**
      * {@inheritDoc}
@@ -91,7 +95,9 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     @Override
     protected ComputerLauncher createLauncher(MacHost host, MacUser user) {
         MacJNLPLauncher launcher = new MacJNLPLauncher(host, user, jenkinsUrl)
-        launcher.setWebSocket(webSocket)
+        if(webSocket) {
+            launcher.setWebSocket(webSocket.booleanValue())
+        }
         return launcher
     }
 
@@ -126,7 +132,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
                     listener.logger.print("Launching entry point cmd")
                     SSHCommand.launchPreLaunchCommand(host, user)
                 }
-                SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac(), isWebSocket())
+                SSHCommand.jnlpConnect(host, user, jenkinsUrl, computer.getJnlpMac())
             }catch(Exception e) {
                 launched = false
                 String message = String.format("Error while connecting computer %s due to error %s ",
