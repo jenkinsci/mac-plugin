@@ -2,6 +2,8 @@ package fr.edf.jenkins.plugins.mac.connector
 
 
 import java.time.Instant
+import java.util.logging.Level
+import java.util.logging.Logger
 
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.jenkinsci.Symbol
@@ -21,8 +23,11 @@ import hudson.slaves.ComputerLauncher
 import hudson.slaves.JNLPLauncher
 import hudson.slaves.SlaveComputer
 import jenkins.model.Jenkins
+import jenkins.websocket.WebSockets
 
 class MacComputerJNLPConnector extends MacComputerConnector {
+
+    private static final Logger LOGGER = Logger.getLogger(MacComputerJNLPConnector.name)
 
     private Boolean webSocket = Boolean.FALSE
     private String jenkinsUrl
@@ -63,32 +68,6 @@ class MacComputerJNLPConnector extends MacComputerConnector {
         }
     }
 
-    //    /**
-    //     * Descriptor of MacComputerJNLPConnector
-    //     * @see src/main/resources/fr/edf/jenkins/plugins/mac/connector/MacComputerJNLPConnector/config.groovy
-    //     * @author Mathieu Delrocq
-    //     *
-    //     */
-    //    @Extension
-    //    public static final class DescriptorImplJNLP extends Descriptor<MacComputerJNLPConnector> {
-    //
-    //        /**
-    //         * Check if Jenkins support webSocket
-    //         *
-    //         * @param webSocket
-    //         * @return FormValidation
-    //         */
-    //        @POST
-    //        public FormValidation doCheckWebSocket(@QueryParameter boolean webSocket) {
-    //            if (webSocket) {
-    //                if (!WebSockets.isSupported()) {
-    //                    return FormValidation.error("WebSocket support is not enabled in this Jenkins installation");
-    //                }
-    //            }
-    //            return FormValidation.ok();
-    //        }
-    //    }
-
     /**
      * {@inheritDoc}
      */
@@ -96,7 +75,11 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     protected ComputerLauncher createLauncher(MacHost host, MacUser user) {
         MacJNLPLauncher launcher = new MacJNLPLauncher(host, user, jenkinsUrl)
         if(webSocket) {
-            launcher.setWebSocket(webSocket.booleanValue())
+            if(!WebSockets.isSupported()) {
+                LOGGER.log(Level.WARNING, "WebSocket support is not enabled in this Jenkins installation, the agent will connect on TCP port for inbound agents")
+            } else {
+                launcher.setWebSocket(webSocket.booleanValue())
+            }
         }
         return launcher
     }
