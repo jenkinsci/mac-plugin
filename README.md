@@ -139,7 +139,7 @@ It is possible to run a script on the Mac with this field.
 <img src="https://zupimages.net/up/21/23/05ub.png" width="750"/>
 
 ### Web Socket
-Since v1.3.1, a mac cloud can be set to connect agents with [WebSocket](https://www.jenkins.io/blog/2020/02/02/web-socket/).
+Since v1.3.1, the agents can be set to connect with [WebSocket](https://www.jenkins.io/blog/2020/02/02/web-socket/).
 
 The option is available in Mac Cloud settings :
 
