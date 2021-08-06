@@ -2,6 +2,8 @@ package fr.edf.jenkins.plugins.mac.connector
 
 
 import java.time.Instant
+import java.util.logging.Level
+import java.util.logging.Logger
 
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.jenkinsci.Symbol
@@ -21,23 +23,37 @@ import hudson.slaves.ComputerLauncher
 import hudson.slaves.JNLPLauncher
 import hudson.slaves.SlaveComputer
 import jenkins.model.Jenkins
+import jenkins.websocket.WebSockets
 
 class MacComputerJNLPConnector extends MacComputerConnector {
 
+    private static final Logger LOGGER = Logger.getLogger(MacComputerJNLPConnector.name)
+
+    private Boolean webSocket = Boolean.FALSE
     private String jenkinsUrl
 
     @DataBoundConstructor
-    public MacComputerJNLPConnector(String jenkinsUrl) {
+    public MacComputerJNLPConnector(Boolean webSocket, String jenkinsUrl) {
+        this.webSocket = webSocket
         this.jenkinsUrl = jenkinsUrl
+    }
+
+    public Boolean getWebSocket() {
+        return webSocket
+    }
+
+    @DataBoundSetter
+    public void setWebSocket(Boolean webSocket) {
+        this.webSocket = webSocket
+    }
+
+    public String getJenkinsUrl() {
+        return jenkinsUrl
     }
 
     @DataBoundSetter
     public void setJenkinsUrl(String jenkinsUrl){
         this.jenkinsUrl = jenkinsUrl
-    }
-
-    public String getJenkinsUrl() {
-        return jenkinsUrl
     }
 
     @Extension @Symbol("jnlp")
@@ -57,7 +73,15 @@ class MacComputerJNLPConnector extends MacComputerConnector {
      */
     @Override
     protected ComputerLauncher createLauncher(MacHost host, MacUser user) {
-        return new MacJNLPLauncher(host, user, jenkinsUrl)
+        MacJNLPLauncher launcher = new MacJNLPLauncher(host, user, jenkinsUrl)
+        if(webSocket) {
+            if(!WebSockets.isSupported()) {
+                LOGGER.log(Level.WARNING, "WebSocket support is not enabled in this Jenkins installation, the agent will connect on TCP port for inbound agents")
+            } else {
+                launcher.setWebSocket(webSocket.booleanValue())
+            }
+        }
+        return launcher
     }
 
     private static class MacJNLPLauncher extends JNLPLauncher {
