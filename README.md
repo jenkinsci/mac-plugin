@@ -48,7 +48,9 @@ This plugin has been tested against macOS 10.14 Mojave and macOS 10.15 Catalina 
 
 ### Jenkins
 
-'TCP port for inbound agents' must be enabled in Global Security settings or WebSocket must be supported by Jenkins (see [Web Socket](#web-socket))
+'TCP port for inbound agents' must be enabled in Global Security settings.
+
+If not, WebSocket must be supported by Jenkins and activated in the agents (see [Web Socket](#web-socket))
 
 ### MacOS
 
