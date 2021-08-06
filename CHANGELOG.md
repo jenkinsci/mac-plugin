@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.3.1] - 06/08/2021
+
+### Added
+* WebSockets access for inbound agents (see [JEP-222](https://github.com/jenkinsci/jep/blob/master/jep/222/README.adoc#inbound-agents))
+* Table of Content in README
+
+### Fixed
+* MissingMethodException on Pre launch command field as reported on [Gitter](https://gitter.im/jenkinsci/mac-plugin?at=60ef09aeec10653d5a3def77)
+* Java 8 compatibility
+* Regression on displaying Jenkins Url field's value in cloud configuration
+
 ## [v1.3.0] - 14/06/2021
 
 ### Added
