@@ -87,7 +87,8 @@ class SSHCommand {
      * @param username
      * @param macHost
      */
-    static void stopUserProcess(String username, SSHGlobalConnectionConfiguration connectionConfig) {
+    @Restricted(NoExternalUse)
+    private static void stopUserProcess(String username, SSHGlobalConnectionConfiguration connectionConfig) {
         try {
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.STOP_USER_PROCESS, username)))
         } catch (Exception e) {
