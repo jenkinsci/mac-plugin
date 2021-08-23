@@ -81,6 +81,20 @@ class SSHCommand {
         }
     }
 
+
+    /**
+     * Stop all processes running with the given user
+     * @param username
+     * @param macHost
+     */
+    static void stopUserProcess(String username, SSHGlobalConnectionConfiguration connectionConfig) {
+        try {
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, false, String.format(Constants.STOP_USER_PROCESS, username)))
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Unable to kill all processes of the user " + username, e)
+        }
+    }
+
     /**
      * Delete the given user in parameter
      * @param username
@@ -93,6 +107,7 @@ class SSHCommand {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
+            stopUserProcess(username, connectionConfig)
             LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
             TimeUnit.SECONDS.sleep(5)
             if(isUserExist(connectionConfig, username)) {
