@@ -51,7 +51,7 @@ class Constants {
 
     /** dscl . list /Users | grep -v ^_ | grep [username_pattern] */
     public static final String LIST_USERS = "dscl . list /Users | grep -v ^_ | grep %s"
-    
+
     /** mkdir [dir_name] */
     public static final String CREATE_DIR = "mkdir %s"
 
@@ -62,8 +62,11 @@ class Constants {
     /** keychains/ */
     public static final String KEYCHAIN_FOLDER = "keychains/"
 
-    /** /Users/%s/Library/Keychains/ */
+    /** /Users/[username]/Library/Keychains/ */
     public static final String KEYCHAIN_DESTINATION_FOLDER = "/Users/%s/Library/Keychains/"
+
+    /** sudo pkill -u [username] * */
+    public static final String KILL_USER_PROCESS = "sudo pkill -u %s *"
 
     //     Command for grouping users on a mac (not used but keep for potential evol)
     //    /** sudo dseditgroup -o create %s */
