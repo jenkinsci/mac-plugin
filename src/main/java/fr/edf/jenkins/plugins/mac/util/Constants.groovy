@@ -65,8 +65,8 @@ class Constants {
     /** /Users/[username]/Library/Keychains/ */
     public static final String KEYCHAIN_DESTINATION_FOLDER = "/Users/%s/Library/Keychains/"
 
-    /** sudo pkill -u [username] * */
-    public static final String STOP_USER_PROCESS = "sudo pkill -u %s *"
+    /** sudo pkill -u [username] */
+    public static final String STOP_USER_PROCESS = "sudo pkill -u %s"
 
     //     Command for grouping users on a mac (not used but keep for potential evol)
     //    /** sudo dseditgroup -o create %s */
