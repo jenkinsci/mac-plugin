@@ -80,7 +80,7 @@ Create an user on the Mac with administrator privileges. It will be your connect
 Add sudo NOPASSWD to this user in /etc/sudoers :
 [see how to configure sudo without password](https://www.robertshell.com/blog/2016/12/3/use-sudo-command-osx-without-password)
 
-To maximize security, you can configure it only for "chmod" and "sysadminctl" command used by the plugin :
+To maximize security, you can configure it only for "chmod", "sysadminctl" and "pkill" commands used by the plugin :
 
 `[USERNAME] ALL = NOPASSWD: /usr/sbin/sysadminctl -addUser mac-?????????? -password ??????????, /usr/sbin/sysadminctl -deleteUser mac-??????????, /bin/chmod -R 700 /Users/mac-??????????/, /usr/bin/pkill -u mac-??????????`
 
