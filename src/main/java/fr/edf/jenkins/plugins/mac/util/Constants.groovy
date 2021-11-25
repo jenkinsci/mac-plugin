@@ -60,7 +60,7 @@ class Constants {
     public static final String CREATE_USER_NFSHOMEDIR = "dscl . -create /Users/%s NFSHomeDirectory /Users/%s"
 
     /** chown -R %s:staff /Users/[username] */
-    public static final String CHOWN_USER_DIR = "chown -R %s:staff /Users/%s"
+    public static final String CHOWN_USER_DIR = "chown -R %s:$STAFF_GROUP /Users/%s"
 
     /** dscl . -passwd /Users/[username] [password] */
     public static final String CREATE_USER_PASSWORD_DSCL = "dscl . -passwd /Users/%s %s"
