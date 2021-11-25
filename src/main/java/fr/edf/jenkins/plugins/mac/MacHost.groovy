@@ -8,6 +8,7 @@ import org.kohsuke.stapler.QueryParameter
 import org.kohsuke.stapler.verb.POST
 
 import fr.edf.jenkins.plugins.mac.ssh.key.verifiers.MacHostKeyVerifier
+import fr.edf.jenkins.plugins.mac.util.Constants
 import fr.edf.jenkins.plugins.mac.util.FormUtils
 import hudson.Extension
 import hudson.model.Describable
@@ -44,10 +45,12 @@ class MacHost implements Describable<MacHost> {
     List<MacEnvVar> envVars = new ArrayList<>()
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
+    String userManagementTool
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key, String preLaunchCommands) {
+    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
+    String preLaunchCommands, String userManagementTool) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -64,6 +67,7 @@ class MacHost implements Describable<MacHost> {
         this.fileCredentialsId = fileCredentialsId
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
+        this.userManagementTool = userManagementTool
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -150,6 +154,15 @@ class MacHost implements Describable<MacHost> {
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommandsString)
     }
 
+    String getUserManagementTool() {
+        return userManagementTool
+    }
+
+    @DataBoundSetter
+    void setUserManagementTool(String userManagementTool) {
+        this.userManagementTool = userManagementTool
+    }
+
     /**
      * Check null or empty and build an array with '\n' separator
      *
@@ -233,6 +246,18 @@ class MacHost implements Describable<MacHost> {
         @POST
         ListBoxModel doFillFileCredentialsIdItems(@QueryParameter String fileCredentialsId, @AncestorInPath Item ancestor) {
             return FormUtils.newFileCredentialsItemsListBoxModel(fileCredentialsId, ancestor)
+        }
+
+        /**
+         * Return ListBoxModel of UserManagementToolItems
+         * @return ListBoxModel
+         */
+        @POST
+        ListBoxModel doFillUserManagementToolItems() {
+            ListBoxModel listbox =  new ListBoxModel()
+            listbox.add(Constants.SYSADMINCTL)
+            listbox.add(Constants.DSCL)
+            return listbox
         }
 
         /**

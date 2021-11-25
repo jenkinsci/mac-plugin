@@ -35,6 +35,13 @@ class Constants {
     /** "whoami" */
     public static final String WHOAMI = "whoami"
 
+    //User Management Tool
+    /** sysadminctl */
+    public static final String SYSADMINCTL = "sysadminctl"
+
+    /** dscl */
+    public static final String DSCL = "dscl"
+
     /** "sudo sysadminctl -addUser [username] -password [password]" */
     public static final String CREATE_USER = "sudo sysadminctl -addUser %s -password %s"
 
@@ -70,7 +77,7 @@ class Constants {
 
     /** "sudo ssysadminctl -deleteUser [username]" */
     public static final String DELETE_USER = "sudo sysadminctl -deleteUser %s"
-    
+
     /** rm -rf /Users/[username] */
     public static final String DELETE_USER_HOMEDIR = "rm -rf /Users/%s"
 
