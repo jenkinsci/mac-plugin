@@ -27,6 +27,10 @@ class Constants {
     /** jnlpJars/remoting.jar */
     public static final String REMOTING_JAR_PATH = "jnlpJars/remoting.jar"
 
+    //Group on MacOs
+    /** staff */
+    public static final String STAFF_GROUP = "staff"
+
     // SSH Commands
     /** "whoami" */
     public static final String WHOAMI = "whoami"
@@ -34,11 +38,50 @@ class Constants {
     /** "sudo sysadminctl -addUser [username] -password [password]" */
     public static final String CREATE_USER = "sudo sysadminctl -addUser %s -password %s"
 
-    /** "sudo sysadminctl -deleteUser [username]" */
-    public static final String DELETE_USER = "sudo sysadminctl -deleteUser %s"
+    /** && */
+    public static final String COMMAND_JOINER = " && "
 
-    /** chmod -R u=rwx,g=rx,o=r /Users/[username]/ */
+    /** dscl . -create /Users/[username] */
+    public static final String CREATE_USER_DSCL = "dscl . -create /Users/%s"
+
+    /** dscl . -create /Users/[username] UserShell /bin/zsh */
+    public static final String CREATE_USER_SHELL_DSCL = "dscl . -create /Users/%s UserShell /bin/zsh"
+
+    /** dscl . -create /Users/[username] UniqueID \$(echo `dscl . -list /Users UniqueID | awk '{ print \$2 }' | sort -g | tail -n1` + 1 | bc) */
+    public static final String CREATE_USER_UID_DSCL = "dscl . -create /Users/%s UniqueID \$(echo `dscl . -list /Users UniqueID | awk '{ print \$2 }' | sort -g | tail -n1` + 1 | bc)"
+
+    /** dscl . -create /Users/[username] PrimaryGroupID 20 */
+    public static final String CREATE_USER_PRIMARYGROUPID_DSCL = "dscl . -create /Users/%s PrimaryGroupID 20"
+
+    /** cp -R /System/Library/User\\ Template/Non_localized /Users/[username] && cp -R /System/Library/User\\ Template/English.lproj /Users/[username] */
+    public static final String CREATE_USER_HOMEDIR = "cp -R /System/Library/User\\ Template/Non_localized /Users/%s && cp -R /System/Library/User\\ Template/English.lproj /Users/%s"
+
+    /** dscl . -create /Users/%s NFSHomeDirectory /Users/[username] */
+    public static final String CREATE_USER_NFSHOMEDIR = "dscl . -create /Users/%s NFSHomeDirectory /Users/%s"
+
+    /** chown -R %s:staff /Users/[username] */
+    public static final String CHOWN_USER_DIR = "chown -R %s:staff /Users/%s"
+
+    /** dscl . -passwd /Users/[username] [password] */
+    public static final String CREATE_USER_PASSWORD_DSCL = "dscl . -passwd /Users/%s %s"
+
+    /** dscl . -delete /Users/[username] */
+    public static final String DELETE_USER_DSCL = "dscl . -delete /Users/%s";
+
+    /** "sudo ssysadminctl -deleteUser [username]" */
+    public static final String DELETE_USER = "sudo sysadminctl -deleteUser %s"
+    
+    /** rm -rf /Users/[username] */
+    public static final String DELETE_USER_HOMEDIR = "rm -rf /Users/%s"
+
+    /** "sudo chmod -R u=rwx,g=rx,o=r /Users/[username]/" */
     public static final String CHANGE_RIGHTS_ON_USER = "sudo chmod -R 700 /Users/%s/"
+
+    /** "sudo mkdir /Users/[username] */
+    public static final String CREATE_HOME_FOLDER = "sudo mkdir /Users/%s"
+
+    /** "sudo chown [username]:[groupname] /Users/[username] */
+    public static final String CHANGE_HOME_OWNER = "sudo chown %s:%s /Users/%s"
 
     /** curl --retry 10 --verbose [remoting.jar_url] > remoting.jar */
     public static final String GET_REMOTING_JAR = "curl --retry 5 --retry-delay 10 --verbose %s > remoting.jar"
@@ -51,9 +94,9 @@ class Constants {
 
     /** dscl . list /Users | grep -v ^_ | grep [username_pattern] */
     public static final String LIST_USERS = "dscl . list /Users | grep -v ^_ | grep %s"
-    
+
     /** mkdir [dir_name] */
-    public static final String CREATE_DIR = "mkdir %s"
+    public static final String CREATE_DIR = "mkdir -p %s"
 
     //regex
     public static final String REGEX_NEW_LINE = "\\r?\\n|\\r"
