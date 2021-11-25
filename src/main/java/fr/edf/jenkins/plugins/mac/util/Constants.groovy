@@ -63,7 +63,7 @@ class Constants {
     /** cp -R /System/Library/User\\ Template/Non_localized /Users/[username] && cp -R /System/Library/User\\ Template/English.lproj /Users/[username] */
     public static final String CREATE_USER_HOMEDIR = "cp -R /System/Library/User\\ Template/Non_localized /Users/%s && cp -R /System/Library/User\\ Template/English.lproj /Users/%s"
 
-    /** dscl . -create /Users/%s NFSHomeDirectory /Users/[username] */
+    /** dscl . -create /Users/[username] NFSHomeDirectory /Users/[username] */
     public static final String CREATE_USER_NFSHOMEDIR = "dscl . -create /Users/%s NFSHomeDirectory /Users/%s"
 
     /** chown -R %s:staff /Users/[username] */

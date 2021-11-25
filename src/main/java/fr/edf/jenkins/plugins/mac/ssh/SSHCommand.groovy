@@ -241,7 +241,7 @@ class SSHCommand {
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.CREATE_USER_HOMEDIR, username, username))
                 .append(Constants.COMMAND_JOINER)
-                .append(String.format(Constants.CREATE_USER_NFSHOMEDIR, username))
+                .append(String.format(Constants.CREATE_USER_NFSHOMEDIR, username, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.CHOWN_USER_DIR, username))
                 .append(Constants.COMMAND_JOINER)
