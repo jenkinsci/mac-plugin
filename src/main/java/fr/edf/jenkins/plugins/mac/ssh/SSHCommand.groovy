@@ -230,7 +230,7 @@ class SSHCommand {
      * @param password
      * @return command as String
      */
-    private static String buildCreateUserCmd(String username, String password) {
+    protected static String buildCreateUserCmd(String username, String password) {
         return new StringBuilder(String.format(Constants.CREATE_USER_DSCL, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.CREATE_USER_SHELL_DSCL, username))
@@ -243,7 +243,7 @@ class SSHCommand {
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.CREATE_USER_NFSHOMEDIR, username, username))
                 .append(Constants.COMMAND_JOINER)
-                .append(String.format(Constants.CHOWN_USER_DIR, username))
+                .append(String.format(Constants.CHOWN_USER_DIR, username, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.CREATE_USER_PASSWORD_DSCL, username, password)).toString()
     }
@@ -254,7 +254,7 @@ class SSHCommand {
      * @param username
      * @return command as String
      */
-    private static String buildDeleteUserCmd(String username) {
+    protected static String buildDeleteUserCmd(String username) {
         return new StringBuilder(String.format(Constants.DELETE_USER_DSCL, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.DELETE_USER_HOMEDIR, username)).toString()

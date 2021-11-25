@@ -229,4 +229,20 @@ class SSHCommandTest extends Specification {
         SSHCommandException sshe = thrown()
         sshe.getMessage().contains("Cannot transfert keychain file")
     }
+    
+    def "buildCreateUserCmd should works"() {
+        when:
+        SSHCommand.buildCreateUserCmd("username", "password")
+        
+        then:
+        notThrown Exception
+    }
+
+    def "buildDeleteUserCmd should works"() {
+        when:
+        SSHCommand.buildDeleteUserCmd("username")
+        
+        then:
+        notThrown Exception
+    }
 }
