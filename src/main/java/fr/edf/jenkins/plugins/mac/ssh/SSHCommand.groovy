@@ -255,7 +255,9 @@ class SSHCommand {
      * @return command as String
      */
     protected static String buildDeleteUserCmd(String username) {
-        return new StringBuilder(String.format(Constants.DELETE_USER_DSCL, username))
+        return new StringBuilder(String.format(Constants.KILL_ALL_USER_PROCESSES, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.DELETE_USER_DSCL, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.DELETE_USER_HOMEDIR, username)).toString()
     }

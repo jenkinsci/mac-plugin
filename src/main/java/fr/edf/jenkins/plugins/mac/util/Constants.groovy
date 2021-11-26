@@ -75,8 +75,11 @@ class Constants {
     /** sudo dscl . -passwd /Users/[username] [password] */
     public static final String CREATE_USER_PASSWORD_DSCL = "sudo dscl . -passwd /Users/%s %s"
 
+    /** sudo pkill -u %s */
+    public static final String KILL_ALL_USER_PROCESSES = "sudo pkill -u %s"
+
     /** sudo dscl . -delete /Users/[username] */
-    public static final String DELETE_USER_DSCL = "sudo dscl . -delete /Users/%s";
+    public static final String DELETE_USER_DSCL = "sudo dscl . -delete /Users/%s"
 
     /** sudo rm -rf /Users/[username] */
     public static final String DELETE_USER_HOMEDIR = "sudo rm -rf /Users/%s"
