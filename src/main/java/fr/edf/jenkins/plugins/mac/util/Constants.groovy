@@ -45,41 +45,41 @@ class Constants {
     /** "sudo sysadminctl -addUser [username] -password [password]" */
     public static final String CREATE_USER = "sudo sysadminctl -addUser %s -password %s"
 
-    /** && */
-    public static final String COMMAND_JOINER = " && "
-
-    /** dscl . -create /Users/[username] */
-    public static final String CREATE_USER_DSCL = "dscl . -create /Users/%s"
-
-    /** dscl . -create /Users/[username] UserShell /bin/zsh */
-    public static final String CREATE_USER_SHELL_DSCL = "dscl . -create /Users/%s UserShell /bin/zsh"
-
-    /** dscl . -create /Users/[username] UniqueID \$(echo `dscl . -list /Users UniqueID | awk '{ print \$2 }' | sort -g | tail -n1` + 1 | bc) */
-    public static final String CREATE_USER_UID_DSCL = "dscl . -create /Users/%s UniqueID \$(echo `dscl . -list /Users UniqueID | awk '{ print \$2 }' | sort -g | tail -n1` + 1 | bc)"
-
-    /** dscl . -create /Users/[username] PrimaryGroupID 20 */
-    public static final String CREATE_USER_PRIMARYGROUPID_DSCL = "dscl . -create /Users/%s PrimaryGroupID 20"
-
-    /** cp -R /System/Library/User\\ Template/Non_localized /Users/[username] && cp -R /System/Library/User\\ Template/English.lproj /Users/[username] */
-    public static final String CREATE_USER_HOMEDIR = "cp -R /System/Library/User\\ Template/Non_localized /Users/%s && cp -R /System/Library/User\\ Template/English.lproj /Users/%s"
-
-    /** dscl . -create /Users/[username] NFSHomeDirectory /Users/[username] */
-    public static final String CREATE_USER_NFSHOMEDIR = "dscl . -create /Users/%s NFSHomeDirectory /Users/%s"
-
-    /** chown -R [username]:staff /Users/[username] */
-    public static final String CHOWN_USER_DIR = "chown -R %s:$STAFF_GROUP /Users/%s"
-
-    /** dscl . -passwd /Users/[username] [password] */
-    public static final String CREATE_USER_PASSWORD_DSCL = "dscl . -passwd /Users/%s %s"
-
-    /** dscl . -delete /Users/[username] */
-    public static final String DELETE_USER_DSCL = "dscl . -delete /Users/%s";
-
     /** "sudo ssysadminctl -deleteUser [username]" */
     public static final String DELETE_USER = "sudo sysadminctl -deleteUser %s"
 
-    /** rm -rf /Users/[username] */
-    public static final String DELETE_USER_HOMEDIR = "rm -rf /Users/%s"
+    /** && */
+    public static final String COMMAND_JOINER = " && "
+
+    /** sudo dscl . -create /Users/[username] */
+    public static final String CREATE_USER_DSCL = "sudo dscl . -create /Users/%s"
+
+    /** sudo dscl . -create /Users/[username] UserShell /bin/zsh */
+    public static final String CREATE_USER_SHELL_DSCL = "sudo dscl . -create /Users/%s UserShell /bin/zsh"
+
+    /** sudo dscl . -create /Users/[username] UniqueID \$(echo `dscl . -list /Users UniqueID | awk '{ print \$2 }' | sort -g | tail -n1` + 1 | bc) */
+    public static final String CREATE_USER_UID_DSCL = "sudo dscl . -create /Users/%s UniqueID \$(echo `dscl . -list /Users UniqueID | awk '{ print \$2 }' | sort -g | tail -n1` + 1 | bc)"
+
+    /** sudo dscl . -create /Users/[username] PrimaryGroupID 20 */
+    public static final String CREATE_USER_PRIMARYGROUPID_DSCL = "sudo dscl . -create /Users/%s PrimaryGroupID 20"
+
+    /** sudo cp -R /System/Library/User\\ Template/Non_localized /Users/[username] && sudo cp -R /System/Library/User\\ Template/English.lproj /Users/[username] */
+    public static final String CREATE_USER_HOMEDIR = "sudo cp -R /System/Library/User\\ Template/Non_localized /Users/%s && sudo cp -R /System/Library/User\\ Template/English.lproj /Users/%s"
+
+    /** sudo dscl . -create /Users/[username] NFSHomeDirectory /Users/[username] */
+    public static final String CREATE_USER_NFSHOMEDIR = "sudo dscl . -create /Users/%s NFSHomeDirectory /Users/%s"
+
+    /** sudo chown -R [username]:staff /Users/[username] */
+    public static final String CHOWN_USER_DIR = "sudo chown -R %s:$STAFF_GROUP /Users/%s"
+
+    /** sudo dscl . -passwd /Users/[username] [password] */
+    public static final String CREATE_USER_PASSWORD_DSCL = "sudo dscl . -passwd /Users/%s %s"
+
+    /** sudo dscl . -delete /Users/[username] */
+    public static final String DELETE_USER_DSCL = "sudo dscl . -delete /Users/%s";
+
+    /** sudo rm -rf /Users/[username] */
+    public static final String DELETE_USER_HOMEDIR = "sudo rm -rf /Users/%s"
 
     /** "sudo chmod -R u=rwx,g=rx,o=r /Users/[username]/" */
     public static final String CHANGE_RIGHTS_ON_USER = "sudo chmod -R 700 /Users/%s/"
