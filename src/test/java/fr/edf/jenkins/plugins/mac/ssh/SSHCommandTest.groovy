@@ -55,6 +55,24 @@ class SSHCommandTest extends Specification {
         notThrown Exception
     }
 
+    def "createUserOnMac with null userManagementTool should not throw exception and use sysadminctl"() {
+        setup:
+        String label = "label"
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+        macHost.setUserManagementTool(null)
+        MacUser user = SSHCommand.generateUser()
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, user.username)) >> user.username
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)) >> "OK"
+
+        when:
+        SSHCommand.createUserOnMac(macHost, user)
+
+        then:
+        notThrown Exception
+    }
+
     def "createUserOnMac should throw exception because user does not exist after creation"() {
         setup:
         String label = "label"
@@ -92,10 +110,27 @@ class SSHCommandTest extends Specification {
         setup:
         String username = "mac_user_test"
         MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+        macHost.setUserManagementTool(Constants.DSCL)
         String dsclCommand = SSHCommand.buildDeleteUserDsclCmd(username)
 
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, dsclCommand) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, username)) >> ""
+
+        when:
+        SSHCommand.deleteUserOnMac(username, macHost)
+
+        then:
+        notThrown Exception
+    }
+
+    def "deleteUserOnMac with null userManagementTool should not throw exception and use sysadminctl"() {
+        setup:
+        String username = "mac_user_test"
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.DELETE_USER, username)) >> "OK"
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, username)) >> ""
 
         when:
