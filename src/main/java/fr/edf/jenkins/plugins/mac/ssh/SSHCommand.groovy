@@ -54,7 +54,7 @@ class SSHCommand {
     }
 
     /**
-     * Create an user with the command sysadminctl
+     * Create the given user on the given Mac host
      * @param macHost
      * @param user
      * @return a MacUser
@@ -66,8 +66,15 @@ class SSHCommand {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
-            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())))
-            TimeUnit.SECONDS.sleep(5)
+
+            if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
+                LOGGER.log(Level.FINE, "Create the user $user.username with dscl")
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildCreateUserDsclCmd(user.username, user.password.getPlainText())))
+            } else {
+                LOGGER.log(Level.FINE, "Create the user $user.username with sysadminctl")
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())))
+                TimeUnit.SECONDS.sleep(5)
+            }
             if(!isUserExist(connectionConfig, user.username)) {
                 throw new Exception(String.format("The user %s wasn't created after verification", user.username))
             }
@@ -93,7 +100,15 @@ class SSHCommand {
             SSHGlobalConnectionConfiguration connectionConfig = new SSHGlobalConnectionConfiguration(credentialsId: macHost.credentialsId, port: macHost.port,
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
-            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
+
+            if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
+                LOGGER.log(Level.FINE, "Delete the user $username with dscl")
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildDeleteUserDsclCmd(username)))
+            }else {
+                LOGGER.log(Level.FINE, "Delete the user $username with sysadminctl")
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
+            }
+
             TimeUnit.SECONDS.sleep(5)
             if(isUserExist(connectionConfig, username)) {
                 throw new Exception(String.format("The user %s still exist after verification", username))
@@ -205,5 +220,44 @@ class SSHCommand {
             LOGGER.log(Level.SEVERE, message, e)
             throw new SSHCommandException(message, e)
         }
+    }
+
+    /**
+     * Build a single command to create the user with the password using dscl
+     * 
+     * @param username
+     * @param password
+     * @return command as String
+     */
+    protected static String buildCreateUserDsclCmd(String username, String password) {
+        return new StringBuilder(String.format(Constants.CREATE_USER_DSCL, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CREATE_USER_SHELL_DSCL, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CREATE_USER_UID_DSCL, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CREATE_USER_PRIMARYGROUPID_DSCL, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CREATE_USER_HOMEDIR, username, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CREATE_USER_NFSHOMEDIR, username, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CHOWN_USER_DIR, username, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.CREATE_USER_PASSWORD_DSCL, username, password)).toString()
+    }
+
+    /**
+     * Build a single command to delete the given user and his workdir using dscl
+     * 
+     * @param username
+     * @return command as String
+     */
+    protected static String buildDeleteUserDsclCmd(String username) {
+        return new StringBuilder(String.format(Constants.KILL_ALL_USER_PROCESSES, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.DELETE_USER_DSCL, username))
+                .append(Constants.COMMAND_JOINER)
+                .append(String.format(Constants.DELETE_USER_HOMEDIR, username)).toString()
     }
 }

@@ -1,6 +1,7 @@
 package fr.edf.jenkins.plugins.mac.MacHost
 
 import fr.edf.jenkins.plugins.mac.Messages
+import fr.edf.jenkins.plugins.mac.util.Constants
 
 def f = namespace(lib.FormTagLib)
 def c = namespace(lib.CredentialsTagLib)
@@ -50,6 +51,10 @@ f.advanced(title:Messages.Host_Details()) {
 
     f.entry(title: _(Messages.Host_AgentConnectionTimeout()), field: 'agentConnectionTimeout') {
         f.number(clazz: 'required', default: 15, min: 15)
+    }
+
+    f.entry(title: _(Messages.Host_UserManagementTool()), field: 'userManagementTool') {
+        f.select(default: Constants.SYSADMINCTL)
     }
 
     f.block() {

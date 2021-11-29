@@ -36,6 +36,43 @@ class SSHCommandTest extends Specification {
         notThrown Exception
     }
 
+    def "createUserOnMac with dscl should not throw exception"() {
+        setup:
+        String label = "label"
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+        macHost.setUserManagementTool(Constants.DSCL)
+        MacUser user = SSHCommand.generateUser()
+        String dsclCommand = SSHCommand.buildCreateUserDsclCmd(user.username, user.password.getPlainText())
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, dsclCommand) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, user.username)) >> user.username
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)) >> "OK"
+
+        when:
+        SSHCommand.createUserOnMac(macHost, user)
+
+        then:
+        notThrown Exception
+    }
+
+    def "createUserOnMac with null userManagementTool should not throw exception and use sysadminctl"() {
+        setup:
+        String label = "label"
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+        macHost.setUserManagementTool(null)
+        MacUser user = SSHCommand.generateUser()
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, user.username)) >> user.username
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHANGE_RIGHTS_ON_USER, user.username)) >> "OK"
+
+        when:
+        SSHCommand.createUserOnMac(macHost, user)
+
+        then:
+        notThrown Exception
+    }
+
     def "createUserOnMac should throw exception because user does not exist after creation"() {
         setup:
         String label = "label"
@@ -59,7 +96,42 @@ class SSHCommandTest extends Specification {
         String username = "mac_user_test"
         MacHost macHost = Mock(MacHost)
         GroovySpy(SSHCommandLauncher, global:true)
-        2 * SSHCommandLauncher.executeCommand(_, true, _) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.DELETE_USER, username)) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, username)) >> ""
+
+        when:
+        SSHCommand.deleteUserOnMac(username, macHost)
+
+        then:
+        notThrown Exception
+    }
+
+    def "deleteUserOnMac with dscl should works"() {
+        setup:
+        String username = "mac_user_test"
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+        macHost.setUserManagementTool(Constants.DSCL)
+        String dsclCommand = SSHCommand.buildDeleteUserDsclCmd(username)
+
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, dsclCommand) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, username)) >> ""
+
+        when:
+        SSHCommand.deleteUserOnMac(username, macHost)
+
+        then:
+        notThrown Exception
+    }
+
+    def "deleteUserOnMac with null userManagementTool should not throw exception and use sysadminctl"() {
+        setup:
+        String username = "mac_user_test"
+        MacHost macHost = MacPojoBuilder.buildMacHost().get(0)
+
+        GroovySpy(SSHCommandLauncher, global:true)
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.DELETE_USER, username)) >> "OK"
+        1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CHECK_USER_EXIST, username)) >> ""
 
         when:
         SSHCommand.deleteUserOnMac(username, macHost)
@@ -228,5 +300,21 @@ class SSHCommandTest extends Specification {
         then:
         SSHCommandException sshe = thrown()
         sshe.getMessage().contains("Cannot transfert keychain file")
+    }
+
+    def "buildCreateUserCmd should works"() {
+        when:
+        SSHCommand.buildCreateUserDsclCmd("username", "password")
+
+        then:
+        notThrown Exception
+    }
+
+    def "buildDeleteUserCmd should works"() {
+        when:
+        SSHCommand.buildDeleteUserDsclCmd("username")
+
+        then:
+        notThrown Exception
     }
 }
