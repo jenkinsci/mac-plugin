@@ -105,8 +105,10 @@ class SSHCommand {
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
 
             if(macHost.userManagementTool.equals(Constants.DSCL)) {
+                LOGGER.log(Level.FINE, "Delete the user with dscl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildDeleteUserCmd(username)))
             }else {
+                LOGGER.log(Level.FINE, "Delete the user with sysadminctl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
             }
 
