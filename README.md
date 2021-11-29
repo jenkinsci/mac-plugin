@@ -25,6 +25,7 @@ It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
     - [Environment variables](#environment-variables)
     - [Pre-launch commands](#pre-launch-commands)
     - [Web Socket](#web-socket)
+    - [User Management Tool](#user-management-tool)
 - [Logs configuration](#logs-configuration)
 - [Execution](#execution)
 - [Team](#team)
@@ -180,11 +181,11 @@ You can see it on the home page of Jenkins :
 <img src="https://zupimages.net/up/19/47/fkmf.png" width="300"/>
 
 ## Troubleshooting
-* Zombie process : Sometimes, "sysadminctl" tool continue to run after task executed. After a while, it can saturate MacOS (in our case we had +1000 process running). A script with the command "killall sysadminctl" should be run regulary.
-* During errors, users and/or home directories cannot be deleted. A clean of users and homedirs starting with "mac-" should be run regulary
+* Zombie process : Sometimes, "sysadminctl" tool continue to run after task executed. After a while, it can saturate MacOS (in our case we had +1000 process running). To prevent this, a script with the command "killall sysadminctl" should be run regulary.
+* Sometimes when an error happens, the users and/or home directories cannot be deleted. A clean of the users and homedirs starting with "mac-" should be run regulary.
 
 **Recommendation :**
-All Mac used with the plugin should be restarted at least one time a week to prevent theses problems. This script can be run during the restart to clean all uneeded users and process :
+All Mac used with the plugin should be rebooted at least one time a week to prevent theses problems. This script can be run during the reboot to clean all uneeded users and process :
 
 ```
 killall sysadminctl
