@@ -67,7 +67,7 @@ class SSHCommand {
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
 
-            if(macHost.userManagementTool.equals(Constants.DSCL)) {
+            if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
                 LOGGER.log(Level.FINE, "Create the user with dscl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildCreateUserCmd(user.username, user.password.getPlainText())))
             } else {
@@ -101,7 +101,7 @@ class SSHCommand {
             context: Jenkins.get(), host: macHost.host, connectionTimeout: macHost.connectionTimeout,
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
 
-            if(macHost.userManagementTool.equals(Constants.DSCL)) {
+            if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
                 LOGGER.log(Level.FINE, "Delete the user with dscl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildDeleteUserCmd(username)))
             }else {
