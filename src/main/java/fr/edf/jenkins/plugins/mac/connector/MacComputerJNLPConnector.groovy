@@ -75,10 +75,10 @@ class MacComputerJNLPConnector extends MacComputerConnector {
     protected ComputerLauncher createLauncher(MacHost host, MacUser user) {
         MacJNLPLauncher launcher = new MacJNLPLauncher(host, user, jenkinsUrl)
         if(webSocket) {
-            if(!WebSockets.isSupported()) {
-                LOGGER.log(Level.WARNING, "WebSocket support is not enabled in this Jenkins installation, the agent will connect on TCP port for inbound agents")
-            } else {
+            if(WebSockets.isSupported()) {
                 launcher.setWebSocket(webSocket.booleanValue())
+            } else {
+                LOGGER.log(Level.WARNING, "WebSocket support is not enabled in this Jenkins installation, the agent will connect on TCP port for inbound agents")
             }
         }
         return launcher
