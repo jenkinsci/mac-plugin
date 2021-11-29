@@ -72,12 +72,9 @@ class SSHCommand {
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildCreateUserCmd(user.username, user.password.getPlainText())))
             } else {
                 LOGGER.log(Level.FINE, "Create the user with sysadminctl")
-                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_HOME_FOLDER, user.username)))
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())))
-                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CHANGE_HOME_OWNER, user.username, Constants.STAFF_GROUP, user.username)))
                 TimeUnit.SECONDS.sleep(5)
             }
-
             if(!isUserExist(connectionConfig, user.username)) {
                 throw new Exception(String.format("The user %s wasn't created after verification", user.username))
             }
