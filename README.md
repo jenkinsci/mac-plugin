@@ -3,8 +3,6 @@
 # Mac Plugin
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins%2Fmac-plugin%2Fmaster)](https://ci.jenkins.io/job/Plugins/job/mac-plugin/job/master/)
 [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/mac.svg?color=blue)](https://plugins.jenkins.io/mac)
-[![Coverage Status](https://coveralls.io/repos/github/jenkinsci/mac-plugin/badge.svg?branch=master)](https://coveralls.io/github/jenkinsci/mac-plugin?branch=master)
-[![DepShield Badge](https://depshield.sonatype.org/badges/jenkinsci/mac-plugin/depshield.svg)](https://depshield.github.io)
 [![Join the chat at https://gitter.im/jenkinsci/mac-plugin](https://badges.gitter.im/jenkinsci/mac-plugin.svg)](https://gitter.im/jenkinsci/mac-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.
