@@ -84,9 +84,9 @@ To maximize security, you can configure it only for "chmod" and "sysadminctl" co
 
 `[USERNAME] ALL = NOPASSWD: /usr/sbin/sysadminctl -addUser mac-?????????? -password ??????????, /usr/sbin/sysadminctl -deleteUser mac-??????????, /bin/chmod -R 700 /Users/mac-??????????/`
 
-**Update for v1.3.2+ :**
+**Update for v1.4.0+ :**
 
-Since 1.3.2 it is possible to use "dscl" instead of "sysadminctl". To use the full functionnalities of the plugin, here is the new NOPASSWD configuration for the user :
+Since 1.4.0 it is possible to use "dscl" instead of "sysadminctl". To use the full functionnalities of the plugin, here is the new NOPASSWD configuration for the user :
 
 `[USERNAME] ALL = NOPASSWD: /usr/sbin/sysadminctl -addUser mac-?????????? -password ??????????, /usr/sbin/sysadminctl -deleteUser mac-??????????, /bin/chmod -R 700 /Users/mac-??????????/, /usr/sbin/chown mac-??????????\:staff /Users/mac-??????????, /bin/mkdir /Users/mac-??????????, /usr/bin/dscl . -create /Users/mac-??????????, /usr/bin/dscl . -create /Users/mac-?????????? UserShell /bin/zsh, /usr/bin/dscl . -create /Users/mac-?????????? UniqueID ???, /usr/bin/dscl . -create /Users/mac-?????????? PrimaryGroupID 20, /bin/cp -R /System/Library/User\ Template/Non_localized /Users/mac-??????????, /bin/cp -R /System/Library/User\ Template/English.lproj /Users/mac-??????????, /usr/bin/dscl . -create /Users/mac-?????????? NFSHomeDirectory /Users/mac-??????????, /usr/sbin/chown -R mac-??????????\:staff /Users/mac-??????????, /usr/bin/dscl . -passwd /Users/mac-?????????? ??????????, /usr/bin/pkill -u mac-??????????, /usr/bin/dscl . -delete /Users/mac-??????????, /bin/rm -rf /Users/mac-??????????`
 
@@ -152,7 +152,7 @@ The option is available in Mac Cloud settings :
 <img src="https://zupimages.net/up/21/31/nn4a.png" width="800"/>
 
 ### User Management Tool
-Since 1.3.2, it is possible to choose between "sysadminctl" or "dscl" for the users creation and deletion.
+Since 1.4.0, it is possible to choose between "sysadminctl" or "dscl" for the users creation and deletion.
 
 The option is available in Mac Cloud->Mac Host settings :
 
@@ -178,6 +178,22 @@ After configuration, when you run a job with a Mac Cloud label, it will create a
 You can see it on the home page of Jenkins :
 
 <img src="https://zupimages.net/up/19/47/fkmf.png" width="300"/>
+
+## Troubleshooting
+* Zombie process : Sometimes, "sysadminctl" tool continue to run after task executed. After a while, it can saturate MacOS (in our case we had +1000 process running). A script with the command "killall sysadminctl" should be run regulary.
+* During errors, users and/or home directories cannot be deleted. A clean of users and homedirs starting with "mac-" should be run regulary
+
+**Recommendation :**
+All Mac used with the plugin should be restarted at least one time a week to prevent theses problems. This script can be run during the restart to clean all uneeded users and process :
+
+```
+killall sysadminctl
+for user in `/usr/bin/dscl . -list /Users | grep mac-`; do
+    /usr/bin/dscl . -delete /Users/$user
+done
+
+cd /Users/ && ls | grep mac- | xargs rm –rf
+```
 
 ## Team
 
