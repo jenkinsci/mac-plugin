@@ -69,7 +69,7 @@ class SSHCommand {
 
             if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
                 LOGGER.log(Level.FINE, "Create the user with dscl")
-                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildCreateUserCmd(user.username, user.password.getPlainText())))
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildCreateUserDsclCmd(user.username, user.password.getPlainText())))
             } else {
                 LOGGER.log(Level.FINE, "Create the user with sysadminctl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())))
@@ -103,7 +103,7 @@ class SSHCommand {
 
             if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
                 LOGGER.log(Level.FINE, "Delete the user with dscl")
-                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildDeleteUserCmd(username)))
+                LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildDeleteUserDsclCmd(username)))
             }else {
                 LOGGER.log(Level.FINE, "Delete the user with sysadminctl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
@@ -223,13 +223,13 @@ class SSHCommand {
     }
 
     /**
-     * Build a single command to create the user with the password
+     * Build a single command to create the user with the password using dscl
      * 
      * @param username
      * @param password
      * @return command as String
      */
-    protected static String buildCreateUserCmd(String username, String password) {
+    protected static String buildCreateUserDsclCmd(String username, String password) {
         return new StringBuilder(String.format(Constants.CREATE_USER_DSCL, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.CREATE_USER_SHELL_DSCL, username))
@@ -248,12 +248,12 @@ class SSHCommand {
     }
 
     /**
-     * Build a single command to delete the given user and his workdir
+     * Build a single command to delete the given user and his workdir using dscl
      * 
      * @param username
      * @return command as String
      */
-    protected static String buildDeleteUserCmd(String username) {
+    protected static String buildDeleteUserDsclCmd(String username) {
         return new StringBuilder(String.format(Constants.KILL_ALL_USER_PROCESSES, username))
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.DELETE_USER_DSCL, username))
