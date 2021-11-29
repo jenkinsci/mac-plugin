@@ -68,10 +68,10 @@ class SSHCommand {
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
 
             if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
-                LOGGER.log(Level.FINE, "Create the user with dscl")
+                LOGGER.log(Level.FINE, "Create the user $user.username with dscl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildCreateUserDsclCmd(user.username, user.password.getPlainText())))
             } else {
-                LOGGER.log(Level.FINE, "Create the user with sysadminctl")
+                LOGGER.log(Level.FINE, "Create the user $user.username with sysadminctl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())))
                 TimeUnit.SECONDS.sleep(5)
             }
@@ -102,10 +102,10 @@ class SSHCommand {
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
 
             if(macHost.userManagementTool != null && macHost.userManagementTool.equals(Constants.DSCL)) {
-                LOGGER.log(Level.FINE, "Delete the user with dscl")
+                LOGGER.log(Level.FINE, "Delete the user $username with dscl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, buildDeleteUserDsclCmd(username)))
             }else {
-                LOGGER.log(Level.FINE, "Delete the user with sysadminctl")
+                LOGGER.log(Level.FINE, "Delete the user $username with sysadminctl")
                 LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.DELETE_USER, username)))
             }
 
