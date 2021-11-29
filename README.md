@@ -28,6 +28,7 @@ It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
     - [User Management Tool](#user-management-tool)
 - [Logs configuration](#logs-configuration)
 - [Execution](#execution)
+- [Troubleshooting](#troubleshooting)
 - [Team](#team)
 - [Contact](#contact)
 
@@ -153,13 +154,15 @@ The option is available in Mac Cloud settings :
 <img src="https://zupimages.net/up/21/31/nn4a.png" width="800"/>
 
 ### User Management Tool
-Since 1.4.0, it is possible to choose between "sysadminctl" or "dscl" for the users creation and deletion.
+v1.4.0 include the possibility to choose between "sysadminctl" or "dscl" for the users creation and deletion.
 
 The option is available in Mac Cloud->Mac Host settings :
 
 <img src="https://zupimages.net/up/21/47/zrdb.png" width="800"/>
 
 This functionality was developed to fix [JENKINS-66374](https://issues.jenkins.io/browse/JENKINS-66374)
+
+sudoers file on the Mac must be updated to add sudo NOPASSWD on all commands needed to create the user with dscl (see [Configure a Jenkins User](#configure-a-jenkins-user)).
 
 ## Logs configuration
 You can define a custom LOGGER to log every output of the plugin on the same place.
@@ -181,11 +184,11 @@ You can see it on the home page of Jenkins :
 <img src="https://zupimages.net/up/19/47/fkmf.png" width="300"/>
 
 ## Troubleshooting
-* Zombie process : Sometimes, "sysadminctl" tool continue to run after task executed. After a while, it can saturate MacOS (in our case we had +1000 process running). To prevent this, a script with the command "killall sysadminctl" should be run regulary.
-* Sometimes when an error happens, the users and/or home directories cannot be deleted. A clean of the users and homedirs starting with "mac-" should be run regulary.
+* Zombie process : Sometimes, "sysadminctl" tool continue to run after task executed. After a while, it can saturate MacOS (in our case we had +1000 process running). To prevent this, a script with the command "killall sysadminctl" has to be run regulary.
+* User and homedirs not deleted : Sometimes when an error happens, the users and/or home directories cannot be deleted. This issue can block the others builds because the plugin detect the user like a build in progress and will wait until its deletion. A clean of the users and homedirs starting with "mac-" has to be run regulary.
 
 **Recommendation :**
-All Mac used with the plugin should be rebooted at least one time a week to prevent theses problems. This script can be run during the reboot to clean all uneeded users and process :
+All Mac used with the plugin has to be rebooted at least one time a week to prevent theses problems. This script can be run during the reboot to clean all uneeded users and process :
 
 ```
 killall sysadminctl
@@ -195,6 +198,8 @@ done
 
 cd /Users/ && ls | grep mac- | xargs rm –rf
 ```
+
+Since v1.4.0, it is possible to use dscl over sysadminctl (see [User Management Tool](#user-management-tool)). Theses issues should not happen with dscl.
 
 ## Team
 
