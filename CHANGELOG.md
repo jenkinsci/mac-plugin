@@ -4,12 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [v1.4.0] - --/12/2021
+## [v1.4.0] - 30/11/2021
 
 ### Added
 * User management tool : possibility to choose between "dsl" and "sysadminctl" for user creation and deletion.
 This functionality fix [JENKINS-66374](https://issues.jenkins.io/browse/JENKINS-66374)
-* Troubleshooting in README
+* Troubleshooting section in README
 
 ## [v1.3.1] - 06/08/2021
 
