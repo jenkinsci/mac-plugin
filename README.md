@@ -158,7 +158,7 @@ The option is available in Mac Cloud->Mac Host settings :
 
 <img src="https://zupimages.net/up/21/47/zrdb.png" width="800"/>
 
-This functionality was developed to fix [JENKINS-66374](https://issues.jenkins.io/browse/JENKINS-66374)
+This functionality has been developed to fix [JENKINS-66374](https://issues.jenkins.io/browse/JENKINS-66374)
 
 sudoers file on the Mac must be updated to add sudo NOPASSWD on all commands needed to create the user with dscl (see [Configure a Jenkins User](#configure-a-jenkins-user)).
 
