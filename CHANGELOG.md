@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v1.4.0] - 30/11/2021
 
 ### Added
-* User management tool : possibility to choose between "dsl" and "sysadminctl" for user creation and deletion.
+* User management tool : possibility to choose between "dscl" and "sysadminctl" for user creation and deletion.
 This functionality fix [JENKINS-66374](https://issues.jenkins.io/browse/JENKINS-66374)
 * Troubleshooting section in README
 
