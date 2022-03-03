@@ -15,6 +15,10 @@ class Constants {
     /** "" */
     public static final String EMPTY_LIST_BOX_VALUE = ""
 
+    // Advanced properties default values
+    /** -Xms64m -Xmx128m */
+    public static final String AGENT_JVM_DEFAULT_PARAMETERS = "-Xms64m -Xmx128m"
+
     //Username pattern
     /**"mac-[random_string]"*/
     public static final String USERNAME_PATTERN = "mac-%s"
@@ -96,8 +100,8 @@ class Constants {
     /** curl --retry 10 --verbose [remoting.jar_url] > remoting.jar */
     public static final String GET_REMOTING_JAR = "curl --retry 5 --retry-delay 10 --verbose %s > remoting.jar"
 
-    /** java -jar remoting.jar -jnlpUrl [jenkins_url]computer/[computer_name]/slave-agent.jnlp -secret [secret]*/
-    public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s"
+    /** java -jar remoting.jar -jnlpUrl [jenkins_url]computer/[computer_name]/slave-agent.jnlp -secret [secret] [agent_jvm_parameters]*/
+    public static final String LAUNCH_JNLP = "java -jar remoting.jar -jnlpUrl %scomputer/%s/slave-agent.jnlp -secret %s %s"
 
     /** dscl . list /Users | grep -v ^_ | grep [username] */
     public static final String CHECK_USER_EXIST = "dscl . list /Users | grep -v ^_ | grep %s"

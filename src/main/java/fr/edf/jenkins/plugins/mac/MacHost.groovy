@@ -41,6 +41,7 @@ class MacHost implements Describable<MacHost> {
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
+    String agentJvmParameters
     List<String> preLaunchCommandsList = new ArrayList<>()
     List<MacEnvVar> envVars = new ArrayList<>()
     MacHostKeyVerifier macHostKeyVerifier
@@ -50,7 +51,7 @@ class MacHost implements Describable<MacHost> {
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
     Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
-    String preLaunchCommands, String userManagementTool) {
+    String preLaunchCommands, String userManagementTool, String agentJvmParameters) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -68,6 +69,7 @@ class MacHost implements Describable<MacHost> {
         this.macHostKeyVerifier = new MacHostKeyVerifier(key)
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
         this.userManagementTool = userManagementTool
+        this.agentJvmParameters = agentJvmParameters
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -156,6 +158,11 @@ class MacHost implements Describable<MacHost> {
 
     String getUserManagementTool() {
         return userManagementTool
+    }
+
+    @DataBoundSetter
+    void setAgentJvmParameters(String agentJvmParameters) {
+        this.agentJvmParameters = agentJvmParameters
     }
 
     @DataBoundSetter
