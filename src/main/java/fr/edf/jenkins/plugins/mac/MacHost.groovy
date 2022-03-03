@@ -165,6 +165,10 @@ class MacHost implements Describable<MacHost> {
         this.agentJvmParameters = agentJvmParameters
     }
 
+    String getAgentJvmParameters() {
+        return !agentJvmParameters ? Constants.AGENT_JVM_DEFAULT_PARAMETERS : agentJvmParameters
+    }
+
     @DataBoundSetter
     void setUserManagementTool(String userManagementTool) {
         this.userManagementTool = userManagementTool
