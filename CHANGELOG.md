@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [v1.4.1] - 08/03/2022
+## [v1.5.0] - 08/03/2022
 
 ### Added
 * Agent JVM argument : Allow to set agent JVM argument in Mac Host advanced properties. Default values is "-Xms64m -Xmx128m".
+
+### Changed
+* Upgrade parent version to 4.37
 
 ## [v1.4.0] - 30/11/2021
 
