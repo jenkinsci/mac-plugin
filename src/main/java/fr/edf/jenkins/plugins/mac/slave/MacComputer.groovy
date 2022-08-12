@@ -5,8 +5,6 @@ import java.util.logging.Logger
 
 import javax.annotation.CheckForNull
 
-import com.google.common.base.Objects
-
 import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.MacHost
 import hudson.model.Executor
@@ -89,9 +87,12 @@ class MacComputer extends AbstractCloudComputer<MacSlave> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("name", super.getName())
-                .add("slave", getNode())
-                .toString()
+        return new StringBuilder()//
+        .append(this.getClass().getName())//
+        .append('{')//
+        .append("name=").append(super.getName())//
+        .append(',')//
+        .append("slave=").append(String.valueOf(getNode()))//
+        .append('}').toString()//
     }
 }
