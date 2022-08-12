@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.5.1] - --/08/2022
+
+### Changed
+* Use Eclipse Temurin, not AdoptOpenJDK in action
+* Chore: use jenkins infra maven cd reusable workflow
+* Upgrade parent version to 4.46
+
+### Fixed
+* Compatibility with Jenkins 2.320 or higher
+
 ## [v1.5.0] - 08/03/2022
 
 ### Added
