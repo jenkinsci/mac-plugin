@@ -94,4 +94,14 @@ f.advanced(title:Messages.Host_Details()) {
                 repeatableDeleteButton:'true'
                 )
     }
+
+    f.entry(title: _(Messages.Host_File())) {
+        f.repeatableHeteroProperty( field:'hostFiles',
+                hasHeader: 'true',
+                addCaption: Messages.HostFile_Add(),
+                deleteCaption:Messages.HostFile_Delete(),
+                oneEach:'false',
+                repeatableDeleteButton:'true'
+        )
+    }
 }

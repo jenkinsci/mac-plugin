@@ -47,11 +47,12 @@ class MacHost implements Describable<MacHost> {
     MacHostKeyVerifier macHostKeyVerifier
     transient Set<LabelAtom> labelSet
     String userManagementTool
+    List<MacHostFile> hostFiles = new ArrayList()
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
     Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
-    String preLaunchCommands, String userManagementTool, String agentJvmParameters) {
+    String preLaunchCommands, String userManagementTool, String agentJvmParameters, List<MacHostFile> hostFiles) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -70,6 +71,7 @@ class MacHost implements Describable<MacHost> {
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
         this.userManagementTool = userManagementTool
         this.agentJvmParameters = agentJvmParameters
+        this.hostFiles = hostFiles
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -272,7 +274,7 @@ class MacHost implements Describable<MacHost> {
         }
 
         /**
-         * Verify the connection to the Mac machine 
+         * Verify the connection to the Mac machine
          * @param host
          * @param port
          * @param credentialsId
