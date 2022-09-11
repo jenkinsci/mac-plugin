@@ -1,5 +1,5 @@
 <?jelly escape-by-default='true'?>
 <div>
-    Allows to setup Mac as Jenkins Slaves. It create ephemeral jenkins agent on the mac configured.
+    Allows to setup Mac as Jenkins agents. It create ephemeral jenkins agent on the mac configured.
     All resources are removed after the build.
 </div>
