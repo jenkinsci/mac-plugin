@@ -32,7 +32,7 @@ It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 
 ## Features
 
-- [x] Allow to configure a Mac as Jenkins slave
+- [x] Allow to configure a Mac as Jenkins agent
 - [x] Run multiples builds on a single Mac
 - [x] Isolates each construction from each other
 - [x] Run builds on a cloud of Macs
