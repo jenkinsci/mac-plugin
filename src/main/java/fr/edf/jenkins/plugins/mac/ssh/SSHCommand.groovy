@@ -18,6 +18,7 @@ import fr.edf.jenkins.plugins.mac.ssh.connection.SSHUserConnectionConfiguration
 import fr.edf.jenkins.plugins.mac.util.Constants
 import hudson.util.Secret
 import jenkins.model.Jenkins
+import java.nio.file.Paths;
 
 /**
  * Contains all availables methods to execute ssh command for the Mac plugin
@@ -174,6 +175,32 @@ class SSHCommand {
     }
 
     /**
+     * Upload file to the host
+     * @param macHost
+     * @param user
+     * @param hostFile
+     * @param hostPath
+     * @return true if file uploaded
+     * @throws SSHCommandException, Exception
+     */
+    @Restricted(NoExternalUse)
+    static boolean uploadHostFile(MacHost host, MacUser user, FileCredentials hostFile, String hostPath) throws SSHCommandException, Exception {
+        try {
+            SSHUserConnectionConfiguration connectionConfig = new SSHUserConnectionConfiguration(username: user.username, password: user.password, host: host.host,
+            port: host.port, connectionTimeout: host.connectionTimeout, readTimeout: host.readTimeout, kexTimeout: host.kexTimeout, macHostKeyVerifier: host.macHostKeyVerifier)
+            String outputDir = Paths.get(String.format(Constants.HOST_FILE_DESTINATION_BASE_FOLDER, user.username), hostPath).toAbsolutePath()
+            LOGGER.log(Level.FINE, "Uploading host file {0} to {1}", hostFile.fileName, outputDir)
+            LOGGER.log(Level.FINE, SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.CREATE_DIR, outputDir)))
+            SSHCommandLauncher.sendFile(connectionConfig, hostFile.content, hostFile.fileName, outputDir)
+            return true
+        } catch(Exception e) {
+            final String message = String.format(SSHCommandException.TRANSFER_HOST_FILE_ERROR_MESSAGE, host.host, e.getMessage())
+            LOGGER.log(Level.SEVERE, message, e)
+            throw new SSHCommandException(message, e)
+        }
+    }
+
+    /**
      * Generate a Mac user with the pattern in Constants
      * @return a MacUser
      * @throws Exception
@@ -224,7 +251,7 @@ class SSHCommand {
 
     /**
      * Build a single command to create the user with the password using dscl
-     * 
+     *
      * @param username
      * @param password
      * @return command as String
@@ -249,7 +276,7 @@ class SSHCommand {
 
     /**
      * Build a single command to delete the given user and his workdir using dscl
-     * 
+     *
      * @param username
      * @return command as String
      */

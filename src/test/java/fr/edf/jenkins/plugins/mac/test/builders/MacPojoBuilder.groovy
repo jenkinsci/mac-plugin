@@ -33,7 +33,8 @@ class MacPojoBuilder {
                 "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZw==", //macHostKeyVerifier
                 "ls \n pwd \n whoami", //preLaunchCommands
                 Constants.SYSADMINCTL, //userManagementTool
-                "-Xms64m -Xmx128m" //agentJvmParameters
+                "-Xms64m -Xmx128m", //agentJvmParameters,
+                [] // host files
                 )
         List<MacHost> hostList = new ArrayList()
         hostList.add(host)

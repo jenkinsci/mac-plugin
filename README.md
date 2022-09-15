@@ -10,25 +10,28 @@ A good utility to build yours IOS apps, this plugin create MacOs agents for your
 It can stock your Keychains file on Jenkins and send it to the MacOs Nodes.
 
 ## Table of Contents
-- [Features](#features)
-- [Requirements](#requirements)
-    - [Jenkins](#jenkins)
-    - [MacOs](#macos)
-       - [Enable SSH for all users](#enable-ssh-for-all-users)
-       - [SSH configuration](#ssh-configuration)
-       - [Configure a Jenkins User](#configure-a-jenkins-user)
-- [Plugin configuration](#plugin-configuration)
-    - [Global Configuration](#global-configuration)
-    - [Keychain Managment](#keychain-managment)
-    - [Environment variables](#environment-variables)
-    - [Pre-launch commands](#pre-launch-commands)
-    - [Web Socket](#web-socket)
-    - [User Management Tool](#user-management-tool)
-- [Logs configuration](#logs-configuration)
-- [Execution](#execution)
-- [Troubleshooting](#troubleshooting)
-- [Team](#team)
-- [Contact](#contact)
+- [Mac Plugin](#mac-plugin)
+	- [Table of Contents](#table-of-contents)
+	- [Features](#features)
+	- [Requirements](#requirements)
+		- [Jenkins](#jenkins)
+		- [MacOS](#macos)
+			- [Enable SSH for all users](#enable-ssh-for-all-users)
+			- [SSH configuration](#ssh-configuration)
+			- [Configure a Jenkins User](#configure-a-jenkins-user)
+	- [Plugin configuration](#plugin-configuration)
+		- [Global Configuration](#global-configuration)
+		- [Keychain Managment](#keychain-managment)
+		- [Environment variables](#environment-variables)
+		- [Host files](#host-files)
+		- [Pre-launch commands](#pre-launch-commands)
+		- [Web Socket](#web-socket)
+		- [User Management Tool](#user-management-tool)
+	- [Logs configuration](#logs-configuration)
+	- [Execution](#execution)
+	- [Troubleshooting](#troubleshooting)
+	- [Team](#team)
+	- [Contact](#contact)
 
 ## Features
 
@@ -136,6 +139,9 @@ The Keychain will be send to the Mac agent with SCP in ~/Library/Keychains/ dire
 Since v1.1.0, you can set environment variables on Mac host. Theses variables will be set on the Node and will be accessible in the build.
 
 <img src="https://zupimages.net/up/19/50/i14g.png" width="650"/>
+
+### Host files
+You can upload files (defined as Jenkins' credentials file type) to a path relative to the user's home folder
 
 ### Pre-launch commands
 Since v1.3.0, you can set commands passed to the user before the agent starts.
