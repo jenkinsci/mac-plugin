@@ -71,7 +71,7 @@ class MacCloud extends Cloud {
      */
     @Override
     boolean canProvision(Label label) {
-        boolean canProvision = macHosts.find {!it.disabled} != null
+        boolean canProvision = macHosts.find {!it.disabled.isDisabled()} != null
         if(!canProvision) {
             LOGGER.log(Level.WARNING, "The Mac Cloud {0} is disabled", this.name)
         }
@@ -88,7 +88,7 @@ class MacCloud extends Cloud {
     public List<MacHost> getMacHosts(Label label) {
         try {
             return macHosts.findAll {
-                !it.disabled && label.matches((Collection) it.getLabelSet())
+                !it.disabled.isDisabled() && label.matches((Collection) it.getLabelSet())
             }
         } catch(Exception e) {
             String message = String.format("An error occured when trying to find hosts with label %s", label.toString())
@@ -108,7 +108,7 @@ class MacCloud extends Cloud {
      */
     private MacHost chooseMacHost(List<MacHost> labelMacHosts) throws Exception {
         MacHost hostChoosen = labelMacHosts.find {
-            if(it.disabled) {
+            if(it.disabled.isDisabled()) {
                 return false
             }
             int nbTries = 0
@@ -122,7 +122,7 @@ class MacCloud extends Cloud {
                         continue
                     } else {
                         LOGGER.log(Level.INFO, "Disabling Mac Host {0}", it.host)
-                        it.disabled = true
+                        disableHost(it, sshe)
                         return false
                     }
                 }
@@ -130,6 +130,25 @@ class MacCloud extends Cloud {
         }
         if(null == hostChoosen) throw new Exception("Unable to find a mac host available")
         return hostChoosen
+    }
+
+    /**
+     * <p>Disable the given WindowsHost for a time defined in the Host configuration.<br/>
+     * If no time is defined, the default value is 300 seconds.</p>
+     *
+     * <p>This method is call in case of system error (e.g. connection lost to the host).
+     * For manual disable, use {@link WindowsDisabled#setDisabledByChoice}</p>
+     *
+     * @param host : WindowsHost to disable
+     * @param error : Reason
+     */
+    private void disableHost(MacHost host, SSHCommandException error) {
+        final long milliseconds = host.getErrorDuration() != null ? host.getErrorDuration()*1000 : 300000
+        if (milliseconds > 0L) {
+            final MacDisabled reasonForDisablement = host.getDisabled()
+            reasonForDisablement.disableBySystem("Cloud provisioning failure", milliseconds, error)
+            host.setDisabled(reasonForDisablement)
+        }
     }
 
     @Extension

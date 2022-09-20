@@ -11,9 +11,7 @@ f.entry(title: _(Messages.Host_Host()), field: 'host') {
     f.textbox(clazz: 'required', checkMethod: 'post')
 }
 
-f.entry(title: Messages.Host_Disabled(), field:'disabled') {
-    f.checkbox()
-}
+f.property(field:'disabled') {}
 
 f.advanced(title:Messages.Host_Details()) {
 

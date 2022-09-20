@@ -37,7 +37,8 @@ class MacHost implements Describable<MacHost> {
     Integer kexTimeout
     Integer agentConnectionTimeout
     Integer maxTries
-    Boolean disabled
+    MacDisabled disabled
+    Integer errorDuration
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
