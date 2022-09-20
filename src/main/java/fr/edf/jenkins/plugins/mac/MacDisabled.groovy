@@ -43,7 +43,7 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
      * @param disabledByChoice : boolean
      */
     @DataBoundSetter
-    public void setDisabledByChoice(final boolean disabledByChoice) {
+    void setDisabledByChoice(final boolean disabledByChoice) {
         this.disabledByChoice = disabledByChoice
     }
 
@@ -59,7 +59,7 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
      * @param exception              Optional exception.
      */
     @Restricted(NoExternalUse.class)
-    public void disableBySystem(@Nonnull final String reasonGiven, final long durationInMilliseconds,
+    void disableBySystem(@Nonnull final String reasonGiven, final long durationInMilliseconds,
             @Nullable final Throwable exception) {
         final long durationInNanoseconds = TimeUnit.MILLISECONDS.toNanos(durationInMilliseconds)
         final long now = readTimeNowInNanoseconds()
@@ -78,11 +78,11 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
      * @return true if we are currently disabled.
      */
     @Restricted(NoExternalUse.class)
-    public boolean isDisabled() {
+    boolean isDisabled() {
         return isDisabledByChoice() || isDisabledBySystem()
     }
 
-    public boolean isDisabledBySystem() {
+    boolean isDisabledBySystem() {
         if (disabledBySystem) {
             final long now = readTimeNowInNanoseconds()
             final long disabledTimeRemaining = nanotimeWhenReEnableBySystem - now
@@ -99,7 +99,7 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
     }
 
     /** @return How long ago this was disabled by the system, e.g. "3 min 0 sec". */
-    public String getWhenDisabledBySystemString() {
+    String getWhenDisabledBySystemString() {
         if (!isDisabledBySystem()) {
             return ""
         }
@@ -113,7 +113,7 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
      * @return How long ago this will remain disabled by the system, e.g. "2 min 0
      *         sec".
      */
-    public String getWhenReEnableBySystemString() {
+    String getWhenReEnableBySystemString() {
         final long now = readTimeNowInNanoseconds()
         if (!isDisabledBySystem()) {
             return ""
@@ -123,14 +123,14 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
         return Util.getTimeSpanString(howSoonInMilliseconds)
     }
 
-    public String getReasonWhyDisabledBySystem() {
+    String getReasonWhyDisabledBySystem() {
         if (!isDisabledBySystem()) {
             return ""
         }
         return reasonWhyDisabledBySystem
     }
 
-    public String getExceptionWhenDisabledBySystemString() {
+    String getExceptionWhenDisabledBySystemString() {
         if (!isDisabledBySystem() || exceptionWhenDisabledBySystem == null) {
             return ""
         }
@@ -138,8 +138,8 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
     }
 
     @Extension
-    public static class DescriptorImpl extends Descriptor<MacDisabled> {
-        public FormValidation doCheckEnabledByChoice(@QueryParameter boolean disabledByChoice,
+    static class DescriptorImpl extends Descriptor<MacDisabled> {
+        FormValidation doCheckEnabledByChoice(@QueryParameter boolean disabledByChoice,
                 @QueryParameter boolean disabledBySystem, @QueryParameter String whenDisabledBySystemString,
                 @QueryParameter String whenReEnableBySystemString, @QueryParameter String reasonWhyDisabledBySystem,
                 @QueryParameter String exceptionWhenDisabledBySystemString) {
@@ -178,7 +178,7 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
     // Basic Java Object methods
 
     @Override
-    public boolean equals(Object o) {
+    boolean equals(Object o) {
         if (this == o) {
             return true
         }
@@ -193,13 +193,13 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
     }
 
     @Override
-    public int hashCode() {
+    int hashCode() {
         int result = disabledByChoice ? 1 : 0
         return result
     }
 
     @Override
-    public String toString() {
+    String toString() {
         final boolean ByChoice = getDisabledByChoice()
         final boolean bySystem = isDisabledBySystem()
         if (bySystem) {

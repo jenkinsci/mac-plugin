@@ -4,6 +4,7 @@ import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 
+import fr.edf.jenkins.plugins.mac.MacDisabled
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
 import fr.edf.jenkins.plugins.mac.ssh.connection.SSHConnectionFactory
@@ -23,6 +24,7 @@ class SSHCommandTest extends Specification {
         setup:
         String label = "label"
         MacHost macHost = Mock(MacHost)
+        MacDisabled macDisabled = Mock(MacDisabled)
         MacUser user = SSHCommand.generateUser()
         GroovySpy(SSHCommandLauncher, global:true)
         1 * SSHCommandLauncher.executeCommand(_, true, String.format(Constants.CREATE_USER, user.username, user.password.getPlainText())) >> "OK"

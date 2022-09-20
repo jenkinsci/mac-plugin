@@ -3,6 +3,7 @@ package fr.edf.jenkins.plugins.mac.test.builders
 import org.jvnet.hudson.test.JenkinsRule
 
 import fr.edf.jenkins.plugins.mac.MacCloud
+import fr.edf.jenkins.plugins.mac.MacDisabled
 import fr.edf.jenkins.plugins.mac.MacEnvVar
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
@@ -24,7 +25,7 @@ class MacPojoBuilder {
                 5, //connectionTimeout
                 5, //readTimeout
                 15, //agentConnectionTimeout
-                false, //disabled
+                new MacDisabled(), //disabled
                 5, //maxTries
                 "testLabel", //label
                 Boolean.FALSE, //

@@ -51,7 +51,7 @@ class MacHost implements Describable<MacHost> {
 
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
-    Boolean disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
+    MacDisabled disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
     String preLaunchCommands, String userManagementTool, String agentJvmParameters) {
         this.host = host
         this.credentialsId = credentialsId
@@ -119,7 +119,7 @@ class MacHost implements Describable<MacHost> {
     }
 
     @DataBoundSetter
-    void setDisabled(Boolean disabled) {
+    void setDisabled(MacDisabled disabled) {
         this.disabled = disabled
     }
 
@@ -292,7 +292,7 @@ class MacHost implements Describable<MacHost> {
          * @return ok if valid, error with exception message if not
          */
         @POST
-        public FormValidation doCheckKey(@QueryParameter String key) {
+        FormValidation doCheckKey(@QueryParameter String key) {
             return FormUtils.verifyHostKey(key)
         }
     }
