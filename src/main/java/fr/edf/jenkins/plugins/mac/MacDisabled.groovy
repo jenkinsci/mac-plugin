@@ -175,29 +175,6 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
         }
     }
 
-    // Basic Java Object methods
-
-    @Override
-    boolean equals(Object o) {
-        if (this == o) {
-            return true
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false
-        }
-        final MacDisabled other = (MacDisabled) o
-        if (disabledByChoice != other.disabledByChoice) {
-            return false
-        }
-        return true
-    }
-
-    @Override
-    int hashCode() {
-        int result = disabledByChoice ? 1 : 0
-        return result
-    }
-
     @Override
     String toString() {
         final boolean ByChoice = getDisabledByChoice()
@@ -221,5 +198,20 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
     @Restricted(NoExternalUse.class)
     protected long readTimeNowInNanoseconds() {
         return System.nanoTime()
+    }
+
+    /**
+     * Makes Spotbug happy by avoiding SE_TRANSIENT_FIELD_NOT_RESTORED
+     * 
+     * @return this
+     * @throws ObjectStreamException
+     */
+    private Object readResolve() throws ObjectStreamException {
+        disabledBySystem = false
+        nanotimeWhenDisabledBySystem = 0L
+        nanotimeWhenReEnableBySystem = 0L
+        reasonWhyDisabledBySystem = null
+        exceptionWhenDisabledBySystem = null
+        return this
     }
 }
