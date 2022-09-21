@@ -1,10 +1,7 @@
 package fr.edf.jenkins.plugins.mac
 
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.startsWith
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
-import static org.junit.Assert.assertNotEquals
 import static org.junit.Assert.assertTrue
 
 import java.util.concurrent.TimeUnit
@@ -191,8 +188,8 @@ public class MacDisabledTest {
         i.moveTimeForwards(Long.MAX_VALUE)
         final String actual4 = i.getExceptionWhenDisabledBySystemString()
 
-        assertThat(actual1, startsWith(expected))
-        assertThat(actual2, startsWith(expected))
+        assertTrue(actual1.startsWith(expected))
+        assertTrue(actual2.startsWith(expected))
         assertEquals("", actual3)
         assertEquals("", actual4)
     }
