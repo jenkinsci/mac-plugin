@@ -10,6 +10,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
 import org.kohsuke.stapler.QueryParameter
+import org.kohsuke.stapler.verb.POST
 
 import hudson.Extension
 import hudson.Functions
@@ -139,7 +140,9 @@ public class MacDisabled extends AbstractDescribableImpl<MacDisabled> implements
 
     @Extension
     static class DescriptorImpl extends Descriptor<MacDisabled> {
-        FormValidation doCheckEnabledByChoice(@QueryParameter boolean disabledByChoice,
+
+        @POST
+        FormValidation doCheckDisabledByChoice(@QueryParameter boolean disabledByChoice,
                 @QueryParameter boolean disabledBySystem, @QueryParameter String whenDisabledBySystemString,
                 @QueryParameter String whenReEnableBySystemString, @QueryParameter String reasonWhyDisabledBySystem,
                 @QueryParameter String exceptionWhenDisabledBySystemString) {
