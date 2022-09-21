@@ -114,7 +114,8 @@ public class MacDisabledTest {
         final TestClass i = new TestClass()
         final long duration = 60001L
         final String expected1 = "0 ms"
-        final String expected2 = "1 mn 0 s"
+        final String expected2Min = "1"
+        final String expected2Sec = "0"
         i.disableBySystem("a reason", duration, null)
 
         final String actual1 = i.getWhenDisabledBySystemString()
@@ -126,7 +127,8 @@ public class MacDisabledTest {
         final String actual4 = i.getWhenDisabledBySystemString()
 
         assertEquals(expected1, actual1)
-        assertEquals(expected2, actual2)
+        assertEquals(expected2Min, actual2.split(" ")[0])
+        assertEquals(expected2Sec, actual2.split(" ")[2])
         assertEquals("", actual3)
         assertEquals("", actual4)
     }
@@ -144,7 +146,8 @@ public class MacDisabledTest {
     public void getWhenReEnableBySystemStringGivenSystemDisabledThenReturnsReasonUntilTimeHasPassed() {
         final TestClass i = new TestClass()
         final long duration = 120000L
-        final String expected1 = "2 mn 0 s"
+        final String expectedMin1 = "2"
+        final String expectedSec1 = "0"
         final String expected2 = "1 ms"
         i.disableBySystem("another reason", duration, null)
 
@@ -156,7 +159,8 @@ public class MacDisabledTest {
         i.moveTimeForwards(Long.MAX_VALUE)
         final String actual4 = i.getWhenReEnableBySystemString()
 
-        assertEquals(expected1, actual1)
+        assertEquals(expectedMin1, actual1.split(" ")[0])
+        assertEquals(expectedSec1, actual1.split(" ")[2])
         assertEquals(expected2, actual2)
         assertEquals("", actual3)
         assertEquals("", actual4)
