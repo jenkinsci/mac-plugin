@@ -38,7 +38,7 @@ class MacHost implements Describable<MacHost> {
     Integer agentConnectionTimeout
     Integer maxTries
     MacDisabled disabled
-    Integer errorDuration
+    Integer errorDuration = Integer.valueOf(300)
     Boolean uploadKeychain = Boolean.FALSE
     String labelString
     String fileCredentialsId
@@ -52,7 +52,7 @@ class MacHost implements Describable<MacHost> {
     @DataBoundConstructor
     MacHost(String host, String credentialsId, Integer port, Integer maxUsers, Integer connectionTimeout, Integer readTimeout, Integer agentConnectionTimeout,
     MacDisabled disabled, Integer maxTries, String labelString, Boolean uploadKeychain, String fileCredentialsId, List<MacEnvVar> envVars, String key,
-    String preLaunchCommands, String userManagementTool, String agentJvmParameters) {
+    String preLaunchCommands, String userManagementTool, String agentJvmParameters, Integer errorDuration) {
         this.host = host
         this.credentialsId = credentialsId
         this.port = port
@@ -71,6 +71,7 @@ class MacHost implements Describable<MacHost> {
         this.preLaunchCommandsList = buildPreLaunchCommands(preLaunchCommands)
         this.userManagementTool = userManagementTool
         this.agentJvmParameters = agentJvmParameters
+        this.errorDuration = errorDuration
         labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
     }
 
@@ -173,6 +174,11 @@ class MacHost implements Describable<MacHost> {
     @DataBoundSetter
     void setUserManagementTool(String userManagementTool) {
         this.userManagementTool = userManagementTool
+    }
+
+    @DataBoundSetter
+    void setErrorDuration(Integer errorDuration) {
+        this.errorDuration = errorDuration
     }
 
     /**

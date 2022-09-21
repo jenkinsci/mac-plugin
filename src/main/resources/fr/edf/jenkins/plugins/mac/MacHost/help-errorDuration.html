@@ -1,0 +1,11 @@
+<div>
+    The duration (in seconds) for which the plugin will remember errors encountered during provisioning.
+    <br/>
+    If an error is encountered while provisioning an agent on a Mac host
+    then that host will be ignored for this duration,
+    allowing Jenkins' subsequent provisioning attempts to use other (hopefully working) hosts
+    (potentially on other clouds, if configured).
+    <br/>
+    Defaults to 300 (5 minutes) if not set (or set to an invalid value).
+    A value of zero disables this functionality (so that recent errors will not be taken into consideration when provisioning).
+</div>

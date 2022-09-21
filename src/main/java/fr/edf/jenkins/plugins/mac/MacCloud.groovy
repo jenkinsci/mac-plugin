@@ -20,6 +20,8 @@ import hudson.slaves.NodeProvisioner.PlannedNode
 
 class MacCloud extends Cloud {
 
+    private static final int ERROR_DURATION_DEFAULT_SECONDS = 300; // 5min
+
     private static final Logger LOGGER = Logger.getLogger(MacCloud.name)
 
     List<MacHost> macHosts = new ArrayList()
@@ -143,7 +145,7 @@ class MacCloud extends Cloud {
      * @param error : Reason
      */
     private void disableHost(MacHost host, SSHCommandException error) {
-        final long milliseconds = host.getErrorDuration() != null ? host.getErrorDuration()*1000 : 300000
+        final long milliseconds = host.getErrorDuration() != null ? host.getErrorDuration()*1000 : ERROR_DURATION_DEFAULT_SECONDS * 1000
         if (milliseconds > 0L) {
             final MacDisabled reasonForDisablement = host.getDisabled()
             reasonForDisablement.disableBySystem("Cloud provisioning failure", milliseconds, error)
