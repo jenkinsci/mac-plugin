@@ -19,6 +19,9 @@ class Constants {
     /** -Xms64m -Xmx128m */
     public static final String AGENT_JVM_DEFAULT_PARAMETERS = "-Xms64m -Xmx128m"
 
+    /** 300 sec */
+    public static final int ERROR_DURATION_DEFAULT_SECONDS = 300; // 5min
+
     //Username pattern
     /**"mac-[random_string]"*/
     public static final String USERNAME_PATTERN = "mac-%s"

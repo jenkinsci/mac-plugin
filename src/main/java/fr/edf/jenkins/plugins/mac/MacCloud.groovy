@@ -1,5 +1,7 @@
 package fr.edf.jenkins.plugins.mac
 
+import static fr.edf.jenkins.plugins.mac.util.Constants.ERROR_DURATION_DEFAULT_SECONDS
+
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -19,8 +21,6 @@ import hudson.slaves.Cloud
 import hudson.slaves.NodeProvisioner.PlannedNode
 
 class MacCloud extends Cloud {
-
-    private static final int ERROR_DURATION_DEFAULT_SECONDS = 300; // 5min
 
     private static final Logger LOGGER = Logger.getLogger(MacCloud.name)
 
