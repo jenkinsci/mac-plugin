@@ -3,6 +3,7 @@ package fr.edf.jenkins.plugins.mac.test.builders
 import org.jvnet.hudson.test.JenkinsRule
 
 import fr.edf.jenkins.plugins.mac.MacCloud
+import fr.edf.jenkins.plugins.mac.MacDisabled
 import fr.edf.jenkins.plugins.mac.MacEnvVar
 import fr.edf.jenkins.plugins.mac.MacHost
 import fr.edf.jenkins.plugins.mac.MacUser
@@ -24,7 +25,7 @@ class MacPojoBuilder {
                 5, //connectionTimeout
                 5, //readTimeout
                 15, //agentConnectionTimeout
-                false, //disabled
+                new MacDisabled(), //disabled
                 5, //maxTries
                 "testLabel", //label
                 Boolean.FALSE, //
@@ -33,7 +34,8 @@ class MacPojoBuilder {
                 "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZw==", //macHostKeyVerifier
                 "ls \n pwd \n whoami", //preLaunchCommands
                 Constants.SYSADMINCTL, //userManagementTool
-                "-Xms64m -Xmx128m" //agentJvmParameters
+                "-Xms64m -Xmx128m", //agentJvmParameters,
+                300 //errorDuration
                 )
         List<MacHost> hostList = new ArrayList()
         hostList.add(host)
