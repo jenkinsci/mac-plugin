@@ -119,6 +119,10 @@ class MacHost implements Describable<MacHost> {
         this.agentConnectionTimeout = agentConnectionTimeout
     }
 
+    MacDisabled getDisabled() {
+        return disabled ?: new MacDisabled()
+    }
+
     @DataBoundSetter
     void setDisabled(MacDisabled disabled) {
         this.disabled = disabled
@@ -168,12 +172,16 @@ class MacHost implements Describable<MacHost> {
     }
 
     String getAgentJvmParameters() {
-        return !agentJvmParameters ? Constants.AGENT_JVM_DEFAULT_PARAMETERS : agentJvmParameters
+        return agentJvmParameters ?: Constants.AGENT_JVM_DEFAULT_PARAMETERS
     }
 
     @DataBoundSetter
     void setUserManagementTool(String userManagementTool) {
         this.userManagementTool = userManagementTool
+    }
+
+    public Integer getErrorDuration() {
+        return errorDuration ?: Constants.ERROR_DURATION_DEFAULT_SECONDS
     }
 
     @DataBoundSetter
