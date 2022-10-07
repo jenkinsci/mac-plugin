@@ -95,6 +95,8 @@ class MacSlave extends AbstractCloudSlave {
     @Override
     @Restricted(NoExternalUse)
     void _terminate(final TaskListener listener) {
+        int nbTries = 0
+        int maxTries = macHost.maxTries
         try {
             final Computer computer = toComputer()
             if (computer != null) {
@@ -106,12 +108,24 @@ class MacSlave extends AbstractCloudSlave {
             LOGGER.log(Level.SEVERE, message, e)
             listener.error(message)
         }
-        try {
-            SSHCommand.deleteUserOnMac(this.name, this.macHost)
-        } catch (Exception e) {
-            String message = String.format("Failed to remove user %s on mac %s due to exception : %s", this.name, this.macHost.host, e.message)
-            LOGGER.log(Level.SEVERE, message, e)
-            listener.fatalError(message)
+        while(true) {
+            try {
+                SSHCommand.deleteUserOnMac(this.name, this.macHost)
+                break
+            } catch (Exception e) {
+                if(nbTries <= maxTries) {
+                    nbTries++
+                    String message = String.format("Error during the deletion of the user %s on the Mac %s. Retry in 20s (%s retries left)", this.name, this.macHost.host, maxTries-nbTries)
+                    LOGGER.log(Level.WARNING, message)
+                    sleep(20000)
+                    continue
+                } else {
+                    String message = String.format("Failed to remove user %s on mac %s due to exception : %s", this.name, this.macHost.host, e.message)
+                    LOGGER.log(Level.SEVERE, message, e)
+                    listener.fatalError(message)
+                    break
+                }
+            }
         }
     }
 
