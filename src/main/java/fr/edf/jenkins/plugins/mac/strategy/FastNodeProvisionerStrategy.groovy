@@ -81,7 +81,7 @@ public class FastNodeProvisionerStrategy extends NodeProvisioner.Strategy {
     }
 
     /**
-     * Ping the nodeProvisioner as a new task enters the queue, so it can provision a DockerSlave without delay.
+     * Ping the nodeProvisioner as a new task enters the queue, so it can provision a Mac Agent without delay.
      */
     @Extension
     public static class FastProvisionning extends QueueListener {
@@ -90,7 +90,7 @@ public class FastNodeProvisionerStrategy extends NodeProvisioner.Strategy {
         public void onEnterBuildable(Queue.BuildableItem item) {
             final Jenkins jenkins = Jenkins.get()
             final Label label = item.getAssignedLabel()
-            for (Cloud cloud : Jenkins.get().clouds) {
+            for (Cloud cloud : jenkins.clouds) {
                 if (cloud instanceof MacCloud && cloud.canProvision(label)) {
                     final NodeProvisioner provisioner = (label == null
                             ? jenkins.unlabeledNodeProvisioner
