@@ -17,8 +17,6 @@ import hudson.model.Queue;
 import hudson.model.queue.QueueListener;
 import hudson.slaves.Cloud;
 import hudson.slaves.NodeProvisioner;
-import hudson.slaves.NodeProvisioner.Strategy
-import hudson.slaves.NodeProvisioner.StrategyDecision
 import jenkins.model.Jenkins;
 
 /**
@@ -27,28 +25,27 @@ import jenkins.model.Jenkins;
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  */
 @Extension
-public class FastNodeProvisionerStrategy extends Strategy {
+public class FastNodeProvisionerStrategy extends NodeProvisioner.Strategy {
 
     private static final Logger LOGGER = Logger.getLogger(FastNodeProvisionerStrategy.class.getName())
 
     @Nonnull
     @Override
-    public StrategyDecision apply(@Nonnull NodeProvisioner.StrategyState state) {
+    public NodeProvisioner.StrategyDecision apply(@Nonnull NodeProvisioner.StrategyState state) {
         if (Jenkins.get().isQuietingDown()) {
             return CONSULT_REMAINING_STRATEGIES
         }
 
-
         for (Cloud cloud : Jenkins.get().clouds) {
             if (cloud instanceof MacCloud) {
-                final StrategyDecision decision = applyFoCloud(state, (MacCloud) cloud);
+                final NodeProvisioner.StrategyDecision decision = applyFoCloud(state, (MacCloud) cloud);
                 if (decision == PROVISIONING_COMPLETED) return decision
             }
         }
         return CONSULT_REMAINING_STRATEGIES
     }
 
-    private StrategyDecision applyFoCloud(@Nonnull NodeProvisioner.StrategyState state, MacCloud cloud) {
+    private NodeProvisioner.StrategyDecision applyFoCloud(@Nonnull NodeProvisioner.StrategyState state, MacCloud cloud) {
 
         final Label label = state.getLabel()
 

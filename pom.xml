@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
@@ -19,11 +21,14 @@
     </scm>
     <properties>
         <spotbugs.failOnError>false</spotbugs.failOnError>
-        <jenkins.version>2.235.1</jenkins.version>
-        <java.level>8</java.level>
+        <jenkins.version>2.426.1</jenkins.version>
+        <java.level>11</java.level>
+        <bom>2.426.x</bom>
+        <bom.version>2571.vede9dc5a_2e23</bom.version>
     </properties>
     <name>Mac Plugin</name>
-    <description>A good utility to build yours IOS apps, this plugin create MacOs agents for yours builds.</description>
+    <description>A good utility to build yours IOS apps, this plugin create
+        MacOs agents for yours builds.</description>
     <url>https://github.com/jenkinsci/mac-plugin/</url>
     <organization>
         <name>EDF</name>
@@ -70,10 +75,10 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.235.x</artifactId>
-                <version>11</version>
-                <scope>import</scope>
+                <artifactId>bom-${bom}</artifactId>
+                <version>${bom.version}</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

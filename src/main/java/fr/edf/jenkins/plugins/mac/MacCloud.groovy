@@ -3,7 +3,6 @@ package fr.edf.jenkins.plugins.mac
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import org.antlr.v4.runtime.misc.Nullable
 import org.apache.commons.collections.CollectionUtils
 import org.kohsuke.stapler.DataBoundConstructor
 
@@ -17,6 +16,7 @@ import hudson.model.Descriptor
 import hudson.model.Label
 import hudson.slaves.Cloud
 import hudson.slaves.NodeProvisioner.PlannedNode
+import jakarta.annotation.Nullable
 
 class MacCloud extends Cloud {
 
@@ -34,7 +34,8 @@ class MacCloud extends Cloud {
         this.idleMinutes = idleMinutes
     }
 
-    static @Nullable getMacClouds() {
+    @Nullable
+    static getMacClouds() {
         return all().get(MacCloud)
     }
 
