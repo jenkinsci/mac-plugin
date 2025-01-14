@@ -21,9 +21,11 @@
     </scm>
     <properties>
         <spotbugs.failOnError>false</spotbugs.failOnError>
-        <jenkins.version>2.426.1</jenkins.version>
+        <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
+        <jenkins.baseline>2.426</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.1</jenkins.version>
         <java.level>11</java.level>
-        <bom>2.426.x</bom>
+        <bom>${jenkins.baseline}.x</bom>
         <bom.version>2571.vede9dc5a_2e23</bom.version>
     </properties>
     <name>Mac Plugin</name>
