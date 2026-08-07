@@ -5,7 +5,7 @@ import java.time.Instant
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import org.apache.commons.lang.exception.ExceptionUtils
+import hudson.Functions
 import org.jenkinsci.Symbol
 import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.stapler.DataBoundConstructor
@@ -119,7 +119,7 @@ class MacComputerJNLPConnector extends MacComputerConnector {
             }catch(Exception e) {
                 launched = false
                 String message = String.format("Error while connecting computer %s due to error %s ",
-                        computer.name, ExceptionUtils.getStackTrace(e))
+                        computer.name, Functions.printThrowable(e))
                 listener.error(message)
                 throw new InterruptedException(message)
             }
