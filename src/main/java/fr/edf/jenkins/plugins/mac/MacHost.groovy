@@ -1,6 +1,5 @@
 package fr.edf.jenkins.plugins.mac
 
-import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
 import org.kohsuke.stapler.DataBoundSetter
@@ -72,7 +71,7 @@ class MacHost implements Describable<MacHost> {
         this.userManagementTool = userManagementTool
         this.agentJvmParameters = agentJvmParameters
         this.errorDuration = errorDuration
-        labelSet = Label.parse(StringUtils.defaultIfEmpty(labelString, ""))
+        labelSet = Label.parse((labelString ?: ""))
     }
 
     String getKey() {
@@ -216,7 +215,7 @@ class MacHost implements Describable<MacHost> {
     }
 
     Set<LabelAtom> getLabelSet() {
-        return Label.parse(StringUtils.defaultIfEmpty(this.labelString, ""))
+        return Label.parse((this.labelString ?: ""))
     }
 
     /**

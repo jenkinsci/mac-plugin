@@ -5,7 +5,6 @@ import java.util.logging.Logger
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang.StringUtils
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
 
@@ -110,7 +109,7 @@ protected class SSHCommandLauncher {
                 throw new Exception(error)
             }
             LOGGER.log(Level.FINE, "Executed command {0} with exit status {1}", command, null != session.exitStatus ? session.exitStatus.intValue() : null)
-            return StringUtils.isNotEmpty(out) ? out : StringUtils.isNotEmpty(err) ? err : ""
+            return (out != null && !out.isEmpty()) ? out : (err != null && !err.isEmpty()) ? err : ""
         } catch(Exception e) {
             if(session != null) session.close()
             throw e

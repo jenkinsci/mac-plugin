@@ -4,8 +4,6 @@ import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import org.apache.commons.lang.RandomStringUtils
-import org.apache.commons.lang.StringUtils
 import org.jenkinsci.plugins.plaincredentials.FileCredentials
 import org.kohsuke.accmod.Restricted
 import org.kohsuke.accmod.restrictions.NoExternalUse
@@ -132,7 +130,7 @@ class SSHCommand {
      */
     @Restricted(NoExternalUse)
     static boolean jnlpConnect(MacHost macHost, MacUser user, String jenkinsUrl, String slaveSecret) throws SSHCommandException, Exception {
-        jenkinsUrl = StringUtils.isNotEmpty(jenkinsUrl) ? jenkinsUrl : Jenkins.get().getRootUrl()
+        jenkinsUrl = (jenkinsUrl != null && !jenkinsUrl.isEmpty()) ? jenkinsUrl : Jenkins.get().getRootUrl()
         if(!jenkinsUrl.endsWith("/")) {
             jenkinsUrl += "/"
         }
@@ -180,8 +178,8 @@ class SSHCommand {
      */
     @Restricted(NoExternalUse)
     static MacUser generateUser() throws Exception {
-        String password = RandomStringUtils.random(10, true, true);
-        String username = String.format(Constants.USERNAME_PATTERN, RandomStringUtils.random(10, true, true).toLowerCase())
+        String password = randomAlphanumeric(10);
+        String username = String.format(Constants.USERNAME_PATTERN, randomAlphanumeric(10).toLowerCase())
         String workdir = String.format(Constants.WORKDIR_PATTERN, username)
         return new MacUser(username:username, password:Secret.fromString(password), workdir:workdir)
     }
@@ -213,7 +211,7 @@ class SSHCommand {
             readTimeout: macHost.readTimeout, kexTimeout: macHost.kexTimeout, macHostKeyVerifier: macHost.macHostKeyVerifier)
             String result = SSHCommandLauncher.executeCommand(connectionConfig, true, String.format(Constants.LIST_USERS, Constants.USERNAME_PATTERN.substring(0, Constants.USERNAME_PATTERN.lastIndexOf("%"))))
             LOGGER.log(Level.FINE, result)
-            if(StringUtils.isEmpty(result)) return new ArrayList()
+            if((result == null || result.isEmpty())) return new ArrayList()
             return result.split(Constants.REGEX_NEW_LINE) as List
         } catch(Exception e) {
             String message = String.format(SSHCommandException.LIST_USERS_ERROR_MESSAGE, macHost.host, e.getMessage())
@@ -260,4 +258,20 @@ class SSHCommand {
                 .append(Constants.COMMAND_JOINER)
                 .append(String.format(Constants.DELETE_USER_HOMEDIR, username)).toString()
     }
+    private static final String ALPHANUMERIC =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    private static final java.security.SecureRandom RANDOM = new java.security.SecureRandom()
+
+    /**
+     * Replaces Commons Lang's RandomStringUtils.random(n, true, true). Uses SecureRandom rather than
+     * the java.util.Random that backed the original, since the result is used as an account password.
+     */
+    private static String randomAlphanumeric(int length) {
+        StringBuilder builder = new StringBuilder(length)
+        for (int i = 0; i < length; i++) {
+            builder.append(ALPHANUMERIC.charAt(RANDOM.nextInt(ALPHANUMERIC.length())))
+        }
+        return builder.toString()
+    }
+
 }

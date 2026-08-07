@@ -3,7 +3,6 @@ package fr.edf.jenkins.plugins.mac.ssh.key.verifiers
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import org.apache.commons.lang.StringUtils
 import org.kohsuke.stapler.DataBoundConstructor
 
 import com.trilead.ssh2.ServerHostKeyVerifier
@@ -63,7 +62,7 @@ class MacHostKeyVerifier implements ServerHostKeyVerifier {
      * @throws MacHostKeyVerifierException
      */
     private static MacHostKey parseKey(String key) throws MacHostKeyVerifierException {
-        if (StringUtils.isEmpty(key) || !key.contains(" ")) {
+        if ((key == null || key.isEmpty()) || !key.contains(" ")) {
             throw new MacHostKeyVerifierException(Messages.MacHostKeyVerifier_TwoPartKey())
         }
         StringTokenizer tokenizer = new StringTokenizer(key, " ")
