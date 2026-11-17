@@ -6,8 +6,10 @@ import org.jvnet.hudson.test.JenkinsRule
 import fr.edf.jenkins.plugins.mac.MacCloud
 import fr.edf.jenkins.plugins.mac.test.builders.MacPojoBuilder
 import hudson.model.Computer
+import hudson.model.FreeStyleProject
 import hudson.model.Label
 import hudson.model.LoadStatistics.LoadStatisticsSnapshot
+import hudson.model.Queue
 import hudson.slaves.NodeProvisioner.PlannedNode
 import hudson.slaves.NodeProvisioner.StrategyDecision
 import hudson.slaves.NodeProvisioner.StrategyState
@@ -68,6 +70,44 @@ public class FastNodeProvisionerStrategyTest extends Specification {
         decision == StrategyDecision.CONSULT_REMAINING_STRATEGIES
     }
     
+    def "should not throw exception for an unlabeled queue item"() {
+        setup:
+        LoadStatisticsSnapshot snapshot = buildSnapshot()
+        StrategyState state = GroovyStub(StrategyState) {
+            getLabel() >> null
+            getSnapshot() >> snapshot
+        }
+        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), new Integer(1))
+        jenkins.jenkins.clouds.add(cloud)
+
+        when:
+        FastNodeProvisionerStrategy provisioner = new FastNodeProvisionerStrategy()
+        StrategyDecision decision = provisioner.apply(state)
+
+        then:
+        notThrown Exception
+        decision == StrategyDecision.CONSULT_REMAINING_STRATEGIES
+    }
+
+    def "queue listener should not throw exception for an unlabeled queue item"() {
+        setup:
+        jenkins.jenkins.setNumExecutors(0)
+        MacCloud cloud = new MacCloud("test", MacPojoBuilder.buildMacHost(), MacPojoBuilder.buildConnector(jenkins), new Integer(1))
+        jenkins.jenkins.clouds.add(cloud)
+        FreeStyleProject project = jenkins.createFreeStyleProject()
+        project.setAssignedLabel(null)
+        project.scheduleBuild2(0)
+        jenkins.jenkins.getQueue().maintain()
+        Queue.BuildableItem item = jenkins.jenkins.getQueue().getBuildableItems().get(0)
+
+        when:
+        new FastNodeProvisionerStrategy.FastProvisionning().onEnterBuildable(item)
+
+        then:
+        item.getAssignedLabel() == null
+        notThrown Exception
+    }
+
     private LoadStatisticsSnapshot buildSnapshot() {
         LoadStatisticsSnapshot.Builder builder = new LoadStatisticsSnapshot.Builder()
         builder.withQueueLength(1)

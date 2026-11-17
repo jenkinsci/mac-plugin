@@ -49,7 +49,7 @@ public class FastNodeProvisionerStrategy extends NodeProvisioner.Strategy {
 
         final Label label = state.getLabel()
 
-        if (!cloud.canProvision(label)) {
+        if (!cloud.canProvision(new Cloud.CloudState(label, state.getAdditionalPlannedCapacity()))) {
             return CONSULT_REMAINING_STRATEGIES
         }
 
@@ -63,7 +63,7 @@ public class FastNodeProvisionerStrategy extends NodeProvisioner.Strategy {
                 availableCapacity, currentDemand)
 
         if (availableCapacity < currentDemand) {
-            Collection<NodeProvisioner.PlannedNode> plannedNodes = cloud.provision(label, currentDemand - availableCapacity)
+            Collection<NodeProvisioner.PlannedNode> plannedNodes = cloud.provision(new Cloud.CloudState(label, state.getAdditionalPlannedCapacity()), currentDemand - availableCapacity)
             LOGGER.log(FINE, "Planned {0} new nodes", plannedNodes.size())
             state.recordPendingLaunches(plannedNodes)
             availableCapacity += plannedNodes.size()
@@ -91,7 +91,7 @@ public class FastNodeProvisionerStrategy extends NodeProvisioner.Strategy {
             final Jenkins jenkins = Jenkins.get()
             final Label label = item.getAssignedLabel()
             for (Cloud cloud : jenkins.clouds) {
-                if (cloud instanceof MacCloud && cloud.canProvision(label)) {
+                if (cloud instanceof MacCloud && cloud.canProvision(new Cloud.CloudState(label, 0))) {
                     final NodeProvisioner provisioner = (label == null
                             ? jenkins.unlabeledNodeProvisioner
                             : label.nodeProvisioner)
